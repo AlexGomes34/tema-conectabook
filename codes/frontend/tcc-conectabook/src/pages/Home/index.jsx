@@ -10,21 +10,79 @@ import HeaderHome from './headerHome';
 
 import './style.css'
 
+const CLUBES_DATA = [
+  { id: 1, nome: "Harry Lovers", membros: 700, image: hpCapa },
+  { id: 2, nome: "Harry Lovers", membros: 700, image: hpCapa },
+  { id: 3, nome: "Harry Lovers", membros: 700, image: hpCapa },
+  { id: 4, nome: "Harry Lovers", membros: 700, image: hpCapa }
+]
+
 const EVENTOS_DATA = [
-  {nome: "Bienal de São Paulo", image:eventos},
-  {nome: "Bienal de São Paulo", image:eventos},
-  {nome: "Bienal de São Paulo", image:eventos},
+  { nome: "Bienal de São Paulo", image: eventos },
+  { nome: "Bienal de São Paulo", image: eventos },
+  { nome: "Bienal de São Paulo", image: eventos },
 ]
 
 const CAFETERIA_DATA = [
-  {id: 1, nome:"Cafeteria Batatinha",image:cafeteria},
-  {id: 2, nome:"Cafeteria Batatinha",image:cafeteria},
-  {id: 3, nome:"Cafeteria Batatinha",image:cafeteria},
-  {id: 4, nome:"Cafeteria Batatinha",image:cafeteria}
+  { id: 1, nome: "Cafeteria Batatinha", image: cafeteria },
+  { id: 2, nome: "Cafeteria Batatinha", image: cafeteria },
+  { id: 3, nome: "Cafeteria Batatinha", image: cafeteria },
+  { id: 4, nome: "Cafeteria Batatinha", image: cafeteria }
 ]
 
-function CafeteriaCard({nome,image}){
-  return(
+const FEEDBACKS_DATA = [
+  { id: 1, autor: "Eloa Raposa", feedback: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis natus atque sed eum itaque quas nulla sunt voluptas enim delectus ducimus blanditiis rerum, quam cupiditate. Ex natus maiores voluptatem labore?", livroComentado: "Crime e Castigo - Dostoieviski", image: fotoPessoa },
+  { id: 2, autor: "Eloa Raposa", feedback: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis natus atque sed eum itaque quas nulla sunt voluptas enim delectus ducimus blanditiis rerum, quam cupiditate. Ex natus maiores voluptatem labore?", livroComentado: "Crime e Castigo - Dostoieviski", image: fotoPessoa },
+  { id: 3, autor: "Eloa Raposa", feedback: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis natus atque sed eum itaque quas nulla sunt voluptas enim delectus ducimus blanditiis rerum, quam cupiditate. Ex natus maiores voluptatem labore?", livroComentado: "Crime e Castigo - Dostoieviski", image: fotoPessoa },
+  { id: 4, autor: "Eloa Raposa", feedback: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis natus atque sed eum itaque quas nulla sunt voluptas enim delectus ducimus blanditiis rerum, quam cupiditate. Ex natus maiores voluptatem labore?", livroComentado: "Crime e Castigo - Dostoieviski", image: fotoPessoa }
+]
+
+const LIVROS_DATA = [
+  { id: 1, autor: "E. K. Johnston", titulo: "A esperança da rainha", image: livro },
+  { id: 2, autor: "E. K. Johnston", titulo: "A esperança da rainha", image: livro },
+  { id: 3, autor: "E. K. Johnston", titulo: "A esperança da rainha", image: livro },
+  { id: 4, autor: "E. K. Johnston", titulo: "A esperança da rainha", image: livro },
+  { id: 5, autor: "E. K. Johnston", titulo: "A esperança da rainha", image: livro },
+]
+
+function LivroCard({ autor, titulo, image }) {
+  return (
+    <div className="livro">
+      <img src={image} alt="" />
+      <h3>{titulo}</h3>
+      <p>{autor}</p>
+    </div>
+  )
+}
+
+function ClubeCard({ nome, membros, image }) {
+  return (
+    <div className="clube">
+      <img src={image} alt="Logo Harry Potter" />
+      <h3>{nome}</h3>
+      <p>{membros} membros</p>
+    </div>
+  )
+}
+
+function FeedbackCard({ nome, feedback, livroComentado, image }) {
+  return (
+    <div className="opiniao">
+      <img src={image} alt="" />
+      <div className="infoPessoa">
+        <div className="leitorLivro">
+          <h3>{nome}</h3>
+          <p className='feedbackLivro'>{livroComentado}</p>
+        </div>
+        <p>{feedback}</p>
+      </div>
+    </div>
+  )
+
+}
+
+function CafeteriaCard({ nome, image }) {
+  return (
     <div className="cafeteria">
       <img src={image} alt="" />
       <h3>{nome}</h3>
@@ -32,8 +90,8 @@ function CafeteriaCard({nome,image}){
   )
 }
 
-function EventoCard({nome,image}){
-  return(
+function EventoCard({ nome, image }) {
+  return (
     <div className="evento">
       <img src={image} alt="" />
       <h3>{nome}</h3>
@@ -46,7 +104,6 @@ function Home() {
   return (
     <div>
       <HeaderHome />
-
       <main>
 
         <div className='info'>
@@ -75,80 +132,29 @@ function Home() {
         </div>
 
         <div className="clubes">
-          <div className="clube">
-            <img src={hpCapa} alt="Logo Harry Potter" />
-            <h3>Clube Harry Potter</h3>
-            <p>700 Membros</p>
-          </div>
-          <div className="clube">
-            <img src={hpCapa} alt="Logo Harry Potter" />
-            <h3>Clube Harry Potter</h3>
-            <p>700 Membros</p>
-          </div>
-          <div className="clube">
-            <img src={hpCapa} alt="Logo Harry Potter" />
-            <h3>Clube Harry Potter</h3>
-            <p>700 Membros</p>
-          </div>
-          <div className="clube">
-            <img src={hpCapa} alt="Logo Harry Potter" />
-            <h3>Clube Harry Potter</h3>
-            <p>700 Membros</p>
-          </div>
+          {CLUBES_DATA.map((clube) => (
+            <ClubeCard
+              key={clube.id}
+              nome={clube.nome}
+              membros={clube.membros}
+              image={clube.image}
+            />
+          ))}
         </div>
       </section>
 
       <section className='feedbackSection'>
         <h2>Publique suas opiniões literárias</h2>
         <div className="opinioes">
-
-          <div className="opiniao">
-            <img src={fotoPessoa} alt="" />
-            <div className="infoPessoa">
-              <div className="leitorLivro">
-                <h3>Eloa Raposa</h3>
-                <p className='feedbackLivro'>Crime e Castigo - Dostoieviski</p>
-
-              </div>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis dicta, cum necessitatibus dolorem fuga similique ex odit molestiae magni id! Suscipit eveniet facilis aperiam ullam commodi repudiandae, illum eius! Dolore?</p>
-            </div>
-
-          </div>
-          <div className="opiniao">
-            <img src={fotoPessoa} alt="" />
-            <div className="infoPessoa">
-              <div className="leitorLivro">
-                <h3>Eloa Raposa</h3>
-                <p className='feedbackLivro'>Crime e Castigo - Dostoieviski</p>
-
-              </div>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consectetur atque officia quam earum velit quia ipsam sint. Itaque, mollitia assumenda.</p>
-            </div>
-
-          </div>
-          <div className="opiniao">
-            <img src={fotoPessoa} alt="" />
-            <div className="infoPessoa">
-              <div className="leitorLivro">
-                <h3>Eloa Raposa</h3>
-                <p className='feedbackLivro'>Crime e Castigo - Dostoieviski</p>
-
-              </div>
-              <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Beatae nemo consequuntur modi, doloribus itaque rem magni neque ad. Praesentium rerum exercitationem quidem eum pariatur perspiciatis perferendis architecto ratione quos. Expedita?</p>
-            </div>
-
-          </div>
-          <div className="opiniao">
-            <img src={fotoPessoa} alt="" />
-            <div className="infoPessoa">
-              <div className="leitorLivro">
-                <h3>Eloa Raposa</h3>
-                <p className='feedbackLivro'>Crime e Castigo - Dostoieviski</p>
-
-              </div>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae nam voluptas repellat expedita, at quas quod quae voluptates autem consequuntur quidem ipsam cumque ab consectetur.</p>
-            </div>
-          </div>
+          {FEEDBACKS_DATA.map((feedback) => (
+            <FeedbackCard
+              key={feedback.id}
+              nome={feedback.autor}
+              feedback={feedback.feedback}
+              livroComentado={feedback.livroComentado}
+              image={feedback.image}
+            />
+          ))}
 
         </div>
       </section>
@@ -156,41 +162,25 @@ function Home() {
       <section className='bookSection'>
         <h2>Veja os livros em destaque no momento</h2>
         <div className="livros">
-          <div className="livro">
-            <img src={livro} alt="" />
-            <h3>A esperança da rainha</h3>
-            <p>E. K. Johnston</p>
-          </div>
-          <div className="livro">
-          <img src={livro} alt="" />
-          <h3>A esperança da rainha</h3>
-          <p>E. K. Johnston</p>
-          </div>
-          <div className="livro">
-          <img src={livro} alt="" />
-          <h3>A esperança da rainha</h3>
-          <p>E. K. Johnston</p>
-          </div>
-          <div className="livro">
-          <img src={livro} alt="" />
-          <h3>A esperança da rainha</h3>
-          <p>E. K. Johnston</p>
-          </div>
-          <div className="livro">
-          <img src={livro} alt="" />
-          <h3>A esperança da rainha</h3>
-          <p>E. K. Johnston</p>
-          </div>
+          {LIVROS_DATA.map((livro) => (
+            <LivroCard
+              key={livro.id}
+              autor={livro.autor}
+              titulo={livro.titulo}
+              image={livro.image}
+            />
+          ))}
         </div>
       </section>
 
       <section className='eventSection'>
         <h2>Veja os Eventos que iram ocorrer</h2>
         <div className="eventos">
-          {EVENTOS_DATA.map((evento) =>(
+          {EVENTOS_DATA.map((evento) => (
             <EventoCard
-            nome={evento.nome}
-            image={evento.image}
+              key={evento.id}
+              nome={evento.nome}
+              image={evento.image}
             />
           ))}
         </div>
@@ -199,11 +189,12 @@ function Home() {
       <section className='cafeteriaSection'>
         <h2>Encontre uma cafeteria para combinar com sua leitura</h2>
         <div className="cafeterias">
-          {CAFETERIA_DATA.map((cafeteria) =>(
+          {CAFETERIA_DATA.map((cafeteria) => (
             <CafeteriaCard
-            nome = {cafeteria.nome}
-            image={cafeteria.image}
-            
+              key={cafeteria.id}
+              nome={cafeteria.nome}
+              image={cafeteria.image}
+
             />
           ))
 
