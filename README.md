@@ -1,5 +1,4 @@
-
-<img width="632" height="395" alt="nano-banana-1776449099684-removebg-preview" src="https://github.com/user-attachments/assets/a126ba05-764b-45b9-8cd2-c8fd0df83d0b" />
+<img width="1536" height="1024" alt="logo" src="https://github.com/user-attachments/assets/fc4be99c-0674-4e24-891b-29e8264678f3" />
 
 
 
