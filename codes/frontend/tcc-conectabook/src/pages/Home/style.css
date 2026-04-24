@@ -36,7 +36,7 @@ img{
 }
 
 /* HERO / MAIN */
-main{
+.home-main{
     padding: 32px;
     display: flex;
     width: 100%;

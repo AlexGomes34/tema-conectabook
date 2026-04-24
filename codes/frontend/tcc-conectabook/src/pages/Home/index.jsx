@@ -5,6 +5,7 @@ import fotoPessoa from '../../assets/fotoPessoa.jpg';
 import livro from '../../assets/livro.jpg';
 import eventos from '../../assets/eventos.jpg'
 import cafeteria from '../../assets/cafeteria.jpeg'
+import {useNavigate} from 'react-router-dom'
 
 import HeaderHome from './headerHome';
 
@@ -18,9 +19,9 @@ const CLUBES_DATA = [
 ]
 
 const EVENTOS_DATA = [
-  { nome: "Bienal de São Paulo", image: eventos },
-  { nome: "Bienal de São Paulo", image: eventos },
-  { nome: "Bienal de São Paulo", image: eventos },
+  { id:1, nome: "Bienal de São Paulo", image: eventos },
+  { id:2,nome: "Bienal de São Paulo", image: eventos },
+  { id:3,nome: "Bienal de São Paulo", image: eventos },
 ]
 
 const CAFETERIA_DATA = [
@@ -99,12 +100,14 @@ function EventoCard({ nome, image }) {
   )
 }
 
-function Home() {
 
+
+function Home() {
+  const navigate = useNavigate()
   return (
     <div>
       <HeaderHome />
-      <main>
+      <main className='home-main'>
 
         <div className='info'>
           <div className="textos">
@@ -117,7 +120,7 @@ function Home() {
 
           <div className='buttons'>
             <Button text="Criar Conta" onClick={() => alert("Clicou!")} />
-            <Button text="Entrar" onClick={() => alert("Clicou!")} />
+            <Button text="Fazer Login" onClick={() => navigate('/login')} />
           </div>
         </div>
 
