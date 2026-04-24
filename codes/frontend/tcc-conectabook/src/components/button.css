@@ -22,6 +22,7 @@ button{
     width: 187px;
     font-size: 14px;
     transition: background-color 0.5s ease;
+    cursor: pointer;
 }
 
 button:hover{
