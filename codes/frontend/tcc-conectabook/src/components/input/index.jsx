@@ -1,10 +1,16 @@
 import './input.css'
 
-function Input({label, placeholder}){
-    return(
+function Input({ label, placeholder, value, onChange, type = "text" }) {
+    return (
         <div className='input-group'>
-            <label htmlFor="Email">{label}</label>
-            <input type="text" placeholder={placeholder} />
+            <label>{label}</label>
+            <input
+                type={type}
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
+                
+            />
         </div>
     )
 }

@@ -20,7 +20,14 @@ main{
 
 .header-login-left{
     display: flex;
-    text-align: center;
+    align-items: center;
+    justify-content: start;
+    padding-left: 3%;
+}
+
+.header-login-left h2{
+    font-weight: 400;
+    color: white;
 }
 
 .text-login-left{
@@ -44,12 +51,106 @@ main{
     display: flex;
     flex-direction: column;
     width: 70%;
-    justify-content: space-between;
+    justify-content: center;
+
 }
-a{
-    color: black;
+
+.text-right-login{
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+}
+
+.right-up-login{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding-inline: 30%;
+}
+
+.right-up-login input{
+    width: 100%;
+}
+
+.esqueci-senha{
+    color: #1976D2;
 }
 
 .previa-footer{
     display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-grow: 1;
+    background-color: #e8f1ff;
+}
+
+.previa{
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+
+.faca-login{
+    color: #64748b;
+}
+
+.login-input{
+    display: flex;
+    flex-direction: column;
+}
+
+.button-login{
+    width: 100%;
+    padding-left: 3%;
+    display: flex;
+    justify-content: center;
+}
+
+.criar-conta-login{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.criar-conta-login a{
+    color: #1976D2;
+}
+
+.senha{
+    display: flex;
+    flex-direction: column;
+}
+
+.senha a{
+    text-align: end;
+    padding-right: 3%;
+}
+
+.footer-login{
+    color: black;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.br-login{
+    background-color: black;
+}
+
+.footer-copyright{
+    height: 30%;
+    background-color: #e8f1ff;
+    border: 1px solid #cbd5e1;
+    color: black;
+}
+
+.erro {
+    color: #ff4d4f;
+    font-size: 14px;
+    padding-left: 3%;
 }

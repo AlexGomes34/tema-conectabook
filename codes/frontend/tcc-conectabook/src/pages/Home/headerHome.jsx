@@ -8,7 +8,7 @@ function headerHome() {
         <header className='headerHome'>
             <img className='logo' src={logo} alt="" />
             <div className="links">
-                <a className='entrar' href="#">Entrar</a>
+                <a className='entrar' href="/login">Entrar</a>
                 <a href="#">Cadastrar</a>
             </div>
         </header>
