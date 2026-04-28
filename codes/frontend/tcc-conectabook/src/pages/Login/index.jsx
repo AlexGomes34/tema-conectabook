@@ -56,6 +56,8 @@ function Login() {
 
         try {
             console.log("Enviando Dados...")
+            console.log("E-mail:", email)
+            console.log("Senha", senha)
 
             await new Promise(resolve => setTimeout(resolve, 2000))
         } catch (error) {
@@ -67,7 +69,7 @@ function Login() {
 
     }
     return (
-        <main>
+        <main className="main-login">
             <div className="left-login">
                 <header className="header-login-left">
                     <img className="logo" src={logo} alt="Logo ConectaBook" />

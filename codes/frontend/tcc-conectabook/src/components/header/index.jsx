@@ -1,6 +1,6 @@
 import './header.css'
-import logo from '../assets/logo.png';
-import user from '../assets/user.png';
+import logo from '../../assets/logo.png';
+import user from '../../assets/user.png';
 
 function Header (){
 
