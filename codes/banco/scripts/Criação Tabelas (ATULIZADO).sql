@@ -1,3 +1,17 @@
+-- DROP DATABASE db_conecta_book;
+-- CREATE DATABASE db_conecta_book;
+
+CREATE TABLE tbl_status_livro (
+	id_status_livro INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	nome_status varchar(20) NOT NULL
+);
+
+CREATE TABLE tbl_genero (
+	id_genero INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	nome varchar(30) NOT NULL,
+	descricao varchar(100) NOT NULL
+);
+
 CREATE TABLE tbl_usuario (
 	id_usuario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	nome varchar(100) NOT NULL,
@@ -7,17 +21,6 @@ CREATE TABLE tbl_usuario (
 	senha varchar(100) NOT NULL,
 	data_nascimento varchar(10) NOT NULL,
 	foto_perfil TEXT NULL
-);
-
-CREATE TABLE tbl_status (
-	id_status INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-	nome_status varchar(20) NOT NULL
-);
-
-CREATE TABLE tbl_categoria (
-	id_categoria INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-	nome varchar(30) NOT NULL,
-	descricao varchar(100) NOT NULL
 );
 
 CREATE TABLE tbl_evento (
@@ -35,17 +38,25 @@ CREATE TABLE tbl_notificacao (
 	mensagem varchar(100) NOT NULL,
 	data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	data_recebimento TIMESTAMP NULL,
-	id_usuario INT NULL,
+	id_usuario INT NOT NULL,
 	FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario)
 );
 
 CREATE TABLE tbl_livro (
 	id_livro INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	titulo varchar(50) NOT NULL,
+    isbn varchar(20) NOT NULL,
 	autor varchar(50) NOT NULL,
-	descricao varchar(300) NULL,
-	id_categoria INT NOT NULL,
-	FOREIGN KEY (id_categoria) REFERENCES tbl_categoria (id_categoria)
+	descricao varchar(300) NULL
+);
+
+CREATE TABLE tbl_acesso_livro (
+	id_acesso_livro INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id_livro INT NOT NULL,
+    FOREIGN KEY (id_livro) REFERENCES tbl_livro (id_livro),
+    id_usuario INT NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario),
+	data_acesso TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE tbl_cafeteria (
@@ -53,7 +64,8 @@ CREATE TABLE tbl_cafeteria (
 	nome varchar(100) NOT NULL,
 	endereco TEXT NOT NULL,
 	horario_funcionamento varchar(100) NOT NULL,
-	rede_social TEXT NULL
+	rede_social TEXT NULL,
+    foto TEXT NOT NULL
 );
 
 CREATE TABLE tbl_avaliacao (
@@ -62,10 +74,7 @@ CREATE TABLE tbl_avaliacao (
 	mensagem TEXT NULL,
 	id_usuario INT NOT NULL,
 	FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario),
-	id_livro INT NULL,
-	FOREIGN KEY (id_livro) REFERENCES tbl_livro (id_livro),
-	id_cafeteria INT NULL,
-	FOREIGN KEY (id_cafeteria) REFERENCES tbl_cafeteria (id_cafeteria)
+	data_avaliacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE tbl_membros (
@@ -83,22 +92,26 @@ CREATE TABLE tbl_clube (
 	genero varchar(30) NOT NULL,
 	foto TEXT NOT NULL,
 	id_membros INT NOT NULL,
-	FOREIGN KEY (id_membros) REFERENCES tbl_membros (id_membros)
+	FOREIGN KEY (id_membros) REFERENCES tbl_membros (id_membros),
+    id_genero INT NOT NULL,
+	FOREIGN KEY (id_genero) REFERENCES tbl_genero (id_genero)
+    
 );
 
 CREATE TABLE tbl_estante (
 	id_estante INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	id_usuario INT NOT NULL,
 	FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario),
-	id_status INT NOT NULL,
-	FOREIGN KEY (id_status) REFERENCES tbl_status (id_status),
+	id_status_livro INT NOT NULL,
+	FOREIGN KEY (id_status_livro) REFERENCES tbl_status_livro (id_status_livro),
 	id_livro INT NOT NULL,
-	FOREIGN KEY (id_livro) REFERENCES tbl_livro (id_livro)
+	FOREIGN KEY (id_livro) REFERENCES tbl_livro (id_livro),
+	data_adicao TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-CREATE TABLE tbl_mensagem_status (
-	id_mensagem_status INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    nome VARCHAR(20) NOT NULL
+CREATE TABLE tbl_status (
+	id_status INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE tbl_modulo (
@@ -113,8 +126,8 @@ CREATE TABLE tbl_mensagem (
 	data_postagem TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	id_usuario INT NULL,
 	FOREIGN KEY (id_usuario) REFERENCES tbl_usuario(id_usuario),
-	id_mensagem_status INT NOT NULL,
-	FOREIGN KEY (id_mensagem_status) REFERENCES tbl_mensagem_status (id_mensagem_status)
+	id_status INT NOT NULL,
+	FOREIGN KEY (id_status) REFERENCES tbl_status (id_status)
 );
 
 CREATE TABLE tbl_conversa (
@@ -133,4 +146,37 @@ CREATE TABLE tbl_curtida (
 	FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario),
     id_conversa INT NOT NULL,
     FOREIGN KEY (id_conversa) REFERENCES tbl_conversa (id_conversa)
+);
+
+CREATE TABLE tbl_avaliacao_livro (
+	id_avaliacao_livro INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id_avaliacao INT NOT NULL,
+    FOREIGN KEY (id_avaliacao) REFERENCES tbl_avaliacao (id_avaliacao),
+    id_livro INT NOT NULL,
+    FOREIGN KEY (id_livro) REFERENCES tbl_livro (id_livro)
+);
+
+
+CREATE TABLE tbl_avaliacao_cafeteria (
+	id_avaliacao_cafeteria INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id_avaliacao INT NOT NULL,
+    FOREIGN KEY (id_avaliacao) REFERENCES tbl_avaliacao (id_avaliacao),
+    id_cafeteria INT NOT NULL,
+    FOREIGN KEY (id_cafeteria) REFERENCES tbl_cafeteria (id_cafeteria)
+);
+
+CREATE TABLE tbl_genero_usuario (
+	id_genero_usuario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id_genero INT NOT NULL,
+    FOREIGN KEY (id_genero) REFERENCES tbl_genero (id_genero),
+    id_usuario INT NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario)
+);
+
+CREATE TABLE tbl_genero_livro (
+	id_genero_livro INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id_genero INT NOT NULL,
+    FOREIGN KEY (id_genero) REFERENCES tbl_genero (id_genero),
+    id_livro INT NOT NULL,
+    FOREIGN KEY (id_livro) REFERENCES tbl_livro (id_livro)
 );
