@@ -16,7 +16,6 @@ CREATE TABLE tbl_usuario (
 	id_usuario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	nome varchar(100) NOT NULL,
 	nome_usuario varchar(100) NOT NULL,
-	genero_favorito varchar(50) NOT NULL,
 	email varchar(100) NOT NULL,
 	senha varchar(100) NOT NULL,
 	data_nascimento varchar(10) NOT NULL,
@@ -47,7 +46,8 @@ CREATE TABLE tbl_livro (
 	titulo varchar(50) NOT NULL,
     isbn varchar(20) NOT NULL,
 	autor varchar(50) NOT NULL,
-	descricao varchar(300) NULL
+	descricao varchar(300) NOT NULL,
+    capa TEXT NOT NULL
 );
 
 CREATE TABLE tbl_acesso_livro (
