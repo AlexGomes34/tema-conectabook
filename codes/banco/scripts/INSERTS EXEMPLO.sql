@@ -8,20 +8,20 @@ INSERT INTO tbl_genero (nome, descricao) VALUES
 ('Clássico', 'Obras atemporais da literatura');
 
 -- Usuários
-INSERT INTO tbl_usuario (nome, nome_usuario, genero_favorito, email, senha, data_nascimento) VALUES 
-('Ana Souza', 'ana_leitora', 'Fantasia', 'ana@email.com', '123', '2002-05-10'),
-('Carlos Lima', 'cadulima', 'Terror', 'carlos@email.com', '456', '1998-11-20'),
-('Beatriz Silva', 'bia_books', 'Clássico', 'bia@email.com', '789', '2005-01-30');
+INSERT INTO tbl_usuario (nome, nome_usuario, email, senha, data_nascimento) VALUES 
+('Ana Souza', 'ana_leitora', 'ana@email.com', '123', '2002-05-10'),
+('Carlos Lima', 'cadulima', 'carlos@email.com', '456', '1998-11-20'),
+('Beatriz Silva', 'bia_books', 'bia@email.com', '789', '2005-01-30');
 
 -- Status da Mensagem e Módulos
 INSERT INTO tbl_status (nome) VALUES ('Post'), ('Resposta'), ('Editado');
 INSERT INTO tbl_modulo (nome) VALUES ('Feed'), ('Clube'), ('B.P');
 
 -- Livros
-INSERT INTO tbl_livro (titulo, isbn, autor, descricao) VALUES 
-('O Hobbit', '9788595084742', 'J.R.R. Tolkien', 'A aventura de Bilbo Bolseiro.'),
-('It: A Coisa', '9788535914849', 'Stephen King', 'Um palhaço assusta crianças em Derry.'),
-('Dom Casmurro', '9788535923421', 'Machado de Assis', 'A dúvida sobre a traição de Capitu.');
+INSERT INTO tbl_livro (titulo, isbn, autor, descricao, capa) VALUES 
+('O Hobbit', '9788595084742', 'J.R.R. Tolkien', 'A aventura de Bilbo Bolseiro.', '1'),
+('It: A Coisa', '9788535914849', 'Stephen King', 'Um palhaço assusta crianças em Derry', '2'),
+('Dom Casmurro', '9788535923421', 'Machado de Assis', 'A dúvida sobre a traição de Capitu.', '3');
 
 -- Cafeterias
 INSERT INTO tbl_cafeteria (nome, endereco, horario_funcionamento, foto) VALUES 

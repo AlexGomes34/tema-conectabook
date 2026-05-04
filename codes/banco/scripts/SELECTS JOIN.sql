@@ -1,6 +1,6 @@
 
 -- VIEW USUARIO INFORMAÇÕES
-CREATE VIEW vw_perfil_usuario AS
+-- CREATE VIEW vw_perfil_usuario AS
 SELECT 
     u.id_usuario,
     u.nome,
@@ -9,7 +9,7 @@ SELECT
     u.senha,
     u.data_nascimento,
     u.foto_perfil,
-    -- Busca o gênero favorito da tabela associativa
+    -- Busca o gênero favorito
     (SELECT g.nome 
      FROM tbl_genero g
      JOIN tbl_genero_usuario gu ON g.id_genero = gu.id_genero
@@ -29,10 +29,21 @@ FROM
     tbl_usuario u;
     
 -- VIEW LIVRO INFORMAÇÕES
-CREATE VIEW vw_livro_inform AS 
+-- CREATE VIEW vw_livro_inform AS 
 SELECT 
 	l.titulo,
+    l.isbn,
     l.autor,
-    l.descricao
-    l.capa
+    l.descricao,
+    l.capa,
+    (SELECT g.nome
+    FROM tbl_genero g
+    JOIN tbl_genero_livro gl ON g.id_genero = gl.id_genero
+    WHERE gl.id_livro = l.id_livro
+    LIMIT 1) AS genero
+FROM tbl_livro l;
+
+-- VIEW AVALIAÇÕES
+-- CREATE VIEW vw_livro_avaliacoes AS
+	
 	
