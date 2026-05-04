@@ -12,11 +12,11 @@ import { text } from "@fortawesome/fontawesome-svg-core"
 //============== ARRAYS ================
 
 const INPUT_DATA = [
-    { id: 1, name: "usuario", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text" },
-    { id: 2, name: "nome", label: "Nome Completo", placeholder: "Digite seu nome...", type: "text" },
-    { id: 3, name: "email", label: "E-mail", placeholder: "Digite seu e-mail...", type: "email" },
-    { id: 4, name: "senha", label: "Senha", placeholder: "Digite sua senha...", type: "password" },
-    { id: 5, name: "nascimento", label: "Data de Nascimento", type: "date" },
+    { id: 1, name: "usuario", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text", required:true },
+    { id: 2, name: "nome", label: "Nome Completo", placeholder: "Digite seu nome...", type: "text", required:true },
+    { id: 3, name: "email", label: "E-mail", placeholder: "Digite seu e-mail...", type: "email", required:true },
+    { id: 4, name: "senha", label: "Senha", placeholder: "Digite sua senha...", type: "password", required:true },
+    { id: 5, name: "nascimento", label: "Data de Nascimento", type: "date", required:true },
 ]
 
 const GENEROS_DATA = [
@@ -126,6 +126,7 @@ function Cadastro() {
                                         value={form[input.name]}
                                         onChange={handleChange}
                                         type={input.type}
+                                        required={input.required}
                                     />
                                 </div>
                             ))}
@@ -146,18 +147,23 @@ function Cadastro() {
                                 ))}
                             </div>
                         </div>
+                        <div className="down-cadastro">
                         <Button
                             text="Criar Conta"
                             type="submit"
                         />
+                        <div className="link-login">
+                            <p>Já tem conta?</p>
+                            <a className="link-cadastro" href="/login">Fazer Login</a>
+                        </div>
+                        </div>
+                        
                     </form>
                 </div>
 
 
 
 
-                <p>Já tem conta?</p>
-                <a className="link-cadastro" href="/login">Fazer Login</a>
             </main>
             <footer className="footer-cadastro">
 

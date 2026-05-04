@@ -37,17 +37,26 @@ body{
 }
 
 .input{
-    width: 45rem;
+    width: 35rem;
 }
 
 .main-cadastro{
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 85.5vh;
 }
 
 .generos-favoritos{
     padding-left: 3rem;
+}
+
+.generos-favoritos p{
+    padding-left: 2rem;
+}
+
+.generos-favoritos h4{
+    padding-left: 2rem;
 }
 
 .generos-container {
@@ -95,4 +104,24 @@ body{
     border: 1px solid #242424;
     width: 90%;
     border-radius: 8px;
+}
+
+.footer-cadastro{
+    background-color: #4D8ED0;
+}
+
+.link-login{
+    display: flex;
+    gap: 8px;
+}
+
+.link-login a{
+    color: #4f8cff;
+}
+
+.down-cadastro{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

@@ -96,10 +96,12 @@ function Login() {
                         <Input
                             label={"E-mail"}
                             value={email}
+                            type={"email"}
                             placeholder={"Digite seu e-mail"}
                             onChange={(e) =>{ 
                                 setEmail(e.target.value)
                                 setErro("")}}
+                                required={true}
                             
                         />
 
@@ -114,6 +116,7 @@ function Login() {
                                     setSenha(e.target.value)
                                     setErro("")
                                 }}
+                                required={true}
                             />
                             <a className="esqueci-senha" href="/recuperarSenha">Esqueci minha senha</a>
                         </div>
