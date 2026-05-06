@@ -11,7 +11,7 @@ module.exports = {
         connection: {
             host: "localhost",
             user: "root",
-            password: "SUA_SENHA",
+            password: "12345678",
             database: "db_conecta_book",
             port: 3306,
             charset: 'utf8mb4'
