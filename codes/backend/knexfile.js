@@ -13,7 +13,7 @@ module.exports = {
             user: "root",
             password: "12345678",
             database: "db_conecta_book",
-            port: 3306,
+            port: 8080,
             charset: 'utf8mb4'
         },
         migrations: {
