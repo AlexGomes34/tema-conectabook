@@ -8,7 +8,7 @@ import Input from "../../components/input"
 import "./style.css"
 import Header from "../../components/header"
 
-const CLUBES_DATA = [
+// const CLUBES_DATA = [
     {
         id: 1,
         nome: "Clube Semideuses",
