@@ -51,43 +51,43 @@ import Header from "../../components/header"
     }
 ]
 
-const CLUBE_MEMBRO = [
-    {
-        id: 1,
-        nome: "Clube Semideuses",
-        genero: "Aventura",
-        quantiaMembros: 760,
-        sobre: "Um clube de leitura para fãs de mitologia e aventura, explorando histórias épicas e debatendo teorias sobre heróis e deuses.",
-        foto: fotoClube1
-    },
-    {
-        id: 2,
-        nome: "Páginas & Café",
-        genero: "Romance",
-        quantiaMembros: 540,
-        sobre: "Para quem ama histórias emocionantes acompanhadas de um bom café. Leituras leves, românticas e cheias de sentimento.",
-        foto: fotoClube1
-    }
-]
+// const CLUBE_MEMBRO = [
+//     {
+//         id: 1,
+//         nome: "Clube Semideuses",
+//         genero: "Aventura",
+//         quantiaMembros: 760,
+//         sobre: "Um clube de leitura para fãs de mitologia e aventura, explorando histórias épicas e debatendo teorias sobre heróis e deuses.",
+//         foto: fotoClube1
+//     },
+//     {
+//         id: 2,
+//         nome: "Páginas & Café",
+//         genero: "Romance",
+//         quantiaMembros: 540,
+//         sobre: "Para quem ama histórias emocionantes acompanhadas de um bom café. Leituras leves, românticas e cheias de sentimento.",
+//         foto: fotoClube1
+//     }
+// ]
 
-const CLUBE_ADM = [
-    {
-        id: 4,
-        nome: "Universo Fantástico",
-        genero: "Fantasia",
-        quantiaMembros: 890,
-        sobre: "Dragões, magia e mundos incríveis. Aqui mergulhamos em universos fantásticos e debatemos teorias sobre sagas famosas.",
-        foto: fotoClube1
-    },
-    {
-        id: 5,
-        nome: "Leitores Críticos",
-        genero: "Clássicos",
-        quantiaMembros: 430,
-        sobre: "Focado em grandes obras da literatura mundial, com discussões profundas e análises críticas.",
-        foto: fotoClube1
-    }
-]
+// const CLUBE_ADM = [
+//     {
+//         id: 4,
+//         nome: "Universo Fantástico",
+//         genero: "Fantasia",
+//         quantiaMembros: 890,
+//         sobre: "Dragões, magia e mundos incríveis. Aqui mergulhamos em universos fantásticos e debatemos teorias sobre sagas famosas.",
+//         foto: fotoClube1
+//     },
+//     {
+//         id: 5,
+//         nome: "Leitores Críticos",
+//         genero: "Clássicos",
+//         quantiaMembros: 430,
+//         sobre: "Focado em grandes obras da literatura mundial, com discussões profundas e análises críticas.",
+//         foto: fotoClube1
+//     }
+// ]
 
 export default function Clube() {
 
