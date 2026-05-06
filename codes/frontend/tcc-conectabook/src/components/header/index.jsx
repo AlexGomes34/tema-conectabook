@@ -7,12 +7,12 @@ function Header({ fotoUser }) {
     return (
         <header className='headerPage'>
             <img className='logo' src={logo} alt="logo" />
-            <a className='a' href="#">Clube de Leitura</a>
-            <a className='a' href="#">Livros</a>
-            <a className='a' href="#">Feed</a>
-            <a className='a' href="#">Cafeteria</a>
-            <a className='a' href="#">Eventos</a>
-            <Link to={"/perfil"} className='user' href="">
+            <Link className='a' to="/clubeLeitura">Clube de Leitura</Link>
+            <Link className='a' to="/livros">Livros</Link>
+            <Link className='a' to="/feed">Feed</Link>
+            <Link className='a' to="/cafeteria">Cafeteria</Link>
+            <Link to={"/eventos"} className='a' href="">Eventos</Link>
+            <Link to={"/perfil"} className='user'>
                 <img className='fotoUser' src={fotoUser} alt="" />
             </Link>
         </header>

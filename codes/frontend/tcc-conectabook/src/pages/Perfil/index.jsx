@@ -3,10 +3,13 @@ import { useNavigate } from "react-router-dom"
 import Header from "../../components/header/index"
 import Button from "../../components/button/index"
 import Input from "../../components/input/index"
+import { Link } from "react-router-dom"
 import './style.css'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBook, faStar, faShieldHalved } from "@fortawesome/free-solid-svg-icons"
+import { faFacebook, faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons"
+import Footer from "../../components/footer"
 
 
 function Perfil() {
@@ -124,6 +127,8 @@ function Perfil() {
 
                 </div>
             </div>
+
+            <Footer/>
 
 
         </div>
