@@ -1,14 +1,14 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-.logo{
+.logo {
     height: 100px;
 }
 
-.header{
+.header {
     width: 100%;
     display: flex;
     align-items: center;
@@ -19,12 +19,19 @@
     font-weight: 500;
 }
 
-a{
+.headerPage {
+    background-color: #4D8ED0;
+    display: flex;
+    justify-content: space-between;
+    padding-inline: 3rem;
+}
+
+a {
     text-decoration: none;
     color: #fafafa;
 }
 
-.a{
+.a {
     height: 100px;
     width: 150px;
     display: flex;
@@ -33,15 +40,27 @@ a{
     transition: background-color 0.5s ease;
 }
 
-.a:hover{
+.user {
+    display: flex;
+    align-items: center;
+}
+
+.a:hover {
     background-color: #1D74AA;
     transform: scale(1);
 }
 
-.user{
+.user {
     transition: 0.5s ease;
 }
 
-.user:hover{
+.fotoUser {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user:hover {
     transform: scale(1.1);
 }

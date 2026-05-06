@@ -1,0 +1,53 @@
+.up-perfil {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-perfil {
+    width: 30rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 2rem;
+    border: 1px solid #eeecec;
+    border-radius: 8px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.img-user {
+    border-radius: 50%;
+    object-fit: cover;
+    height: 10rem;
+    width: 10rem;
+}
+
+.info-perfil {
+    display: flex;
+    align-items: center;
+    width: 20rem;
+    gap: 1.5rem;
+}
+
+.informacoes-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.icone-perfil {
+    height: 2rem;
+    width: auto;
+    background-color: aliceblue;
+}
+
+.right-perfil {
+    width: 60vw;
+    background-color: aqua;
+}
+
+.down-perfil {
+    display: flex;
+    justify-content: center;
+    padding-inline: 3rem;
+    gap: 2rem;
+}

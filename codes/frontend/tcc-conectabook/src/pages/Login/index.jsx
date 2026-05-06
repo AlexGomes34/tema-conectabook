@@ -2,7 +2,11 @@ import Button from "../../components/button/index"
 import Input from "../../components/input/index"
 import logo from "../../assets/pngLogo.png"
 import mascote from "../../assets/mascote.png"
+import fotoJulio from "../../assets/fotoPessoa1.jpg"
+import fotoLeonardo from "../../assets/fotoPessoa2.jpg"
+import fotoRaissa from "../../assets/fotoPessoa3.jpg"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 import "./style.css"
 
@@ -22,6 +26,54 @@ function Previa({ icon, titulo, desc }) {
 
 }
 
+const USUARIOS_DATA = [
+    {
+        id: 1,
+        nome: "Julio Cesar Santana",
+        username: "JcDev",
+        email: "julio@gmail.com",
+        senha: "12345678",
+        foto: fotoJulio,
+        dataNascimento: "2000-03-27",
+        generosFavoritos: ["Horror", "Suspense"],
+        avatar: fotoJulio,
+        stats: {
+            livrosLidos: 18,
+            resenhas: 9
+        }
+    },
+    {
+        id: 2,
+        nome: "Leonardo Pedreira Da Silva",
+        username: "LeoDev",
+        email: "leonardo@gmail.com",
+        senha: "batata555",
+        foto: fotoLeonardo,
+        dataNascimento: "1998-07-15",
+        generosFavoritos: ["Ficção Científica", "Tecnologia"],
+        avatar: fotoLeonardo,
+        stats: {
+            livrosLidos: 8,
+            resenhas: 2
+        }
+    },
+    {
+        id: 3,
+        nome: "Raissa Soares Da Silva",
+        username: "RaiDev32",
+        email: "raissa@gmail.com",
+        senha: "raissa123",
+        foto: fotoRaissa,
+        dataNascimento: "2001-11-03",
+        generosFavoritos: ["Romance", "Drama"],
+        avatar: fotoRaissa,
+        stats: {
+            livrosLidos: 20,
+            resenhas: 10
+        }
+    },
+]
+
 const PREVIAS_DATA = [
     { id: 1, icon: faBook, titulo: "Explore livros", desc: "Encontre novas leituras incríveis" },
     { id: 2, icon: faPeopleGroup, titulo: "Conecte-se", desc: "Participe de clubes e discussões" },
@@ -30,6 +82,7 @@ const PREVIAS_DATA = [
 
 
 function Login() {
+    const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [senha, setSenha] = useState("")
     const [erro, setErro] = useState("")
@@ -55,6 +108,21 @@ function Login() {
         setLoading(true)
 
         try {
+
+            await new Promise(resolve => setTimeout(resolve, 2000))
+
+            const user = USUARIOS_DATA.find(
+                (u) => u.email === email && u.senha === senha
+            )
+
+            if (!user) {
+                throw new Error("E-mail ou senha icorretos")
+            }
+
+            localStorage.setItem("user", JSON.stringify(user))
+
+            navigate("/feed")
+
             console.log("Enviando Dados...")
             console.log("E-mail:", email)
             console.log("Senha", senha)
@@ -62,7 +130,7 @@ function Login() {
             await new Promise(resolve => setTimeout(resolve, 2000))
         } catch (error) {
             setErro("Erro ao fazer login")
-        } finally{
+        } finally {
             setLoading(false)
         }
 
@@ -98,11 +166,12 @@ function Login() {
                             value={email}
                             type={"email"}
                             placeholder={"Digite seu e-mail"}
-                            onChange={(e) =>{ 
+                            onChange={(e) => {
                                 setEmail(e.target.value)
-                                setErro("")}}
-                                required={true}
-                            
+                                setErro("")
+                            }}
+                            required={true}
+
                         />
 
 
@@ -123,7 +192,7 @@ function Login() {
 
                         <div className="button-login">
                             <Button
-                                text={loading? "Entrando...":"Entrar"}
+                                text={loading ? "Entrando..." : "Entrar"}
                                 type="submit"
                                 disabled={loading}
                             />

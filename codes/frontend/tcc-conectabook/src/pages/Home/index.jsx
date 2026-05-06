@@ -119,7 +119,7 @@ function Home() {
 
 
           <div className='buttons'>
-            <Button text="Criar Conta" onClick={() => alert("Clicou!")} />
+            <Button text="Criar Conta" onClick={() => navigate("/cadastro")} />
             <Button text="Fazer Login" onClick={() => navigate('/login')} />
           </div>
         </div>

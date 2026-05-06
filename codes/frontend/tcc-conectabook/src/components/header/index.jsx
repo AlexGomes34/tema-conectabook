@@ -1,10 +1,10 @@
 import './header.css'
 import logo from '../../assets/logo.png';
-import user from '../../assets/user.png';
+import { Link } from 'react-router-dom';
 
-function Header (){
+function Header({ fotoUser }) {
 
-    return(
+    return (
         <header className='headerPage'>
             <img className='logo' src={logo} alt="logo" />
             <a className='a' href="#">Clube de Leitura</a>
@@ -12,7 +12,9 @@ function Header (){
             <a className='a' href="#">Feed</a>
             <a className='a' href="#">Cafeteria</a>
             <a className='a' href="#">Eventos</a>
-            <a className='user' href=""><img src={user} alt="" /></a>
+            <Link to={"/perfil"} className='user' href="">
+                <img className='fotoUser' src={fotoUser} alt="" />
+            </Link>
         </header>
     )
 }

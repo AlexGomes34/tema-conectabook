@@ -1,0 +1,131 @@
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import Header from "../../components/header/index"
+import Button from "../../components/button/index"
+import Input from "../../components/input/index"
+import './style.css'
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faBook, faStar, faShieldHalved } from "@fortawesome/free-solid-svg-icons"
+
+
+function Perfil() {
+
+    const [formData, setFormData] = useState({
+    username: "",
+    nome: "",
+    email: "",
+    senha: "",
+    nascimento: ""
+})
+
+    const INPUT_DATA = [
+        { id: 1, name: "username", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text", required: true },
+        { id: 2, name: "nome", label: "Nome Completo", placeholder: "Digite seu nome...", type: "text", required: true },
+        { id: 3, name: "email", label: "E-mail", placeholder: "Digite seu e-mail...", type: "email", required: true },
+        { id: 4, name: "senha", label: "Senha", placeholder: "Digite sua senha...", type: "password", required: true },
+        { id: 5, name: "dataNascimento", label: "Data de Nascimento", type: "date", required: true },
+    ]
+
+    const [user, setUser] = useState(null)
+
+    useEffect(() => {
+        const userStorage = JSON.parse(localStorage.getItem("user"))
+
+        if(userStorage){
+            setUser(userStorage)
+        
+
+        setFormData({
+            username: userStorage.username || "",
+            nome: userStorage.nome || "",
+            email:userStorage.email || "",
+            senha:userStorage.senha || "",
+            dataNascimento: userStorage.dataNascimento || ""
+        })
+    
+    }
+    }, [])
+
+    function handleChange(e) {
+    const { name, value } = e.target
+
+    setFormData((prev) => ({
+        ...prev,
+        [name]: value
+    }))
+}
+
+    return (
+        <div>
+            <Header
+                fotoUser={user?.foto}
+            />
+            <div className="up-perfil">
+                <h1>Perfil</h1>
+                <Button
+                    text={"Editar Perfil"} />
+            </div>
+
+            <div className="down-perfil">
+                <div className="left-perfil">
+                    <img className="img-user" src={user?.foto} alt="Foto do usuário" />
+                    <h2>{user?.nome}</h2>
+                    <p>@{user?.username}</p>
+                    <div className="informacoes-perfil">
+                        <div className="info-perfil">
+                            <FontAwesomeIcon className="icone-perfil" icon={faBook} />
+                            <div className="livros-lido-text">
+                                <p>{user?.stats.livrosLidos}</p>
+                                <p>Livros Lidos</p>
+                            </div>
+                        </div>
+
+                        <div className="info-perfil">
+                            <FontAwesomeIcon className="icone-perfil" icon={faStar} />
+                            <div className="livros-lido-text">
+                                <p>{user?.stats.resenhas}</p>
+                                <p>Resenhas Publicadas</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div className="right-perfil">
+                    <h2>Olá {user?.nome}</h2>
+                    <p>Bem vindo á sua conta ConectaBook.</p>
+                    <br />
+                    <div className="inputs-perfil">
+                        {INPUT_DATA.map((input) => (
+                            <div className="input">
+                                <Input
+                                    name={input.name}
+                                    label={input.label}
+                                    placeholder={input.placeholder}
+                                    value={formData[input.name]}
+                                    onChange={handleChange}
+                                    type={input.type}
+                                    required={input.required}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                    <div className="seguranca">
+                        <FontAwesomeIcon icon={faShieldHalved} />
+                        <div className="seguranca-text">
+                            <p>Seus dados estão seguros</p>
+                            <p>Não compartilhe suas informações com terceiros</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    )
+
+}
+
+export default Perfil
