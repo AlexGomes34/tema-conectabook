@@ -9,16 +9,12 @@ module.exports = {
     development: {
         client: 'mysql2',
         connection: {
-            host: "localhost",
+            host: "127.0.0.1",
             user: "root",
             password: "12345678",
             database: "db_conecta_book",
-            port: 8080,
+            port: 3306, // CORRIGIDO: Porta do MySQL é 3306
             charset: 'utf8mb4'
-        },
-        migrations: {
-            tableName: "knex_migrations",
-            directory: "./database/migrations", 
         }
     }
 };

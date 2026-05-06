@@ -12,15 +12,17 @@ const db = require('../../database/connection');
 //RETORNA TODOS OS USUARIOS DO BANCO
 const getSelectAllUsers = async function () {
     try {
-        let sql = `select * from tbl_usuario order by id_usuario asc`
+        console.log("tentando conectar ao banco")
+        let sql = `select * from tbl_usuario;`
         let result = await db.raw(sql)
+        console.log("banco_respondeu")
 
-        // Retorna apenas a lista de dados (índice 0)
         if (result && result[0].length > 0)
             return result[0]
         else
             return false
     }catch(error){
+        console.log("erro de conexão", error)
         return false
     }
 }
@@ -41,36 +43,38 @@ const getSelectByIdUser = async function (id) {
         return false
     }
 }
-
-//INSERE UM USUARIO DENTRO DO BANCO
 const setInsertUser = async function (usuario) {
     try {
+        // CORREÇÃO: Usando data_nascimento (com underline) para bater com a Controller/Postman
+        const foto = usuario.foto_perfil ? `'${usuario.foto_perfil}'` : "NULL";
+        const nascimento = usuario.data_nascimento ? `'${usuario.data_nascimento}'` : "NULL";
+
         let sql = `insert into tbl_usuario (
                         nome,
-                        nomeUsuario,
+                        nome_usuario,
                         email,
                         senha,
                         data_nascimento,
                         foto_perfil
                     ) values (
                         '${usuario.nome}',
-                        '${usuario.nomeUsuario}',
+                        '${usuario.nome_usuario}',
                         '${usuario.email}',
                         '${usuario.senha}',
-                        '${usuario.dataNascimento}',
-                        '${usuario.fotoPerfil}'
+                        ${nascimento},
+                        ${foto}
                     )`
         
-        let result = await db.raw(sql)
+        let result = await db.raw(sql);
 
-        // Em inserts, o índice 0 contém informações sobre a linha inserida
         if(result && result[0].affectedRows > 0)
-            return true
+            return true;
         else
-            return false
+            return false;
 
-    }catch(error){
-        return false
+    } catch(error) {
+        console.log("ERRO AO INSERIR:", error.sqlMessage);
+        return false;
     }
 }
 
@@ -79,7 +83,7 @@ const setUpdateUser = async function (usuario) {
     try {
         let sql = `update tbl_usuario set 
                         nome = '${usuario.nome}',
-                        nomeUsuario = '${usuario.nomeUsuario}',
+                        nome_usuario = '${usuario.nome_usuario}',
                         email = '${usuario.email}',
                         senha = '${usuario.senha}',
                         data_nascimento = '${usuario.dataNascimento}',

@@ -6,24 +6,26 @@
  * Versão: 1.1
  *******************************************************************************************/
 
-const usuarioDAO = require("../../model/DAO/usuarioDAO.js");
+const usuarioDAO = require("../../model/DAO/usuario.js");
 const messages = require("../modulo/config_messages.js");
 
 // GET - Listar todos os usuários
 const listarUsuarios = async function() {
     try {
-        let result = await usuarioDAO.getSelectAllUsers();
-        
-        // Agora o result já é o array de usuários ou false
-        if (result) {
-            let responseData = Object.assign({}, messages.HEADER); 
-            responseData.status = messages.SUCCESS_REQUEST.status;
-            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-            responseData.response = result; // Atribui direto o array vindo do DAO
-            return responseData;
-        } else {
-            return messages.ERROR_NOT_FOUND;
-        }
+        // No seu Controller (listarUsuarios)
+let result = await usuarioDAO.getSelectAllUsers();
+
+if (result) {
+    let responseData = Object.assign({}, messages.HEADER);
+    responseData.status = messages.SUCCESS_REQUEST.status;
+    responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+    // IMPORTANTE: result já é o array limpo vindo do DAO agora
+    responseData.response = result; 
+    return responseData;
+} else {
+    // Se o banco estiver vazio ou o DAO retornar false, cai aqui
+    return messages.ERROR_NOT_FOUND;
+}
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
@@ -60,17 +62,17 @@ const criarUsuario = async function(usuario, contentType) {
             return messages.ERROR_CONTENT_TYPE;
         }
 
+        // CORREÇÃO: Validando data_nascimento conforme seu JSON do Postman
         if (usuario.nome == '' || usuario.nome == undefined || 
-            usuario.nomeUsuario == '' || usuario.nomeUsuario == undefined || 
+            usuario.nome_usuario == '' || usuario.nome_usuario == undefined || 
             usuario.email == '' || usuario.email == undefined || 
             usuario.senha == '' || usuario.senha == undefined ||
-            usuario.dataNascimento == '' || usuario.dataNascimento == undefined
+            (usuario.data_nascimento == '' || usuario.data_nascimento == undefined)
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
             let result = await usuarioDAO.setInsertUser(usuario);
             
-            // O DAO agora retorna true para sucesso na inserção
             if (result) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_CREATED_ITEM.status;
