@@ -3,7 +3,7 @@
  * Projeto: ConectaBook
  * Data: 06/05/2026
  * Autor: Alex Henrique Da Cruz Gomes
- * Versão: 1.0
+ * Versão: 1.1 
  *******************************************************************************************/
 
 //CONEXÃO COM O BANCO DE DADOS
@@ -15,8 +15,9 @@ const getSelectAllUsers = async function () {
         let sql = `select * from tbl_usuario order by id_usuario asc`
         let result = await db.raw(sql)
 
-        if (Array.isArray(result))
-            return result
+        // Retorna apenas a lista de dados (índice 0)
+        if (result && result[0].length > 0)
+            return result[0]
         else
             return false
     }catch(error){
@@ -30,13 +31,14 @@ const getSelectByIdUser = async function (id) {
         let sql = `select * from tbl_usuario where id_usuario = ${id}`
         let result = await db.raw(sql)
 
-        if(Array.isArray(result))
-            return result
+        // Retorna o índice 0 (dados)
+        if(result && result[0].length > 0)
+            return result[0]
         else
             return false
 
     }catch(error){
-        return error
+        return false
     }
 }
 
@@ -61,13 +63,14 @@ const setInsertUser = async function (usuario) {
         
         let result = await db.raw(sql)
 
-        if(Array.isArray(result))
-            return result
+        // Em inserts, o índice 0 contém informações sobre a linha inserida
+        if(result && result[0].affectedRows > 0)
+            return true
         else
             return false
 
     }catch(error){
-        return error
+        return false
     }
 }
 
@@ -85,13 +88,13 @@ const setUpdateUser = async function (usuario) {
         
         let result = await db.raw(sql)
 
-        if(Array.isArray(result))
-            return result
+        if(result && result[0].affectedRows > 0)
+            return true
         else
             return false
 
     }catch(error){
-        return error
+        return false
     }
 }
 
@@ -101,13 +104,13 @@ const setDeleteUser = async function (id) {
         let sql = `delete from tbl_usuario where id_usuario = ${id}`
         let result = await db.raw(sql)
 
-        if(Array.isArray(result))
-            return result
+        if(result && result[0].affectedRows > 0)
+            return true
         else
             return false
 
     }catch(error){
-        return error
+        return false
     }
     
 }

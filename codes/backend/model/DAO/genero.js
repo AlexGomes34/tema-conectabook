@@ -1,103 +1,92 @@
 /*******************************************************************************************
- * Objetivo: Arquivo responsável pela realização do CRUD de generos no Banco de Dados MySQL
+ * Objetivo: Arquivo responsável pela realização do CRUD de gêneros no Banco de Dados MySQL
  * Projeto: ConectaBook
  * Data: 06/05/2026
  * Autor: Alex Henrique Da Cruz Gomes
- * Versão: 1.0
+ * Versão: 1.1 (Ajustado para retornar apenas o índice [0])
  *******************************************************************************************/
 
-//CONEXÃO COM O BANCO DE DADOS
+// CONEXÃO COM O BANCO DE DADOS
 const db = require('../../database/connection');
 
-//RETORNA TODOS OS GENEROS DO BANCO
+// RETORNA TODOS OS GÊNEROS DO BANCO
 const getSelectAllGenres = async function () {
     try {
         let sql = `select * from tbl_genero order by id_genero asc`
         let result = await db.raw(sql)
 
-        if (Array.isArray(result))
-            return result
+        // Retorna apenas a lista de dados (índice 0)
+        if (result && result[0].length > 0)
+            return result[0]
         else
             return false
-    }catch(error){
+    } catch (error) {
         return false
     }
 }
 
-//RETORNA GENERO PELO ID DO BANCO
+// RETORNA GÊNERO PELO ID
 const getSelectByIdGenre = async function (id) {
     try {
         let sql = `select * from tbl_genero where id_genero = ${id}`
         let result = await db.raw(sql)
 
-        if(Array.isArray(result))
-            return result
+        // Retorna o primeiro registro do índice 0
+        if (result && result[0].length > 0)
+            return result[0]
         else
             return false
-
-    }catch(error){
-        return error
+    } catch (error) {
+        return false
     }
 }
 
-//INSERE UM GENERO DENTRO DO BANCO
+// INSERE UM GÊNERO NO BANCO
 const setInsertGenre = async function (genero) {
     try {
-        let sql = `insert into tbl_genero (
-                        nome,
-                        descricao
-                    ) values (
-                        '${genero.nome}',
-                        '${genero.descricao}'
-                    )`
+        let sql = `insert into tbl_genero (nome) values ('${genero.nome}')`
         
         let result = await db.raw(sql)
 
-        if(Array.isArray(result))
-            return result
+        // Verifica se a linha foi afetada no índice 0
+        if (result && result[0].affectedRows > 0)
+            return true
         else
             return false
-
-    }catch(error){
-        return error
+    } catch (error) {
+        return false
     }
 }
 
-//ATUALIZA UM GENERO DENTRO DO BANCO
+// ATUALIZA UM GÊNERO NO BANCO
 const setUpdateGenre = async function (genero) {
     try {
-        let sql = `update tbl_genero set 
-                        nome = '${genero.nome}',
-                        nomeUsuario = '${genero.descricao}'
-                    where id_genero = ${genero.id}`
+        let sql = `update tbl_genero set nome = '${genero.nome}' where id_genero = ${genero.id}`
         
         let result = await db.raw(sql)
 
-        if(Array.isArray(result))
-            return result
+        if (result && result[0].affectedRows > 0)
+            return true
         else
             return false
-
-    }catch(error){
-        return error
+    } catch (error) {
+        return false
     }
 }
 
-//DELETA UM GENERO DENTRO DO BANCO
+// DELETA UM GÊNERO NO BANCO
 const setDeleteGenre = async function (id) {
     try {
         let sql = `delete from tbl_genero where id_genero = ${id}`
         let result = await db.raw(sql)
 
-        if(Array.isArray(result))
-            return result
+        if (result && result[0].affectedRows > 0)
+            return true
         else
             return false
-
-    }catch(error){
-        return error
+    } catch (error) {
+        return false
     }
-    
 }
 
 module.exports = {

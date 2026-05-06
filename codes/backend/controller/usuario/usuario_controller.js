@@ -3,7 +3,7 @@
  * Projeto: ConectaBook
  * Data: 06/05/2026
  * Autor: Alex Henrique Da Cruz Gomes
- * Versão: 1.0
+ * Versão: 1.1
  *******************************************************************************************/
 
 const usuarioDAO = require("../../model/DAO/usuarioDAO.js");
@@ -14,19 +14,15 @@ const listarUsuarios = async function() {
     try {
         let result = await usuarioDAO.getSelectAllUsers();
         
+        // Agora o result já é o array de usuários ou false
         if (result) {
-            if (result[0].length > 0) {
-                // Montando o HEADER de sucesso
-                let responseData = Object.assign({}, messages.HEADER); 
-                responseData.status = messages.SUCCESS_REQUEST.status;
-                responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-                responseData.response = result[0];
-                return responseData;
-            } else {
-                return messages.ERROR_NOT_FOUND;
-            }
+            let responseData = Object.assign({}, messages.HEADER); 
+            responseData.status = messages.SUCCESS_REQUEST.status;
+            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+            responseData.response = result; // Atribui direto o array vindo do DAO
+            return responseData;
         } else {
-            return messages.ERROR_INTERNAL_SERVER_MODEL;
+            return messages.ERROR_NOT_FOUND;
         }
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
@@ -35,26 +31,22 @@ const listarUsuarios = async function() {
 
 // GET id - Listar usuário pelo ID
 const listarUsuarioID = async function(id) {
-    // Validação manual de ID
     if (id == '' || id == undefined || isNaN(id)) {
-        return messages.ERROR_REQUIRED_FIELDS; // Ou criar um ERROR_INVALID_ID se preferir
+        return messages.ERROR_REQUIRED_FIELDS;
     }
 
     try {
         let result = await usuarioDAO.getSelectByIdUser(id);
 
         if (result) {
-            if (result[0].length > 0) {
-                let responseData = Object.assign({}, messages.HEADER);
-                responseData.status = messages.SUCCESS_REQUEST.status;
-                responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-                responseData.response = result[0][0]; 
-                return responseData;
-            } else {
-                return messages.ERROR_NOT_FOUND;
-            }
+            let responseData = Object.assign({}, messages.HEADER);
+            responseData.status = messages.SUCCESS_REQUEST.status;
+            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+            // O DAO já retorna o array de dados filtrado, pegamos a primeira posição
+            responseData.response = result[0]; 
+            return responseData;
         } else {
-            return messages.ERROR_INTERNAL_SERVER_MODEL;
+            return messages.ERROR_NOT_FOUND;
         }
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
@@ -64,12 +56,10 @@ const listarUsuarioID = async function(id) {
 // POST - Criar novo usuário
 const criarUsuario = async function(usuario, contentType) {
     try {
-        // Validação de Content-Type
         if (String(contentType).toLowerCase() !== 'application/json') {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        // Validação manual de campos obrigatórios[cite: 1]
         if (usuario.nome == '' || usuario.nome == undefined || 
             usuario.nomeUsuario == '' || usuario.nomeUsuario == undefined || 
             usuario.email == '' || usuario.email == undefined || 
@@ -80,6 +70,7 @@ const criarUsuario = async function(usuario, contentType) {
         } else {
             let result = await usuarioDAO.setInsertUser(usuario);
             
+            // O DAO agora retorna true para sucesso na inserção
             if (result) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_CREATED_ITEM.status;
@@ -115,7 +106,7 @@ const atualizarUsuario = async function(usuario, contentType, id) {
         } else {
             let buscarId = await usuarioDAO.getSelectByIdUser(id);
             
-            if (buscarId && buscarId[0].length > 0) {
+            if (buscarId) {
                 usuario.id = id; 
                 let result = await usuarioDAO.setUpdateUser(usuario);
                 
@@ -146,7 +137,7 @@ const excluirUsuario = async function(id) {
     try {
         let buscarId = await usuarioDAO.getSelectByIdUser(id);
         
-        if (buscarId && buscarId[0].length > 0) {
+        if (buscarId) {
             let result = await usuarioDAO.setDeleteUser(id);
             
             if (result) {
