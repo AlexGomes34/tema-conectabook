@@ -100,7 +100,7 @@ const atualizarUsuario = async function(usuario, contentType, id) {
         }
 
         if (usuario.nome == '' || usuario.nome == undefined ||
-            usuario.nomeUsuario == '' || usuario.nomeUsuario == undefined ||
+            usuario.nome_usuario == '' || usuario.nome_usuario == undefined ||
             usuario.email == '' || usuario.email == undefined ||
             usuario.senha == '' || usuario.senha == undefined
         ) {

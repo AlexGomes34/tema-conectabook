@@ -86,8 +86,8 @@ const setUpdateUser = async function (usuario) {
                         nome_usuario = '${usuario.nome_usuario}',
                         email = '${usuario.email}',
                         senha = '${usuario.senha}',
-                        data_nascimento = '${usuario.dataNascimento}',
-                        foto_perfil = '${usuario.fotoPerfil}'
+                        data_nascimento = '${usuario.data_nascimento}',
+                        foto_perfil = '${usuario.foto_perfil}'
                     where id_usuario = ${usuario.id}`
         
         let result = await db.raw(sql)
