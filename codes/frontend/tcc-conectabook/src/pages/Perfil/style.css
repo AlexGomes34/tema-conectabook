@@ -1,6 +1,8 @@
 .up-perfil {
     display: flex;
     justify-content: space-between;
+    margin: 2rem;
+    padding-inline: 2rem;
 }
 
 .left-perfil {
@@ -37,12 +39,29 @@
 .icone-perfil {
     height: 2rem;
     width: auto;
-    background-color: aliceblue;
 }
 
 .right-perfil {
     width: 60vw;
-    background-color: aqua;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eeecec;
+    border-radius: 8px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.inputs-perfil{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.apresentacao-perfil{
+    padding: 2rem;
+}
+
+.input-perfil{
+    width: 35rem;
 }
 
 .down-perfil {
@@ -50,4 +69,24 @@
     justify-content: center;
     padding-inline: 3rem;
     gap: 2rem;
+}
+
+.seguranca{
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin: 1rem;
+    gap: 1.5rem;
+    border: 1px solid #242424;
+    border-radius: 8px;
+    background-color: #e8f1ff;
+}
+
+.seguranca h4{
+    color: #1976d2;
+}
+
+.seguranca p{
+    color: #242424;
+    font-size: 0.8rem;
 }

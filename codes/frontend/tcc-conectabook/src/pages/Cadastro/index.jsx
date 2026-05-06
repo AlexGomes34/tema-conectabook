@@ -5,18 +5,20 @@ import logo from "../../assets/logo.png"
 import "./style.css"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
+import { faCircleUser, faUser, faEnvelope, faLock, faCalendar } from "@fortawesome/free-solid-svg-icons"
 import Button from "../../components/button"
-import { text } from "@fortawesome/fontawesome-svg-core"
+import Footer from "../../components/footer"
 
 //============== ARRAYS ================
 
 const INPUT_DATA = [
-    { id: 1, name: "usuario", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text", required:true },
-    { id: 2, name: "nome", label: "Nome Completo", placeholder: "Digite seu nome...", type: "text", required:true },
-    { id: 3, name: "email", label: "E-mail", placeholder: "Digite seu e-mail...", type: "email", required:true },
-    { id: 4, name: "senha", label: "Senha", placeholder: "Digite sua senha...", type: "password", required:true },
-    { id: 5, name: "nascimento", label: "Data de Nascimento", type: "date", required:true },
+    { id: 1, name: "usuario", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text", required:true, faIcon:faUser },
+    { id: 2, name: "nome", label: "Nome Completo", placeholder: "Digite seu nome...", type: "text", required:true, faIcon:faUser },
+    { id: 3, name: "email", label: "E-mail", placeholder: "Digite seu e-mail...", type: "email", required:true,faIcon:faEnvelope },
+    { id: 5, name: "nascimento", label: "Data de Nascimento", type: "date", required:true, faIcon:faCalendar },
+    { id: 4, name: "senha", label: "Senha", placeholder: "Digite sua senha...", type: "password", required:true, faIcon:faLock },
+    { id: 5, name: "confirmarSenha", label: "Confirme sua Senha", placeholder: "Confirme sua Senha...", type: "password", required:true, faIcon:faLock },
+    
 ]
 
 const GENEROS_DATA = [
@@ -121,6 +123,7 @@ function Cadastro() {
                                 <div className="input">
                                     <Input
                                         name={input.name}
+                                        faIcon={input.faIcon}
                                         label={input.label}
                                         placeholder={input.placeholder}
                                         value={form[input.name]}
@@ -160,14 +163,8 @@ function Cadastro() {
                         
                     </form>
                 </div>
-
-
-
-
             </main>
-            <footer className="footer-cadastro">
-
-            </footer>
+            <Footer/>
         </div>
     )
 }

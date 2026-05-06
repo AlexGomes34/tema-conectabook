@@ -1,11 +1,12 @@
 import image from '../../assets/image.png';
 import Button from '../../components/button';
+import Footer from '../../components/footer';
 import hpCapa from '../../assets/hpCapa.png';
 import fotoPessoa from '../../assets/fotoPessoa.jpg';
 import livro from '../../assets/livro.jpg';
 import eventos from '../../assets/eventos.jpg'
 import cafeteria from '../../assets/cafeteria.jpeg'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import HeaderHome from './headerHome';
 
@@ -19,9 +20,9 @@ const CLUBES_DATA = [
 ]
 
 const EVENTOS_DATA = [
-  { id:1, nome: "Bienal de São Paulo", image: eventos },
-  { id:2,nome: "Bienal de São Paulo", image: eventos },
-  { id:3,nome: "Bienal de São Paulo", image: eventos },
+  { id: 1, nome: "Bienal de São Paulo", image: eventos },
+  { id: 2, nome: "Bienal de São Paulo", image: eventos },
+  { id: 3, nome: "Bienal de São Paulo", image: eventos },
 ]
 
 const CAFETERIA_DATA = [
@@ -205,9 +206,7 @@ function Home() {
         </div>
       </section>
 
-      <footer>
-        <p>© 2026 ConectaBook — 2026</p>
-      </footer>
+      <Footer/>
     </div>
   )
 }

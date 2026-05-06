@@ -12,12 +12,12 @@ import { faBook, faStar, faShieldHalved } from "@fortawesome/free-solid-svg-icon
 function Perfil() {
 
     const [formData, setFormData] = useState({
-    username: "",
-    nome: "",
-    email: "",
-    senha: "",
-    nascimento: ""
-})
+        username: "",
+        nome: "",
+        email: "",
+        senha: "",
+        nascimento: ""
+    })
 
     const INPUT_DATA = [
         { id: 1, name: "username", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text", required: true },
@@ -32,29 +32,29 @@ function Perfil() {
     useEffect(() => {
         const userStorage = JSON.parse(localStorage.getItem("user"))
 
-        if(userStorage){
+        if (userStorage) {
             setUser(userStorage)
-        
 
-        setFormData({
-            username: userStorage.username || "",
-            nome: userStorage.nome || "",
-            email:userStorage.email || "",
-            senha:userStorage.senha || "",
-            dataNascimento: userStorage.dataNascimento || ""
-        })
-    
-    }
+
+            setFormData({
+                username: userStorage.username || "",
+                nome: userStorage.nome || "",
+                email: userStorage.email || "",
+                senha: userStorage.senha || "",
+                dataNascimento: userStorage.dataNascimento || ""
+            })
+
+        }
     }, [])
 
     function handleChange(e) {
-    const { name, value } = e.target
+        const { name, value } = e.target
 
-    setFormData((prev) => ({
-        ...prev,
-        [name]: value
-    }))
-}
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }))
+    }
 
     return (
         <div>
@@ -93,12 +93,15 @@ function Perfil() {
                 </div>
 
                 <div className="right-perfil">
-                    <h2>Olá {user?.nome}</h2>
-                    <p>Bem vindo á sua conta ConectaBook.</p>
+                    <div className="apresentacao-perfil">
+                        <h2>Olá, {user?.nome}</h2>
+                        <p>Bem vindo á sua conta ConectaBook.</p>
+                    </div>
+
                     <br />
                     <div className="inputs-perfil">
                         {INPUT_DATA.map((input) => (
-                            <div className="input">
+                            <div className="input-perfil">
                                 <Input
                                     name={input.name}
                                     label={input.label}
@@ -112,9 +115,9 @@ function Perfil() {
                         ))}
                     </div>
                     <div className="seguranca">
-                        <FontAwesomeIcon icon={faShieldHalved} />
+                        <FontAwesomeIcon className="icone-perfil" icon={faShieldHalved} />
                         <div className="seguranca-text">
-                            <p>Seus dados estão seguros</p>
+                            <h4>Seus dados estão seguros</h4>
                             <p>Não compartilhe suas informações com terceiros</p>
                         </div>
                     </div>
