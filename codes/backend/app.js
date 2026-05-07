@@ -27,11 +27,12 @@ app.use('/v1/conectaBook/generos', generoRoutes)
 const generoUsuarioRoutes = require('./routes/genero_usuarioRoutes.js')
 app.use('/v1/conectaBook/genero-usuario', generoUsuarioRoutes)
 
+const authRoutes = require('./routes/auth_routes.js')
+app.use('/v1/conectaBook/auth', authRoutes)
+
+
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, function(){
     console.log(`Servidor rodando na porta ${PORT}...`)
 })
-
-const authRoutes = require('./routes/auth_routes.js')
-app.use('/v1/conectaBook/auth', authRoutes)
