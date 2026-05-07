@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.conectabook.screens.CadastroScreen
 import com.example.conectabook.screens.EsqueceuSenhaScreen
+import com.example.conectabook.screens.HomeScreenn
 import com.example.conectabook.screens.LoginScreen
 import com.example.conectabook.ui.theme.ConectaBookTheme
 
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ConectaBookTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CadastroScreen(
+                    HomeScreenn(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
