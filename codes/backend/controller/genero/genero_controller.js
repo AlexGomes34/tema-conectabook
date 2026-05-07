@@ -1,5 +1,5 @@
 /*******************************************************************************************
- * Objetivo: Arquivo responsável pela manipulação da camada model de usuários (Controller)
+ * Objetivo: Arquivo responsável pela manipulação da camada model de Gêneros (Controller)
  * Projeto: ConectaBook
  * Data: 06/05/2026
  * Autor: Geovanna Silva
