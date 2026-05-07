@@ -42,11 +42,21 @@ router.get('/genero/:id', cors(), async function(request, response) {
     response.status(dados.status_code).json(dados);
 });
 
-// Inserir novo interesse
+// Inserir novo RELACIONAMENTO
 router.post('/', cors(), jsonParser, async function(request, response) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
     let result = await controllerGeneroUsuario.criarGeneroUsuario(dadosBody, contentType);
+    response.status(result.status_code).json(result);
+});
+
+//Insere varios RELACIONAMENTOS
+router.post('/genero-usuario/multiplos', cors(), jsonParser, async function(request, response) {
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let result = await controllerGeneroUsuario.criarMultiplosGenerosUsuario(dadosBody, contentType);
+
     response.status(result.status_code).json(result);
 });
 

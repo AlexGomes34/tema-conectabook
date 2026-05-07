@@ -8,6 +8,7 @@
 
 //CONEXÃO COM O BANCO DE DADOS
 const db = require('../../database/connection');
+const { setInsertGenresUsers } = require('./genero_usuario');
 
 //RETORNA TODOS OS USUARIOS DO BANCO
 const getSelectAllUsers = async function () {

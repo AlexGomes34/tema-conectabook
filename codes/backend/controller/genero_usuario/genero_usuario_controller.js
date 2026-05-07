@@ -130,6 +130,38 @@ const criarGeneroUsuario = async function (dadosGeneroUsuario, contentType) {
     }
 }
 
+// POST - Criar múltiplos relacionamentos de uma vez
+const criarMultiplosGenerosUsuario = async function (dados, contentType) {
+    try {
+
+        if (String(contentType).toLowerCase() !== 'application/json') {
+            return messages.ERROR_CONTENT_TYPE;
+        }
+
+        if (
+            dados.id_usuario == '' || dados.id_usuario == undefined || isNaN(dados.id_usuario) ||
+            !Array.isArray(dados.generos) || dados.generos.length === 0
+        ) {
+            return messages.ERROR_REQUIRED_FIELDS;
+        } else {
+            
+            let result = await generoUsuarioDAO.setInsertMultiplesGenres(dados);
+
+            if (result) {
+                let responseData = Object.assign({}, messages.HEADER);
+                responseData.status = messages.SUCCESS_CREATED_ITEM.status;
+                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
+                responseData.response = messages.SUCCESS_CREATED_ITEM.message;
+                return responseData;
+            } else {
+                return messages.ERROR_INTERNAL_SERVER_MODEL;
+            }
+        }
+    } catch (error) {
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+    }
+}
+
 // PUT - Atualizar relacionamento
 const atualizarGeneroUsuario = async function (genero_usuario, contentType, id) {
     try {
@@ -207,5 +239,6 @@ module.exports = {
     listarUsuariosPorGenero,
     excluirGeneroUsuario,
     atualizarGeneroUsuario,
-    criarGeneroUsuario
+    criarGeneroUsuario,
+    criarMultiplosGenerosUsuario
 };
