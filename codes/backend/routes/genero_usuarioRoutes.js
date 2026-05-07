@@ -51,7 +51,7 @@ router.post('/', cors(), jsonParser, async function(request, response) {
 });
 
 //Insere varios RELACIONAMENTOS
-router.post('/genero-usuario/multiplos', cors(), jsonParser, async function(request, response) {
+router.post('/multiplos', cors(), jsonParser, async function(request, response) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
