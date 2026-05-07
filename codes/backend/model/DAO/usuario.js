@@ -12,17 +12,14 @@ const db = require('../../database/connection');
 //RETORNA TODOS OS USUARIOS DO BANCO
 const getSelectAllUsers = async function () {
     try {
-        console.log("tentando conectar ao banco")
         let sql = `select * from tbl_usuario;`
         let result = await db.raw(sql)
-        console.log("banco_respondeu")
 
         if (result && result[0].length > 0)
             return result[0]
         else
             return false
     }catch(error){
-        console.log("erro de conexão", error)
         return false
     }
 }
@@ -38,7 +35,6 @@ const getSelectByIdUser = async function (id) {
             return result[0]
         else
             return false
-
     }catch(error){
         return false
     }

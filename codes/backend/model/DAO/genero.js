@@ -41,27 +41,36 @@ const getSelectByIdGenre = async function (id) {
     }
 }
 
-// INSERE UM GÊNERO NO BANCO
+// INSERE UM GÊNERO
 const setInsertGenre = async function (genero) {
     try {
-        let sql = `insert into tbl_genero (nome) values ('${genero.nome}')`
+        let sql = `insert into tbl_genero (
+                        nome,
+                        descricao
+                    ) values (
+                        '${genero.nome}',
+                        '${genero.descricao}'
+                    )`
         
-        let result = await db.raw(sql)
+        let result = await db.raw(sql);
 
-        // Verifica se a linha foi afetada no índice 0
         if (result && result[0].affectedRows > 0)
-            return true
+            return true;
         else
-            return false
+            return false;
+
     } catch (error) {
-        return false
+        return false;
     }
 }
 
-// ATUALIZA UM GÊNERO NO BANCO
+// ATUALIZA UM GÊNERO
 const setUpdateGenre = async function (genero) {
     try {
-        let sql = `update tbl_genero set nome = '${genero.nome}' where id_genero = ${genero.id}`
+        let sql = `update tbl_genero set 
+                        nome = '${genero.nome}',
+                        descricao = '${genero.descricao}'
+                    where id_genero = ${genero.id}`
         
         let result = await db.raw(sql)
 
@@ -69,6 +78,7 @@ const setUpdateGenre = async function (genero) {
             return true
         else
             return false
+
     } catch (error) {
         return false
     }

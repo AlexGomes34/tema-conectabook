@@ -21,6 +21,12 @@ app.use(bodyParser.json())
 const usuarioRoutes = require('./routes/usuarioRoutes.js')
 app.use('/v1/conectaBook/usuarios', usuarioRoutes)
 
+const generoRoutes = require('./routes/generoRoutes.js')
+app.use('/v1/conectaBook/generos', generoRoutes)
+
+const generoUsuarioRoutes = require('./routes/genero_usuarioRoutes.js')
+app.use('/v1/conectaBook/genero-usuario', generoUsuarioRoutes)
+
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, function(){
