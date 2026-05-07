@@ -1,0 +1,117 @@
+.clube-acess{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: #fafafa;
+    border: 1px solid #242424;
+    border-radius: 8px;
+    width: 20rem;
+    height: 5rem;
+}
+
+.main-clube{
+    display: flex;
+    padding-bottom: 3rem;
+}
+
+.titulo-acess{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.meus-clubes{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+.clube-acess img{
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.clube-acess-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.left-clube{
+    margin: 2rem 5rem;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eeecec;
+    border-radius: 8px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+    background-color: #e8f1ff;
+    width: 25rem;
+    height: 35rem;
+    align-items: start;
+    padding: 2rem;
+    gap: 3rem;
+}
+
+.pesquisa{
+    display: flex;
+    align-items: center;
+}
+
+.pesquisa input{
+    width: 75rem;
+}
+
+.titulo-filtros{
+    display: flex;
+    justify-content: space-between;
+    padding-right: 6rem;
+}
+
+.clube-detalhe{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #242424;
+    border-radius: 8px;
+}
+
+.info-left{
+    display: flex;
+}
+
+.info-clube{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.clube-detalhe img{
+    height: 20rem;
+}
+
+.button-sobre{
+    display: flex;
+    justify-content: end;
+    padding-right: 1rem;
+}
+
+.sobre-text{
+    width: 30rem;
+}
+
+.clubes{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sobre-clube{
+    width: 40rem;
+    padding-top: 1rem;
+    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
