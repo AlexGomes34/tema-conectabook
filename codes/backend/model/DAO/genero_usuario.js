@@ -109,6 +109,23 @@ const setInsertGenresUsers = async function (generoUsuario) {
     }
 }
 
+// INSERE VARIOS RELACIONAMENTOS DE UMA VEZ
+const setInsertMultiplesGenres = async function (dados) {
+    try {
+        // Cria os blocos de valores: (id_genero, id_usuario), (id_genero, id_usuario)
+        const valores = dados.generos.map(id_genero => 
+            `(${id_genero}, ${dados.id_usuario})`
+        ).join(',');
+
+        let sql = `insert into tbl_genero_usuario (id_genero, id_usuario) values ${valores}`;
+        
+        let result = await db.raw(sql);
+        return !!(result && result[0].affectedRows > 0);
+    } catch (error) {
+        return false;
+    }
+}
+
 //ATUALIZA UM RELACIONAMENTO
 const setUpdateGenresUsers = async function (generoUsuario) {
     try {
@@ -151,6 +168,7 @@ module.exports = {
     getSelectGenresByIdUsers,
     getSelectUsersByIdGenres,
     setInsertGenresUsers,
+    setInsertMultiplesGenres,
     setUpdateGenresUsers,
     setDeleteGenresUsers
 }

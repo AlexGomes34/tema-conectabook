@@ -32,3 +32,6 @@ const PORT = process.env.PORT || 8080
 app.listen(PORT, function(){
     console.log(`Servidor rodando na porta ${PORT}...`)
 })
+
+const authRoutes = require('./routes/auth_routes.js')
+app.use('/v1/conectaBook/auth', authRoutes)

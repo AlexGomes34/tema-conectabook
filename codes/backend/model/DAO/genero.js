@@ -64,6 +64,9 @@ const setInsertGenre = async function (genero) {
     }
 }
 
+//INSERE VARIOS GENEROS
+
+
 // ATUALIZA UM GÊNERO
 const setUpdateGenre = async function (genero) {
     try {
