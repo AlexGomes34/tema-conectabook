@@ -99,6 +99,21 @@ const setUpdateUser = async function (usuario) {
     }
 }
 
+//Pega o usuario com base no email dele
+const getSelectUserByEmail = async function(email) {
+    try {
+        let sql = `select * from tbl_usuario where email = '${email}'`;
+        let result = await db.raw(sql);
+
+        if (result && result[0].length > 0)
+            return result[0];
+        else
+            return false;
+    } catch (error) {
+        return false;
+    }
+}
+
 //DELETA UM USUARIO DENTRO DO BANCO
 const setDeleteUser = async function (id) {
     try {
@@ -120,6 +135,7 @@ module.exports = {
     getSelectAllUsers,
     getSelectByIdUser,
     setInsertUser,
+    getSelectUserByEmail,
     setUpdateUser,
     setDeleteUser
 }

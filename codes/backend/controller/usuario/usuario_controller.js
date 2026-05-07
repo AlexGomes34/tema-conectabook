@@ -9,6 +9,8 @@
 const usuarioDAO = require("../../model/DAO/usuario.js");
 const messages = require("../modulo/config_messages.js");
 
+const bcrypt = require('bcrypt');
+
 // GET - Listar todos os usuários
 const listarUsuarios = async function() {
     try {
@@ -62,7 +64,7 @@ const criarUsuario = async function(usuario, contentType) {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        // CORREÇÃO: Validando data_nascimento conforme seu JSON do Postman
+        // Validação de campos obrigatórios
         if (usuario.nome == '' || usuario.nome == undefined || 
             usuario.nome_usuario == '' || usuario.nome_usuario == undefined || 
             usuario.email == '' || usuario.email == undefined || 
@@ -71,6 +73,10 @@ const criarUsuario = async function(usuario, contentType) {
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
+            
+            let senhaCriptografada = await bcrypt.hash(usuario.senha, 10);
+            usuario.senha = senhaCriptografada;
+
             let result = await usuarioDAO.setInsertUser(usuario);
             
             if (result) {
@@ -84,6 +90,7 @@ const criarUsuario = async function(usuario, contentType) {
             }
         }
     } catch (error) {
+        console.log(error); 
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
@@ -98,34 +105,34 @@ const atualizarUsuario = async function(usuario, contentType, id) {
         if (String(contentType).toLowerCase() !== 'application/json') {
             return messages.ERROR_CONTENT_TYPE;
         }
+        let buscarId = await usuarioDAO.getSelectByIdUser(id);
 
-        if (usuario.nome == '' || usuario.nome == undefined ||
-            usuario.nome_usuario == '' || usuario.nome_usuario == undefined ||
-            usuario.email == '' || usuario.email == undefined ||
-            usuario.senha == '' || usuario.senha == undefined
-        ) {
-            return messages.ERROR_REQUIRED_FIELDS;
-        } else {
-            let buscarId = await usuarioDAO.getSelectByIdUser(id);
-            
-            if (buscarId) {
-                usuario.id = id; 
-                let result = await usuarioDAO.setUpdateUser(usuario);
-                
-                if (result) {
-                    let responseData = Object.assign({}, messages.HEADER);
-                    responseData.status = messages.SUCCESS_UPDATED_ITEM.status;
-                    responseData.status_code = messages.SUCCESS_UPDATED_ITEM.status_code;
-                    responseData.response = messages.SUCCESS_UPDATED_ITEM.message;
-                    return responseData;
-                } else {
-                    return messages.ERROR_INTERNAL_SERVER_MODEL;
-                }
+        if (buscarId) {
+            if (usuario.senha && usuario.senha !== '') {
+                let senhaCriptografada = await bcrypt.hash(usuario.senha, 10);
+                usuario.senha = senhaCriptografada;
             } else {
-                return messages.ERROR_NOT_FOUND;
+                usuario.senha = buscarId[0].senha;
             }
+
+            usuario.id = id;
+
+            let result = await usuarioDAO.setUpdateUser(usuario);
+
+            if (result) {
+                let responseData = Object.assign({}, messages.HEADER);
+                responseData.status = messages.SUCCESS_UPDATED_ITEM.status;
+                responseData.status_code = messages.SUCCESS_UPDATED_ITEM.status_code;
+                responseData.response = messages.SUCCESS_UPDATED_ITEM.message;
+                return responseData;
+            } else {
+                return messages.ERROR_INTERNAL_SERVER_MODEL;
+            }
+        } else {
+            return messages.ERROR_NOT_FOUND;
         }
     } catch (error) {
+        console.log(error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
