@@ -46,6 +46,7 @@ const getSelectByIdClub = async function(id){
 // INSERE UM CLUBE NO BANCO
 const setInsertClub = async function (clube) {
     try {
+        const foto = clube.foto ? `'${clube.foto}'` : "NULL";
         let sql = `insert into tbl_clube (
                         nome,
                         sobre,
@@ -57,7 +58,7 @@ const setInsertClub = async function (clube) {
                         '${clube.nome}',
                         '${clube.sobre}',
                         '${clube.regras}',
-                        '${clube.foto}',
+                        '${foto}',
                         '${clube.id_membros}',
                         '${clube.id_genero}'
                         )`

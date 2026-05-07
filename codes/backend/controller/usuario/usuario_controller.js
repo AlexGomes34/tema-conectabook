@@ -56,15 +56,12 @@ const listarUsuarioID = async function(id) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
-
-// POST - Criar novo usuário
 const criarUsuario = async function(usuario, contentType) {
     try {
         if (String(contentType).toLowerCase() !== 'application/json') {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        // Validação de campos obrigatórios
         if (usuario.nome == '' || usuario.nome == undefined || 
             usuario.nome_usuario == '' || usuario.nome_usuario == undefined || 
             usuario.email == '' || usuario.email == undefined || 
@@ -77,13 +74,20 @@ const criarUsuario = async function(usuario, contentType) {
             let senhaCriptografada = await bcrypt.hash(usuario.senha, 10);
             usuario.senha = senhaCriptografada;
 
+            // Aqui, 'result' receberá o ID que o DAO retornar
             let result = await usuarioDAO.setInsertUser(usuario);
             
             if (result) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_CREATED_ITEM.status;
                 responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
-                responseData.response = messages.SUCCESS_CREATED_ITEM.message;
+                responseData.message = messages.SUCCESS_CREATED_ITEM.message;
+                
+                // Retornamos o ID que veio do banco
+                responseData.usuario_criado = {
+                    id: result
+                };
+
                 return responseData;
             } else {
                 return messages.ERROR_INTERNAL_SERVER_MODEL;

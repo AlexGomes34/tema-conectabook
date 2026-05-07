@@ -65,7 +65,7 @@ const setInsertUser = async function (usuario) {
         let result = await db.raw(sql);
 
         if(result && result[0].affectedRows > 0)
-            return true;
+            return result[0].insertId;
         else
             return false;
 
