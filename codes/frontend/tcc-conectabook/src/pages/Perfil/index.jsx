@@ -72,14 +72,17 @@ function Perfil() {
 
             <div className="down-perfil">
                 <div className="left-perfil">
-                    <img className="img-user" src={user?.foto} alt="Foto do usuário" />
-                    <h2>{user?.nome}</h2>
-                    <p>@{user?.username}</p>
+                    <div className="user-icon">
+                        <img className="img-user" src={user?.foto} alt="Foto do usuário" />
+                        <h2>{user?.nome}</h2>
+                        <p>@{user?.username}</p>
+                    </div>
+
                     <div className="informacoes-perfil">
                         <div className="info-perfil">
                             <FontAwesomeIcon className="icone-perfil" icon={faBook} />
                             <div className="livros-lido-text">
-                                <p>{user?.stats.livrosLidos}</p>
+                                <p className="stats-livro">{user?.stats.livrosLidos}</p>
                                 <p>Livros Lidos</p>
                             </div>
                         </div>
@@ -87,11 +90,17 @@ function Perfil() {
                         <div className="info-perfil">
                             <FontAwesomeIcon className="icone-perfil" icon={faStar} />
                             <div className="livros-lido-text">
-                                <p>{user?.stats.resenhas}</p>
+                                <p className="stats-livro">{user?.stats.resenhas}</p>
                                 <p>Resenhas Publicadas</p>
                             </div>
                         </div>
                     </div>
+
+                    <div className="excluir-conta">
+                        <Button className="button-excluir" text={"Excluir Conta"} />
+                        <p>Essa ação não pode ser desfeita</p>
+                    </div>
+
 
                 </div>
 
@@ -128,7 +137,7 @@ function Perfil() {
                 </div>
             </div>
 
-            <Footer/>
+            <Footer />
 
 
         </div>

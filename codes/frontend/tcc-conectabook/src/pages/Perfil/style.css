@@ -15,6 +15,7 @@
     border-radius: 8px;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
     height: 49rem;
+    justify-content: space-between;
 }
 
 .img-user {
@@ -22,6 +23,35 @@
     object-fit: cover;
     height: 10rem;
     width: 10rem;
+}
+
+.user-icon{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.stats-livro{
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.excluir-conta{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-excluir{
+    background-color: #fafafa;
+    color: red;
+    border: 1px solid red;
+}
+
+.button-excluir:hover{
+    background-color: red;
+    color: #fafafa;
+    border: 1px solid #fafafa;
 }
 
 .info-perfil {
@@ -72,6 +102,7 @@
     padding-inline: 3rem;
     gap: 2rem;
     min-height: 66vh;
+    padding-bottom: 3rem;
 }
 
 .seguranca{
