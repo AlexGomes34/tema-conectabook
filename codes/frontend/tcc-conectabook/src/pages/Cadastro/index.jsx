@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Input from "../../components/input"
 import logo from "../../assets/logo.png"
 import "./style.css"
@@ -9,52 +9,22 @@ import { faCircleUser, faUser, faEnvelope, faLock, faCalendar } from "@fortaweso
 import Button from "../../components/button"
 import Footer from "../../components/footer"
 
-//============== ARRAYS ================
-
 const INPUT_DATA = [
-    { id: 1, name: "usuario", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text", required:true, faIcon:faUser },
-    { id: 2, name: "nome", label: "Nome Completo", placeholder: "Digite seu nome...", type: "text", required:true, faIcon:faUser },
-    { id: 3, name: "email", label: "E-mail", placeholder: "Digite seu e-mail...", type: "email", required:true,faIcon:faEnvelope },
-    { id: 5, name: "nascimento", label: "Data de Nascimento", type: "date", required:true, faIcon:faCalendar },
-    { id: 4, name: "senha", label: "Senha", placeholder: "Digite sua senha...", type: "password", required:true, faIcon:faLock },
-    { id: 5, name: "confirmarSenha", label: "Confirme sua Senha", placeholder: "Confirme sua Senha...", type: "password", required:true, faIcon:faLock },
-    
+    { id: 1, name: "usuario", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text", required: true, faIcon: faUser },
+    { id: 2, name: "nome", label: "Nome Completo", placeholder: "Digite seu nome...", type: "text", required: true, faIcon: faUser },
+    { id: 3, name: "email", label: "E-mail", placeholder: "Digite seu e-mail...", type: "email", required: true, faIcon: faEnvelope },
+    { id: 5, name: "nascimento", label: "Data de Nascimento", type: "date", required: true, faIcon: faCalendar },
+    { id: 4, name: "senha", label: "Senha", placeholder: "Digite sua senha...", type: "password", required: true, faIcon: faLock },
+    { id: 6, name: "confirmarSenha", label: "Confirme sua Senha", placeholder: "Confirme sua Senha...", type: "password", required: true, faIcon: faLock },
+
 ]
 
-const GENEROS_DATA = [
-    { id: 1, value: "Terror" },
-    { id: 2, value: "Ação" },
-    { id: 3, value: "Aventura" },
-    { id: 4, value: "Comédia" },
-    { id: 5, value: "Drama" },
-    { id: 6, value: "Romance" },
-    { id: 7, value: "Ficção Científica" },
-    { id: 8, value: "Fantasia" },
-    { id: 9, value: "Suspense" },
-    { id: 10, value: "Mistério" },
-    { id: 11, value: "Animação" },
-    { id: 12, value: "Documentário" },
-    { id: 13, value: "Musical" },
-    { id: 14, value: "Guerra" },
-    { id: 15, value: "Histórico" },
-    { id: 16, value: "Policial" },
-    { id: 17, value: "Crime" },
-    { id: 18, value: "Biografia" },
-    { id: 19, value: "Esporte" },
-    { id: 20, value: "Família" },
-    { id: 21, value: "Infantil" },
-    { id: 22, value: "Western" },
-    { id: 23, value: "Super-herói" },
-    { id: 24, value: "Distopia" },
-    { id: 25, value: "Apocalipse" }
-]
+const API_GENEROS = "http://localhost:8080/v1/conectaBook/generos"
+const API_USUARIOS = "http://localhost:8080/v1/conectaBook/usuarios"
+const API_GENERO_USUARIO = "http://localhost:8080/v1/conectaBook/genero-usuario/multiplos"
 
-// ================= CONTEÚDO ================= 
 
 function Cadastro() {
-
-
-    // ============= FUNÇÕES ==============
 
     function handleChange(e) {
 
@@ -66,11 +36,70 @@ function Cadastro() {
         })
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault()
 
-        console.log("Dados do formulário:")
-        console.log(form)
+        if (form.senha !== form.confirmarSenha) {
+            alert("As senhas não coincidem")
+            return
+        }
+
+        try {
+            const responseUsuario = await fetch(API_USUARIOS, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nome: form.nome,
+                    nome_usuario: form.usuario,
+                    email: form.email,
+                    senha: form.senha,
+                    data_nascimento: form.nascimento
+                })
+            })
+
+            const dataUsuario = await responseUsuario.json()
+
+            console.log(dataUsuario)
+
+            if (!responseUsuario.ok) {
+                throw new Error("Erro ao cadastrar usuário");
+            }
+
+            const idUsuario = dataUsuario.usuario_criado.id
+
+            console.log({
+                id_usuario: idUsuario,
+                generos: form.generosFavorito
+            })
+
+            console.log(dataUsuario)
+
+
+            const responseGenero = await fetch(API_GENERO_USUARIO, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id_usuario: idUsuario,
+                    generos: form.generosFavorito
+                })
+            }
+            )
+
+            if (!responseGenero.ok) {
+                throw new Error("Erro ao cadastrar generos");
+
+            }
+
+            alert("Usuario cadastrado com sucesso!")
+
+        } catch (error) {
+            console.log(error)
+            alert("Erro no servidor")
+        }
     }
 
     function toggleGenero(genero) {
@@ -93,18 +122,37 @@ function Cadastro() {
         })
     }
 
-    // ================= CONSTANTES =================
-
     const [form, setForm] = useState({
         usuario: "",
         nome: "",
         email: "",
         senha: "",
+        confirmarSenha: "",
         nascimento: "",
         generosFavorito: []
     })
 
+    const [generos, setGeneros] = useState([])
+
+    
+
+    useEffect(() => {
+        async function buscarGeneros() {
+            try {
+                const response = await fetch(API_GENEROS)
+                const data = await response.json()
+
+                setGeneros(data.response)
+            } catch (error) {
+                console.log("Erro ao buscar generos", error)
+            }
+        }
+
+        buscarGeneros()
+    }, [])
+
     return (
+
         <div>
             <header className="header-cadastro">
                 <img className="img-header" src={logo} alt="" />
@@ -120,8 +168,9 @@ function Cadastro() {
                     <form onSubmit={handleSubmit}>
                         <div className="inputs">
                             {INPUT_DATA.map((input) => (
-                                <div className="input">
+                                <div key={input.id} className="input">
                                     <Input
+                                        id={input.id}
                                         name={input.name}
                                         faIcon={input.faIcon}
                                         label={input.label}
@@ -137,34 +186,39 @@ function Cadastro() {
                         <div className="generos-favoritos">
                             <h4>Generos Favoritos</h4>
                             <p>Selecione seus generos favoritos (máx 5)</p>
+
                             <div className="generos-container">
-                                {GENEROS_DATA.map((genero) => (
+                                {generos.map((genero) => (
                                     <button
-                                        key={genero.id}
+                                        key={genero.id_genero}
                                         type="button"
-                                        className={`genero-tag ${form.generosFavorito.includes(genero.value) ? "ativo" : ""}`}
-                                        onClick={() => toggleGenero(genero.value)}
+                                        className={`genero-tag ${form.generosFavorito.includes(genero.id_genero)
+                                            ? "ativo"
+                                            : ""
+                                            }`}
+                                        onClick={() => toggleGenero(genero.id_genero)}
                                     >
-                                        {genero.value}
+                                        {genero.nome}
                                     </button>
                                 ))}
                             </div>
+
                         </div>
                         <div className="down-cadastro">
-                        <Button
-                            text="Criar Conta"
-                            type="submit"
-                        />
-                        <div className="link-login">
-                            <p>Já tem conta?</p>
-                            <a className="link-cadastro" href="/login">Fazer Login</a>
+                            <Button
+                                text="Criar Conta"
+                                type="submit"
+                            />
+                            <div className="link-login">
+                                <p>Já tem conta?</p>
+                                <a className="link-cadastro" href="/login">Fazer Login</a>
+                            </div>
                         </div>
-                        </div>
-                        
+
                     </form>
                 </div>
             </main>
-            <Footer/>
+            <Footer />
         </div>
     )
 }

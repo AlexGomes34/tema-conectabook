@@ -135,7 +135,7 @@ function Home() {
           <Button text={"Ver Clubes"}></Button>
         </div>
 
-        <div className="clubes">
+        <div className="clubes-home">
           {CLUBES_DATA.map((clube) => (
             <ClubeCard
               key={clube.id}

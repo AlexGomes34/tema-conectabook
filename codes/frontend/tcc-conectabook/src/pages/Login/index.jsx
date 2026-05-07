@@ -26,53 +26,7 @@ function Previa({ icon, titulo, desc }) {
 
 }
 
-const USUARIOS_DATA = [
-    {
-        id: 1,
-        nome: "Julio Cesar Santana",
-        username: "JcDev",
-        email: "julio@gmail.com",
-        senha: "12345678",
-        foto: fotoJulio,
-        dataNascimento: "2000-03-27",
-        generosFavoritos: ["Horror", "Suspense"],
-        avatar: fotoJulio,
-        stats: {
-            livrosLidos: 18,
-            resenhas: 9
-        }
-    },
-    {
-        id: 2,
-        nome: "Leonardo Pedreira Da Silva",
-        username: "LeoDev",
-        email: "leonardo@gmail.com",
-        senha: "batata555",
-        foto: fotoLeonardo,
-        dataNascimento: "1998-07-15",
-        generosFavoritos: ["Ficção Científica", "Tecnologia"],
-        avatar: fotoLeonardo,
-        stats: {
-            livrosLidos: 8,
-            resenhas: 2
-        }
-    },
-    {
-        id: 3,
-        nome: "Raissa Soares Da Silva",
-        username: "RaiDev32",
-        email: "raissa@gmail.com",
-        senha: "raissa123",
-        foto: fotoRaissa,
-        dataNascimento: "2001-11-03",
-        generosFavoritos: ["Romance", "Drama"],
-        avatar: fotoRaissa,
-        stats: {
-            livrosLidos: 20,
-            resenhas: 10
-        }
-    },
-]
+const API_USUARIOS = ("http://localhost:8080/v1/conectaBook/auth/login")
 
 const PREVIAS_DATA = [
     { id: 1, icon: faBook, titulo: "Explore livros", desc: "Encontre novas leituras incríveis" },
@@ -111,24 +65,30 @@ function Login() {
 
             await new Promise(resolve => setTimeout(resolve, 2000))
 
-            const user = USUARIOS_DATA.find(
-                (u) => u.email === email && u.senha === senha
-            )
+            const response = await fetch(API_USUARIOS, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    senha: senha
+                })
+            })
 
-            if (!user) {
-                throw new Error("E-mail ou senha icorretos")
+            const data = await response.json()
+
+            console.log(data)
+
+            if (!response.ok) {
+                throw new Error(data.message || "E-mail ou senha incorretos")
             }
 
-            localStorage.setItem("user", JSON.stringify(user))
+            localStorage.setItem("user", JSON.stringify(data))
 
             navigate("/feed")
-
-            console.log("Enviando Dados...")
-            console.log("E-mail:", email)
-            console.log("Senha", senha)
-
-            await new Promise(resolve => setTimeout(resolve, 2000))
         } catch (error) {
+            console.log(error)
             setErro("Erro ao fazer login")
         } finally {
             setLoading(false)
