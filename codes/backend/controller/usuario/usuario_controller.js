@@ -56,6 +56,8 @@ const listarUsuarioID = async function(id) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
+
+
 const criarUsuario = async function(usuario, contentType) {
     try {
         if (String(contentType).toLowerCase() !== 'application/json') {
