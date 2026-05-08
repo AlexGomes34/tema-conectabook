@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import Header from "../../components/header/index"
 import Button from "../../components/button/index"
 import Input from "../../components/input/index"
@@ -11,55 +11,93 @@ import { faBook, faStar, faShieldHalved } from "@fortawesome/free-solid-svg-icon
 import { faFacebook, faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons"
 import Footer from "../../components/footer"
 
-const API_USUARIOS = ""
-
 
 
 function Perfil() {
 
-    async function handleUpdate() {
-    try {
-        const userStorage = JSON.parse(localStorage.getItem("user"))
+    const navigate = useNavigate()
 
-        const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`,{
-            method: "PUT",
-            headers:{
-                "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
-                nome:formData.nome,
-                nome_usuario: formData.username,
-                email: formData.email,
-                data_nascimento: formData.dataNascimento
+    async function handleDelete() {
+        try {
+            const userStorage = JSON.parse(localStorage.getItem("user"))
+            const id = userStorage.user.id
+
+            const confirmDelete = window.confirm("Tem certeza que deseja excluir sua conta?")
+            if (!confirmDelete) return
+
+            const relacoes = await fetch(`http://localhost:8080/v1/conectaBook/genero-usuario/usuario/${id}`, {
+                method: "DELETE"
             })
-        })
 
-        const data = await response.json()
-
-        console.log("UPDATE RESPONSE", data)
-
-        if(data.status){
-            alert("Perfil atualizado com sucesso!")
-
-            const updatedUser = {
-                ...userStorage,
-                nome: formData.nome,
-                nome_usuario: formData.username,
-                email:formData.email,
-                data_nascimento: formData.data_nascimento
+            if(!relacoes.ok){
+                throw new Error("Erro ao deletar relações");
+                
             }
 
-            localStorage.setItem("user", JSON.stringify(updatedUser))
-            setUser(updatedUser)
-        }else{
-            alert("Erro ao atualizar perfil")
+            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${id}`,{
+                method: "DELETE"
+            })
+
+            const data = await response.json()
+
+            if(data.status){
+                alert("Conta excluída com sucesso")
+                localStorage.removeItem("user")
+                navigate("/login")
+            }else{
+                alert("Erro ao excluir usuário")
+            }
+        } catch (error) {
+            console.error(error)
+            alert("Erro na requisição")
         }
-    } catch (error) {
-        console.error("Erro no PUT:", error)
-        alert("Erro na requisição")
-        
     }
-}
+
+
+
+    async function handleUpdate() {
+        try {
+            const userStorage = JSON.parse(localStorage.getItem("user"))
+
+            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nome: formData.nome,
+                    nome_usuario: formData.username,
+                    email: formData.email,
+                    data_nascimento: formData.dataNascimento
+                })
+            })
+
+            const data = await response.json()
+
+            console.log("UPDATE RESPONSE", data)
+
+            if (data.status) {
+                alert("Perfil atualizado com sucesso!")
+
+                const updatedUser = {
+                    ...userStorage,
+                    nome: formData.nome,
+                    nome_usuario: formData.username,
+                    email: formData.email,
+                    data_nascimento: formData.data_nascimento
+                }
+
+                localStorage.setItem("user", JSON.stringify(updatedUser))
+                setUser(updatedUser)
+            } else {
+                alert("Erro ao atualizar perfil")
+            }
+        } catch (error) {
+            console.error("Erro no PUT:", error)
+            alert("Erro na requisição")
+
+        }
+    }
 
     const [formData, setFormData] = useState({
         username: "",
@@ -80,22 +118,22 @@ function Perfil() {
     const [user, setUser] = useState(null)
 
     useEffect(() => {
-    const userStorage = JSON.parse(localStorage.getItem("user"))
+        const userStorage = JSON.parse(localStorage.getItem("user"))
 
-    if (userStorage) {
-    
-        setUser(userStorage)
+        if (userStorage) {
 
-        setFormData({
-            username: userStorage.user.nome_usuario || "",
-            nome: userStorage.user.nome || "",
-            email: userStorage.user.email || "",
-            senha: "",
-            dataNascimento: userStorage.user.data_nascimento || "",
-            id: userStorage.user.id || ""
-        })
-    }
-}, [])
+            setUser(userStorage)
+
+            setFormData({
+                username: userStorage.user.nome_usuario || "",
+                nome: userStorage.user.nome || "",
+                email: userStorage.user.email || "",
+                senha: "",
+                dataNascimento: userStorage.user.data_nascimento || "",
+                id: userStorage.user.id || ""
+            })
+        }
+    }, [])
 
     function handleChange(e) {
         const { name, value } = e.target
@@ -127,7 +165,7 @@ function Perfil() {
 
 
                     <div className="excluir-conta">
-                        <Button className="button-excluir" text={"Excluir Conta"} />
+                        <Button className="button-excluir" onClick={handleDelete} text={"Excluir Conta"} />
                         <p>Essa ação não pode ser desfeita</p>
                     </div>
 
