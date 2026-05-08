@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.conectabook.components.CriarPostcard
 import com.example.conectabook.components.HomeaHeader
+import com.example.conectabook.components.SecaoTitulosSugeridos
 
 @Composable
 fun HomeScreenn(modifier: Modifier = Modifier) {
@@ -48,7 +49,7 @@ fun HomeScreenn(modifier: Modifier = Modifier) {
             }
 
             item {
-                Text("Título sugeridos")
+                SecaoTitulosSugeridos()
             }
 
             item {
