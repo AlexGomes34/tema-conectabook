@@ -113,8 +113,8 @@ export default function Clube() {
     return (
         <div>
 
-            <Header 
-                fotoUser={user?.foto}/>
+            <Header
+                fotoUser={user?.foto} />
 
             <main className="main-clube">
                 <div className="left-clube">
@@ -159,6 +159,7 @@ export default function Clube() {
                         <Input
                             placeholder={"Procure por um grupo..."} />
                         <Button
+                            onClick={ () => navigate("/criarClube")}
                             text={"Criar Clube"} />
                     </div>
 
@@ -167,9 +168,10 @@ export default function Clube() {
                             <h2>Descubra clubes de leitura</h2>
                             <p>Encontre seu próximo clube e faça parte de histórias incríveis.</p>
                         </div>
-                        <select name="" id="">
-                            <option value="mama">aba</option>
-                            <option value="mama">aba</option>
+                        <select name="genero" id="genero">
+                            <option value="">Selecione um genero</option>
+                            <option value="acao">Ação</option>
+                            <option value="romance">aba</option>
                             <option value="mama">aba</option>
                         </select>
                     </div>
@@ -207,7 +209,7 @@ export default function Clube() {
                 </div>
             </main>
 
-            <Footer/>
+            <Footer />
 
 
         </div>

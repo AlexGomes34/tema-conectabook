@@ -1,18 +1,37 @@
-.clube-acess{
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background-color: #fafafa;
-    border: 1px solid #242424;
-    border-radius: 8px;
-    width: 20rem;
-    height: 5rem;
-}
+/* ===== CONTAINER PRINCIPAL ===== */
 
 .main-clube{
     display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
     padding-bottom: 3rem;
+    align-items: flex-start;
 }
+
+/* ===== SIDEBAR ===== */
+
+.left-clube{
+    width: 100%;
+    max-width: 25rem;
+
+    min-height: 35rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+    padding: 2rem;
+
+    background-color: #e8f1ff;
+
+    border: 1px solid #eeecec;
+    border-radius: 12px;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ===== TITULO ===== */
 
 .titulo-acess{
     display: flex;
@@ -20,98 +39,228 @@
     gap: 0.5rem;
 }
 
+/* ===== LISTA CLUBES ===== */
+
 .meus-clubes{
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
+/* ===== CARD CLUBE ===== */
+
+.clube-acess{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 1rem;
+
+    background-color: #fafafa;
+
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+
+    transition: 0.2s ease;
+
+    cursor: pointer;
+}
+
+.clube-acess:hover{
+    transform: translateY(-2px);
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* ===== IMAGEM ===== */
 
 .clube-acess img{
-    height: 70px;
     width: 70px;
+    height: 70px;
+
     border-radius: 50%;
+
     object-fit: cover;
 }
+
+/* ===== TEXTO ===== */
 
 .clube-acess-text{
     display: flex;
     flex-direction: column;
+    gap: 0.3rem;
 }
 
-.left-clube{
-    margin: 2rem 5rem;
+/* ===== ÁREA DIREITA ===== */
+
+.clubes{
+    flex: 1;
+
     display: flex;
     flex-direction: column;
-    border: 1px solid #eeecec;
-    border-radius: 8px;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
-    background-color: #e8f1ff;
-    width: 25rem;
-    height: 35rem;
-    align-items: start;
-    padding: 2rem;
-    gap: 3rem;
+
+    gap: 2rem;
 }
 
+/* ===== PESQUISA ===== */
+
 .pesquisa{
+    width: 100%;
     display: flex;
     align-items: center;
 }
 
 .pesquisa input{
-    width: 75rem;
+    width: 35vw;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    border: 1px solid #ccc;
+
+    outline: none;
+
+    font-size: 16px;
 }
+
+/* ===== FILTROS ===== */
 
 .titulo-filtros{
     display: flex;
     justify-content: space-between;
-    padding-right: 6rem;
+    align-items: center;
+
+    padding: 2rem;
+
+    gap: 1rem;
+
+    flex-wrap: wrap;
 }
+
+/* ===== SELECT ===== */
+
+select{
+    width: 100%;
+    max-width: 250px;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    border: 1px solid #ccc;
+
+    background-color: #fff;
+
+    font-size: 16px;
+
+    color: #333;
+
+    outline: none;
+
+    cursor: pointer;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg fill='gray' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7l5 5 5-5H5z'/%3E%3C/svg%3E");
+
+    background-repeat: no-repeat;
+
+    background-position: right 12px center;
+
+    background-size: 16px;
+}
+
+select:focus{
+    border-color: #6c63ff;
+
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+/* ===== CARD DETALHE ===== */
 
 .clube-detalhe{
     display: flex;
+
     justify-content: space-between;
-    border: 1px solid #242424;
-    border-radius: 8px;
+
+    align-items: center;
+
+    gap: 2rem;
+
+    flex-wrap: wrap;
+
+    padding: 1.5rem;
+
+    border: 1px solid #dcdcdc;
+
+    border-radius: 12px;
+
+    background-color: #fff;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
+
+/* ===== LADO ESQUERDO ===== */
 
 .info-left{
     display: flex;
+
+    gap: 1.5rem;
+
+    flex-wrap: wrap;
 }
+
+/* ===== IMAGEM DETALHE ===== */
+
+.clube-detalhe img{
+    width: 100%;
+
+    max-width: 20rem;
+
+    height: 20rem;
+
+    object-fit: cover;
+
+    border-radius: 10px;
+}
+
+/* ===== INFO ===== */
 
 .info-clube{
     display: flex;
+
     flex-direction: column;
+
     gap: 1rem;
-    padding: 1rem;
 }
 
-.clube-detalhe img{
-    height: 20rem;
-}
+/* ===== SOBRE ===== */
 
-.button-sobre{
+.sobre-clube{
+    width: 100%;
+
+    max-width: 40rem;
+
     display: flex;
-    justify-content: end;
-    padding-right: 1rem;
+
+    flex-direction: column;
+
+    gap: 2rem;
 }
 
 .sobre-text{
-    width: 30rem;
+    width: 100%;
+
+    line-height: 1.6;
 }
 
-.clubes{
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
+/* ===== BOTÃO ===== */
 
-.sobre-clube{
-    width: 40rem;
-    padding-top: 1rem;
-    gap: 2rem;
+.button-sobre{
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+
+    justify-content: flex-end;
 }
