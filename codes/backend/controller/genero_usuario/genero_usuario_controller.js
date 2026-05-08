@@ -232,12 +232,39 @@ const excluirGeneroUsuario = async function (id) {
     }
 }
 
+const excluirGenerosPorUsuario = async function (idUsuario) {
+    // Validação do ID do usuário
+    if (idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
+        return messages.ERROR_INVALID_ID; 
+    }
+
+    try {
+        // Chamada para o DAO (usando a função setDeleteGenresByIdUser que você criou)
+        let result = await generoUsuarioDAO.setDeleteGenresByIdUser(idUsuario);
+
+        if (result) {
+            let responseData = Object.assign({}, messages.HEADER);
+            responseData.status = messages.SUCCESS_DELETE_ITEM.status;
+            responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code;
+            responseData.response = messages.SUCCESS_DELETE_ITEM.message;
+            return responseData;
+        } else {
+            // Se retornar false, pode ser que o usuário não tivesse gêneros ou o ID não existe
+            return messages.ERROR_NOT_FOUND; 
+        }
+    } catch (error) {
+        console.log(error);
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+    }
+}
+
 module.exports = {
     listarGeneroUsuarioID,
     listarGenerosUsuario,
     listarGenerosPorUsuario,
     listarUsuariosPorGenero,
     excluirGeneroUsuario,
+    excluirGenerosPorUsuario,
     atualizarGeneroUsuario,
     criarGeneroUsuario,
     criarMultiplosGenerosUsuario

@@ -78,4 +78,11 @@ router.delete('/:id', cors(), async function(request, response) {
     response.status(result.status_code).json(result);
 });
 
+// Rota para deletar todos os gêneros de um usuário específico
+router.delete('/usuario/:id', async function(request, response) {
+    let idUsuario = request.params.id;
+    let result = await controllerGeneroUsuario.excluirGenerosPorUsuario(idUsuario);
+    response.status(result.status_code).json(result);
+});
+
 module.exports = router;
