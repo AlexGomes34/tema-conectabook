@@ -30,7 +30,6 @@ app.use('/v1/conectaBook/genero-usuario', generoUsuarioRoutes)
 const authRoutes = require('./routes/auth_routes.js')
 app.use('/v1/conectaBook/auth', authRoutes)
 
-
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, function(){
