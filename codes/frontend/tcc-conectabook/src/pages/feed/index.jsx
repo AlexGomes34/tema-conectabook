@@ -25,9 +25,7 @@ function Feed() {
             <Header
             fotoUser = {user?.foto}
             />
-            <h1>Olá {user?.username}</h1>
-            <p>Este é você</p>
-            <img className="img-user" src={user?.foto} alt="Foto do usuário"/>
+            <h1>Olá {user?.user.nome_usuario}</h1>
         </div>
 
     )

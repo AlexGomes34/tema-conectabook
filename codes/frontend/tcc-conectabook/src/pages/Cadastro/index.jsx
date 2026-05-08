@@ -26,6 +26,45 @@ const API_GENERO_USUARIO = "http://localhost:8080/v1/conectaBook/genero-usuario/
 
 function Cadastro() {
 
+    function verificarDuplicados(usuarios, form) {
+        const emailExiste = usuarios.some(
+            u => u.email === form.email
+        )
+
+        if (emailExiste) {
+            return "E-mail já cadastrado"
+        }
+
+        const usuarioExiste = usuarios.some(
+            u => u.nome_usuario === form.usuario
+        )
+
+        if (usuarioExiste) {
+            return "Nome de usuário já existe"
+        }
+
+        return null
+    }
+
+    function validarFormulario() {
+        const { usuario, nome, email, senha, confirmarSenha, nascimento, generosFavorito } = form
+
+        if (!usuario.trim()) return "Usuário obrigatório"
+        if (!nome.trim()) return "Nome obrigatório"
+        if (!email.trim()) return "E-mail obrigatório"
+        if (!email.includes("@")) return "E-mail inválido"
+
+        if (!nascimento) return "Data de nascimento obrigatória"
+
+        if (!senha || senha.length < 6) return "Senha deve ter no mínimo 6 caracteres"
+
+        if (senha !== confirmarSenha) return "As senhas não coincidem"
+
+        if (generosFavorito.length === 0) return "Selecione pelo menos 1 gênero"
+
+        return null
+    }
+
     function handleChange(e) {
 
         const { name, value } = e.target
@@ -39,12 +78,25 @@ function Cadastro() {
     async function handleSubmit(e) {
         e.preventDefault()
 
-        if (form.senha !== form.confirmarSenha) {
-            alert("As senhas não coincidem")
+        const erro = validarFormulario()
+
+        if (erro) {
+            alert(erro)
             return
         }
 
         try {
+
+            const responseUsuarios = await fetch("http://localhost:8080/v1/conectaBook/usuarios")
+            const dataUsuarios = await responseUsuarios.json()
+
+            const erroDuplicado = verificarDuplicados(dataUsuarios.response, form)
+
+            if (erroDuplicado) {
+                alert(erroDuplicado)
+                return
+            }
+
             const responseUsuario = await fetch(API_USUARIOS, {
                 method: "POST",
                 headers: {
@@ -134,7 +186,7 @@ function Cadastro() {
 
     const [generos, setGeneros] = useState([])
 
-    
+
 
     useEffect(() => {
         async function buscarGeneros() {
