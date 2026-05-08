@@ -162,6 +162,22 @@ const setDeleteGenresUsers = async function (id) {
     }
 }
 
+//DELETA OS RELACIONAMENTOS DE UM USUARIO
+const setDeleteGenresByIdUser = async function (id) {
+    try {
+        let sql = `delete from tbl_genero_usuario where id_usuario = ?`
+        let result = await db.raw(sql, [id])
+
+        if(result && result[0].affectedRows > 0)
+            return true
+        else
+            return false
+
+    } catch(error) {
+        return false
+    }
+}
+
 module.exports = {
     getSelectAllGenresUsers,
     getSelectByIdGenresUsers,
@@ -170,5 +186,6 @@ module.exports = {
     setInsertGenresUsers,
     setInsertMultiplesGenres,
     setUpdateGenresUsers,
-    setDeleteGenresUsers
+    setDeleteGenresUsers,
+    setDeleteGenresByIdUser
 }
