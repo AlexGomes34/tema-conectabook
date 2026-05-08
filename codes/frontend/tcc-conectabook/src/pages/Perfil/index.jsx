@@ -11,15 +11,63 @@ import { faBook, faStar, faShieldHalved } from "@fortawesome/free-solid-svg-icon
 import { faFacebook, faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons"
 import Footer from "../../components/footer"
 
+const API_USUARIOS = ""
+
+
 
 function Perfil() {
+
+    async function handleUpdate() {
+    try {
+        const userStorage = JSON.parse(localStorage.getItem("user"))
+
+        const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`,{
+            method: "PUT",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                nome:formData.nome,
+                nome_usuario: formData.username,
+                email: formData.email,
+                data_nascimento: formData.dataNascimento
+            })
+        })
+
+        const data = await response.json()
+
+        console.log("UPDATE RESPONSE", data)
+
+        if(data.status){
+            alert("Perfil atualizado com sucesso!")
+
+            const updatedUser = {
+                ...userStorage,
+                nome: formData.nome,
+                nome_usuario: formData.username,
+                email:formData.email,
+                data_nascimento: formData.data_nascimento
+            }
+
+            localStorage.setItem("user", JSON.stringify(updatedUser))
+            setUser(updatedUser)
+        }else{
+            alert("Erro ao atualizar perfil")
+        }
+    } catch (error) {
+        console.error("Erro no PUT:", error)
+        alert("Erro na requisição")
+        
+    }
+}
 
     const [formData, setFormData] = useState({
         username: "",
         nome: "",
         email: "",
         senha: "",
-        dataNascimento: ""
+        dataNascimento: "",
+        id: ""
     })
 
     const INPUT_DATA = [
@@ -43,7 +91,8 @@ function Perfil() {
             nome: userStorage.user.nome || "",
             email: userStorage.user.email || "",
             senha: "",
-            dataNascimento: userStorage.user.data_nascimento || ""
+            dataNascimento: userStorage.user.data_nascimento || "",
+            id: userStorage.user.id || ""
         })
     }
 }, [])
@@ -65,7 +114,7 @@ function Perfil() {
             <div className="up-perfil">
                 <h1>Perfil</h1>
                 <Button
-                    text={"Editar Perfil"} />
+                    text={"Editar Perfil"} onClick={handleUpdate} />
             </div>
 
             <div className="down-perfil">
@@ -87,7 +136,7 @@ function Perfil() {
 
                 <div className="right-perfil">
                     <div className="apresentacao-perfil">
-                        <h2>Olá, {user?.nome}</h2>
+                        <h2>Olá, {user?.user.nome}</h2>
                         <p>Bem vindo á sua conta ConectaBook.</p>
                     </div>
 
