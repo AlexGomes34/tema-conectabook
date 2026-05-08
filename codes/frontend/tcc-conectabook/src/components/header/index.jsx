@@ -7,7 +7,7 @@ function Header({ fotoUser }) {
     return (
         <header className='headerPage'>
             <img className='logo' src={logo} alt="logo" />
-            <Link className='a' to="/clubeLeitura">Clube de Leitura</Link>
+            <Link className='a' to="/clube">Clube de Leitura</Link>
             <Link className='a' to="/livros">Livros</Link>
             <Link className='a' to="/feed">Feed</Link>
             <Link className='a' to="/cafeteria">Cafeteria</Link>
