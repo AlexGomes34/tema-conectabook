@@ -43,7 +43,7 @@ fun HomeaHeader(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(colors.surfaceVariant)
+                .background(colors.primary)
         )
 
         Spacer(modifier = Modifier.width(12.dp))
