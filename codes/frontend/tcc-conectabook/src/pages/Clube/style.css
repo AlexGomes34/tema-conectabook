@@ -72,6 +72,20 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
+.clubePage{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.clubePage h3{
+    color: black;
+}
+
+.clubePage p{
+    color: black;
+}
+
 /* ===== IMAGEM ===== */
 
 .clube-acess img{

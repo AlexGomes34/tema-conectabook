@@ -1,0 +1,14 @@
+.body-feedClube{
+    height: 100vh;
+}
+
+.up-main{
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+
+.main-feedClube{
+    display: flex;
+}

@@ -9,7 +9,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rebeccapurple;
 }
 
 .left-criarClube{
@@ -17,15 +16,13 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background-color: yellow;
-    height: 16rem;
+    height: 20rem;
     width: 50%;
 }
 
 .questionario-criarClube{
     display: flex;
     align-items: center;
-    background-color: purple;
     justify-content: space-between;
     padding-inline: 1rem;
     width: 100%;
@@ -44,9 +41,8 @@
 }
 
 .criarClube-card{
-    background-color: aqua;
     width: 70vw;
-    height: 50rem;
+    height: 50vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,7 +50,6 @@
 }
 
 .titulo-criarClube{
-    background-color: orange;
     width: 100%;
     padding: 1rem;
 }
@@ -66,14 +61,16 @@
     height: 30rem;
     align-items: center;
     justify-content: space-between;
-    background-color: brown;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 1rem;
 }
 .upload-box input{
     display: none;
 }
 
 .upload-label{
-    width: 400px;
+    width: 20vw;
     height: 100%;
 
     border: 2px dashed #bdbdbd;
@@ -99,6 +96,5 @@
     display: flex;
     flex-direction: column;
     text-align: start;
-    background-color: red;
-    width: 400px;
+    width: 20vw;
 }

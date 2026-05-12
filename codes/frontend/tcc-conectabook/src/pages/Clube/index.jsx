@@ -6,6 +6,7 @@ import Button from "../../components/button"
 import Input from "../../components/input"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 import "./style.css"
 import Header from "../../components/header"
@@ -111,8 +112,7 @@ export default function Clube() {
     const clube_adm_selecionado = CLUBE_ADM[0]
 
     return (
-        <div>
-
+        <div className="body-feedClube">
             <Header
                 fotoUser={user?.foto} />
 
@@ -124,11 +124,13 @@ export default function Clube() {
                             <h2>Clubes faço parte</h2>
                         </div>
                         <div className="clube-acess">
-                            <img src={clube_membro_selecionado.foto} alt="Foto do Clube" />
-                            <div className="clube-acess-text">
-                                <h3>{clube_membro_selecionado.nome}</h3>
-                                <p>{clube_membro_selecionado.quantiaMembros} membros</p>
-                            </div>
+                            <Link to="/feedClube" className="clubePage">
+                                <img src={clube_membro_selecionado.foto} alt="Foto do Clube" />
+                                <div className="clube-acess-text">
+                                    <h3>{clube_membro_selecionado.nome}</h3>
+                                    <p>{clube_membro_selecionado.quantiaMembros} membros</p>
+                                </div>
+                            </Link>
                         </div>
                         <Button
                             text={"Ver Todos os clubes"}
@@ -141,11 +143,14 @@ export default function Clube() {
                             <h2>Clubes Administro</h2>
                         </div>
                         <div className="clube-acess">
-                            <img src={clube_adm_selecionado.foto} alt="Foto do Clube" />
-                            <div className="clube-acess-text">
-                                <h3>{clube_adm_selecionado.nome}</h3>
-                                <p>{clube_adm_selecionado.quantiaMembros} membros</p>
-                            </div>
+                            <Link className="clubePage">
+                                <img src={clube_adm_selecionado.foto} alt="Foto do Clube" />
+                                <div className="clube-acess-text">
+                                    <h3>{clube_adm_selecionado.nome}</h3>
+                                    <p>{clube_adm_selecionado.quantiaMembros} membros</p>
+                                </div>
+                            </Link>
+
                         </div>
                         <Button
                             text={"Ver Todos os clubes"}
@@ -159,7 +164,7 @@ export default function Clube() {
                         <Input
                             placeholder={"Procure por um grupo..."} />
                         <Button
-                            onClick={ () => navigate("/criarClube")}
+                            onClick={() => navigate("/criarClube")}
                             text={"Criar Clube"} />
                     </div>
 
@@ -210,8 +215,6 @@ export default function Clube() {
             </main>
 
             <Footer />
-
-
         </div>
     )
 

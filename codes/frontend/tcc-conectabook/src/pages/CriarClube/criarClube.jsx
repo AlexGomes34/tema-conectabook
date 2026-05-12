@@ -58,7 +58,7 @@ export default function CriarClube() {
                                         name={input.name}
                                         label={input.label}
                                         placeholder={input.placeholder}
-                                        value={""}
+                                        value={input.value}
                                         onChange={""}
                                         type={input.type}
                                         required={input.required}
