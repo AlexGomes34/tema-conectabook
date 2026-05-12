@@ -1,16 +1,12 @@
 package com.example.conectabook.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -33,7 +30,7 @@ fun ClubeCard(
     val colors = MaterialTheme.colorScheme
 
     Column(
-        modifier = Modifier.width(90.dp),
+        modifier = Modifier.width(110.dp),
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
@@ -53,7 +50,9 @@ fun ClubeCard(
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
             color = colors.onBackground,
-            maxLines = 1
+            maxLines = 2,
+            lineHeight = 15.sp,
+            textAlign = TextAlign.Center
         )
 
         Text(

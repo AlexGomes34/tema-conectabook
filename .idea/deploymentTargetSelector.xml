@@ -2,15 +2,8 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="app">
+      <SelectionState runConfigName="ConectaBook.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-04-28T00:58:04.235287500Z">
-          <Target type="DEFAULT_BOOT">
-            <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=RQCY107BP8L" />
-            </handle>
-          </Target>
-        </DropdownSelection>
         <DialogSelection />
       </SelectionState>
     </selectionStates>

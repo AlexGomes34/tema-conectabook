@@ -13,8 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.conectabook.R
 import com.example.conectabook.components.CriarPostcard
 import com.example.conectabook.components.HomeaHeader
+import com.example.conectabook.components.PostCard
+import com.example.conectabook.components.SecaoClubes
 import com.example.conectabook.components.SecaoTitulosSugeridos
 
 @Composable
@@ -53,11 +56,22 @@ fun HomeScreenn(modifier: Modifier = Modifier) {
             }
 
             item {
-                Text("Clubes")
+                SecaoClubes()
             }
 
             item {
-                Text("Feed")
+                PostCard(
+                    nome = "Raissa Soares",
+                    tempo = "2h atrás",
+                    texto = "Acabei de terminar 1984...",
+                    curtidas = 128,
+                    comentarios = 32,
+                    avatar = R.drawable.moca_lendo,
+                    capaLivro = R.drawable.livropost,
+                    nomeLivro = "1984",
+                    autorLivro = "George Orwell",
+                    notaLivro = "4.9"
+                )
             }
         }
     }
