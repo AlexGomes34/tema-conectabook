@@ -2,6 +2,8 @@ import Button from "../../components/button";
 import Header from "../../components/header";
 import Footer from "../../components/footer";
 
+import Input from "../../components/input/index.jsx"
+
 import "./style.css"
 
 export default function FeedClube() {
@@ -21,18 +23,23 @@ export default function FeedClube() {
                         <h2>Amantes de Percy Jackson</h2>
                         <p>320 membros</p>
                     </div>
+
                     <div className="input-postagem">
                         <div className="inputComFoto">
                             <img src="" alt="" />
-                            <input type="text" />
+                            <Input
+                            placeholder="O que está pensando?"
+                            />
                         </div>
                         <div className="inputComArquivo">
                             <Button text="Arquivo" />
                             <Button text="Postar" />
                         </div>
                     </div>
+
                     <div className="postagem">
                         <img src="" alt="" />
+
                         <div className="postagem-text">
                             <h3>Raissa Soares</h3>
                             <p>O pequeno principe</p>
@@ -48,7 +55,9 @@ export default function FeedClube() {
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
+
                 </div>
 
                 <div className="right-main">

@@ -8,7 +8,109 @@
     padding: 1rem;
 }
 
+.left-main{
+    width: 70vw;
+}
+.right-main{
+    width: 30vw;
+}
 
 .main-feedClube{
     display: flex;
+}
+
+.reacoes{
+    display: flex;
+}
+
+.titulo-left-main{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.input-postagem{
+    border: 1px solid black;
+    border-radius: 8px;
+}
+
+.inputComArquivo{
+    display: flex;
+    justify-content: space-between;
+}
+
+.up-main{
+    background-color: red;
+}
+
+.up-left-main{
+    background-color: orange;
+}
+
+.main-feedClube{
+    background-color: yellow;
+}
+
+.left-main{
+    background-color: green;
+}
+
+.titulo-left-main{
+    background-color: cyan;
+}
+
+.input-postagem{
+    background-color: blue;
+}
+
+.inputComFoto{
+    background-color: purple;
+}
+
+.inputComArquivo{
+    background-color: pink;
+}
+
+.postagem{
+    background-color: brown;
+}
+
+.postagem-text{
+    background-color: gray;
+}
+
+.reacoes{
+    background-color: lime;
+}
+
+.reacao{
+    background-color: gold;
+}
+
+.right-main{
+    background-color: lightblue;
+}
+
+.sobre{
+    background-color: lightcoral;
+}
+
+.administradores{
+    background-color: lightgreen;
+}
+
+.adm{
+    background-color: lightsalmon;
+}
+
+.clubesMesmoGenero{
+    background-color: lightseagreen;
+}
+
+.clube-diverso{
+    background-color: lightpink;
+}
+
+.titulo-clube-diverso{
+    background-color: lightyellow;
 }
