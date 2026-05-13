@@ -33,22 +33,22 @@ function Perfil() {
                 method: "DELETE"
             })
 
-            if(!relacoes.ok){
+            if (!relacoes.ok) {
                 throw new Error("Erro ao deletar relações");
-                
+
             }
 
-            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${id}`,{
+            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${id}`, {
                 method: "DELETE"
             })
 
             const data = await response.json()
 
-            if(data.status){
+            if (data.status) {
                 alert("Conta excluída com sucesso")
                 localStorage.removeItem("user")
                 navigate("/login")
-            }else{
+            } else {
                 alert("Erro ao excluir usuário")
             }
         } catch (error) {
@@ -63,18 +63,22 @@ function Perfil() {
         try {
             const userStorage = JSON.parse(localStorage.getItem("user"))
 
+            const form = new FormData()
+
+            form.append("nome", formData.nome)
+            form.append("nome_usuario", formData.username)
+            form.append("email", formData.email)
+            form.append("data_nascimento", formData.dataNascimento)
+
+            if (foto) {
+                form.append("foto", foto)
+            }
+
+            console.log("FOTO ENVIADA", foto)
+
             const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    nome: formData.nome,
-                    nome_usuario: formData.username,
-                    email: formData.email,
-                    data_nascimento: formData.dataNascimento,
-                    foto_perfil: foto
-                })
+                body: form
             })
 
             const data = await response.json()
@@ -86,10 +90,14 @@ function Perfil() {
 
                 const updatedUser = {
                     ...userStorage,
-                    nome: formData.nome,
-                    nome_usuario: formData.username,
-                    email: formData.email,
-                    data_nascimento: formData.data_nascimento
+                    user: {
+                        ...userStorage.user,
+                        nome: formData.nome,
+                        nome_usuario: formData.username,
+                        email: formData.email,
+                        data_nascimento: formData.dataNascimento,
+                        foto_perfil: data.usuario.foto_perfil
+                    }
                 }
 
                 localStorage.setItem("user", JSON.stringify(updatedUser))
@@ -119,22 +127,24 @@ function Perfil() {
     async function handleFotoChange(e) {
         const file = e.target.files[0]
 
-        if(file){
+        if (!file) return
 
-            const compressedFile = await imageCompression(file, {
-                maxSizeMB: 0.2,
-                maxWidthOrHeight: 500,
-                useWebWorker: true
-            })
-            const reader = new FileReader()
+        const compressedFile = await imageCompression(file, {
+            maxSizeMB: 0.2,
+            maxWidthOrHeight: 500,
+            useWebWorker: true
+        })
 
-            reader.onloadend = () => {
-                setFoto(reader.result)
-                setPreview(reader.result)
-            }
+        const fileFinal = new File([compressedFile], file.name, {
+            type: file.type
+        })
 
-            reader.readAsDataURL(file)
-        }
+        setFoto(fileFinal)
+
+        setPreview(URL.createObjectURL(fileFinal))
+
+        console.log("FILE ORIGINAL:", file)
+        console.log("COMPRESSED FILE:", compressedFile)
     }
 
     const INPUT_DATA = [
@@ -188,13 +198,13 @@ function Perfil() {
                 <div className="left-perfil">
                     <div className="user-icon">
                         <img className="img-user"
-                         src={preview || user?.user?.foto_perfil || userDefault}
-                        alt="Foto do usuário" 
+                            src={preview || user?.user?.foto_perfil || userDefault}
+                            alt="Foto do usuário"
                         />
 
-                        <input type="file" 
-                        accept="image/*"
-                        onChange={handleFotoChange}/>
+                        <input type="file"
+                            accept="image/*"
+                            onChange={handleFotoChange} />
 
 
                         <h2>{user?.user.nome}</h2>

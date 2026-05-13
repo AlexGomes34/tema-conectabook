@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import fotoDefault from "../../assets/userDefault.webp"
 
+
 function Header({ fotoUser }) {
 
     return (
@@ -16,7 +17,7 @@ function Header({ fotoUser }) {
             <Link to={"/eventos"} className='a' href="">Eventos</Link>
             <Link to={"/perfil"} className='user'>
                 <img className='fotoUser' src=
-                {fotoUser} alt="" />
+                {fotoUser || fotoDefault} alt="" />
             </Link>
         </header>
     )
