@@ -1,5 +1,18 @@
-.body-feedClube{
-    height: 100vh;
+.feedClube-container{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #fcfcfd;
+}
+
+.main-container{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-feedClube{
+    flex: 1;
 }
 
 .up-main{
@@ -10,17 +23,21 @@
 
 .left-main{
     width: 70vw;
+    padding-inline: 1vw;
 }
 .right-main{
     width: 30vw;
 }
 
 .main-feedClube{
+    flex: 1;
     display: flex;
 }
 
 .reacoes{
     display: flex;
+    padding-top: 1rem;
+    gap: 10rem;
 }
 
 .titulo-left-main{
@@ -30,8 +47,11 @@
 }
 
 .input-postagem{
-    border: 1px solid black;
-    border-radius: 8px;
+    background: #fcfcfd;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef2f7;
 }
 
 .inputComArquivo{
@@ -39,78 +59,135 @@
     justify-content: space-between;
 }
 
-.up-main{
-    background-color: red;
-}
-
-.up-left-main{
-    background-color: orange;
-}
-
-.main-feedClube{
-    background-color: yellow;
-}
-
-.left-main{
-    background-color: green;
-}
-
-.titulo-left-main{
-    background-color: cyan;
-}
-
 .input-postagem{
-    background-color: blue;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin-top: 1rem;
 }
 
 .inputComFoto{
-    background-color: purple;
+    display: flex;
+    align-items: center;
+    padding-inline: 1rem;
+}
+
+.inputComFoto input{
+    width: 53vw;
+}
+
+.inputComFoto img{
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .inputComArquivo{
-    background-color: pink;
+    padding-left: 4vw;
+    padding-right: 2.5vw;
+}
+
+.postagem img{
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .postagem{
-    background-color: brown;
+    display: flex;
+    margin-top: 2rem;
+    background: #fcfcfd;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef2f7;
+    margin-bottom: 1rem;
 }
 
 .postagem-text{
-    background-color: gray;
+    width: 100%;
+    height: auto;
+    padding-inline: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
-.reacoes{
-    background-color: lime;
+.postagem-text span{
+    color: #2d7ff9;
 }
 
 .reacao{
-    background-color: gold;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
 }
 
 .right-main{
-    background-color: lightblue;
+    padding-top: 1.5rem;
+    margin: 1rem;
+    height:50rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
-.sobre{
-    background-color: lightcoral;
-}
 
 .administradores{
-    background-color: lightgreen;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background: #fcfcfd;
+    height: 13rem;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef2f7;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .adm{
-    background-color: lightsalmon;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.clubesMesmoGenero{
-    background-color: lightseagreen;
-}
-
-.clube-diverso{
-    background-color: lightpink;
+.adm img{
+    height: 35px;
+    width: 35px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .titulo-clube-diverso{
-    background-color: lightyellow;
+    display: flex;
+    gap: 1rem;
+}
+
+.clubesMesmoGenero{
+    background: #fcfcfd;
+    height: 19rem;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef2f7;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.sobre{
+    background: #fcfcfd;
+    height: 13rem;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef2f7;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }

@@ -11,6 +11,10 @@ import { faBook, faStar, faShieldHalved } from "@fortawesome/free-solid-svg-icon
 import { faFacebook, faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons"
 import Footer from "../../components/footer"
 
+import userDefault from "../../assets/userDefault.webp"
+
+import imageCompression from "browser-image-compression"
+
 
 
 function Perfil() {
@@ -68,7 +72,8 @@ function Perfil() {
                     nome: formData.nome,
                     nome_usuario: formData.username,
                     email: formData.email,
-                    data_nascimento: formData.dataNascimento
+                    data_nascimento: formData.dataNascimento,
+                    foto_perfil: foto
                 })
             })
 
@@ -107,6 +112,30 @@ function Perfil() {
         dataNascimento: "",
         id: ""
     })
+
+    const [foto, setFoto] = useState(null)
+    const [preview, setPreview] = useState(null)
+
+    async function handleFotoChange(e) {
+        const file = e.target.files[0]
+
+        if(file){
+
+            const compressedFile = await imageCompression(file, {
+                maxSizeMB: 0.2,
+                maxWidthOrHeight: 500,
+                useWebWorker: true
+            })
+            const reader = new FileReader()
+
+            reader.onloadend = () => {
+                setFoto(reader.result)
+                setPreview(reader.result)
+            }
+
+            reader.readAsDataURL(file)
+        }
+    }
 
     const INPUT_DATA = [
         { id: 1, name: "username", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text", required: true },
@@ -147,7 +176,7 @@ function Perfil() {
     return (
         <div>
             <Header
-                fotoUser={user?.foto}
+                fotoUser={user?.user?.foto_perfil}
             />
             <div className="up-perfil">
                 <h1>Perfil</h1>
@@ -158,7 +187,16 @@ function Perfil() {
             <div className="down-perfil">
                 <div className="left-perfil">
                     <div className="user-icon">
-                        <img className="img-user" src={user?.foto} alt="Foto do usuário" />
+                        <img className="img-user"
+                         src={preview || user?.user?.foto_perfil || userDefault}
+                        alt="Foto do usuário" 
+                        />
+
+                        <input type="file" 
+                        accept="image/*"
+                        onChange={handleFotoChange}/>
+
+
                         <h2>{user?.user.nome}</h2>
                         <p>@{user?.user.nome_usuario}</p>
                     </div>

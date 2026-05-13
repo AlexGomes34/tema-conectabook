@@ -114,7 +114,7 @@ export default function Clube() {
     return (
         <div className="body-feedClube">
             <Header
-                fotoUser={user?.foto} />
+                fotoUser = {user?.user?.foto_perfil} />
 
             <main className="main-clube">
                 <div className="left-clube">

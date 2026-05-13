@@ -2,6 +2,8 @@ import './header.css'
 import logo from '../../assets/logo.png';
 import { Link } from 'react-router-dom';
 
+import fotoDefault from "../../assets/userDefault.webp"
+
 function Header({ fotoUser }) {
 
     return (
@@ -13,7 +15,8 @@ function Header({ fotoUser }) {
             <Link className='a' to="/cafeteria">Cafeteria</Link>
             <Link to={"/eventos"} className='a' href="">Eventos</Link>
             <Link to={"/perfil"} className='user'>
-                <img className='fotoUser' src={fotoUser} alt="" />
+                <img className='fotoUser' src=
+                {fotoUser} alt="" />
             </Link>
         </header>
     )
