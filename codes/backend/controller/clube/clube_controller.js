@@ -2,7 +2,7 @@
  * Objetivo: Arquivo responsável pela manipulação da camada model de Clubes (Controller)
  * Projeto: ConectaBook
  * Data: 06/05/2026
- * Autor: Geovanna
+ * Autor: Geovanna Silva
  * Versão: 1.1
  *******************************************************************************************/
 
