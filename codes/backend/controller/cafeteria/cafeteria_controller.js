@@ -9,11 +9,8 @@
 const cafeteriaDAO = require('../../model/DAO/cafeteria.js');
 const messages = require('../modulo/config_messages.js');
 
-
-
-
 // GET - Listar todas as cafeterias
-const criarCafeteria = async function () {
+const listarCafeteria = async function () {
     try {
         let result = await cafeteriaDAO.getSelectAllCoffeeShops();
 
@@ -151,3 +148,40 @@ const atualizarCafeteria =  async function (cafeteria, contentType, id) {
 
 
 // DELETE - Excluir a cafeteria
+const excluirCafeteria = async function (id) {
+    if (id == '' || id == undefined || isNaN(id)) {
+            return messages.ERROR_REQUIRED_FIELDS;
+    }
+
+    try {
+        let buscarId = await cafeteriaDAO.getSelectByIdCoffeeShop(id)
+
+        if(buscarId) {
+            
+            let result = await cafeteriaDAO.setDeleteCoffeeShop(id)
+
+            if(result) {
+              let responseData = Object.assign({}, messages.HEADER);
+               responseData.status = messages.SUCCESS_DELETE_ITEM.status;
+               responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code;
+               responseData.response = messages.SUCCESS_DELETE_ITEM.message;
+                return responseData;
+            } else {
+                    return messages.ERROR_INTERNAL_SERVER_MODEL;
+             }
+        } else {
+                    return messages.ERROR_NOT_FOUND;
+             }
+     } catch (error) {
+                return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+    }
+ }
+
+
+ module.exports = {
+    listarCafeteria,
+    listarCafeteriaID,
+    criarCafeteria,
+    atualizarCafeteria,
+    excluirCafeteria
+ }

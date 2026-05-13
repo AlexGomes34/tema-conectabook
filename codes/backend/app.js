@@ -33,6 +33,9 @@ app.use('/v1/conectaBook/auth', authRoutes)
 const clubeRoutes = require('./routes/clubeRoutes.js')
 app.use('/v1/conectaBook/clubes', clubeRoutes)
 
+const membrosRoutes = require('./routes/membrosRoutes.js')
+app.use('/v1/conectabook/membros', membrosRoutes)
+
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, function(){

@@ -1,5 +1,5 @@
 /*******************************************************************************************
- * Objetivo: Arquivo responsável pela realização das rotas de generos_usuarios
+ * Objetivo: Arquivo responsável pela realização das rotas de clubes
  * Projeto: ConectaBook
  * Data: 13/05/2026
  * Autor: Geovanna Silva
@@ -35,7 +35,7 @@ router.get('/', cors(), async function (request, response) {
 
 
 
-// GET - Retorna um clube do BD diltrabdo pelo id
+// GET - Retorna um clube do BD filtrando pelo id
 router.get('/:id', cors(), async function (request, response) {
         let idClube = request.params.id
         
@@ -47,7 +47,7 @@ router.get('/:id', cors(), async function (request, response) {
 })
 
 
-// POST - Insere um novo gênero dentro do BD
+// POST - Insere um novo clube dentro do BD
 router.post('/', cors(), bodyParserJson, async function (request, response) {
     let dadosBody = request.body
     let contentType = request.headers['content-type']
