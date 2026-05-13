@@ -25,7 +25,7 @@ fun BottomBar() {
 
 
         NavigationBarItem(
-            selected = true,
+            selected = false,
             onClick = {},
             icon = {
                 Icon(
@@ -54,7 +54,7 @@ fun BottomBar() {
         )
 
         NavigationBarItem(
-            selected = false,
+            selected = true,
             onClick = {},
             icon = {
                 Icon(

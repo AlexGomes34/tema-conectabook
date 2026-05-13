@@ -21,7 +21,7 @@ import com.example.conectabook.components.SecaoClubes
 import com.example.conectabook.components.SecaoTitulosSugeridos
 
 @Composable
-fun HomeScreenn(modifier: Modifier = Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier) {
 
     val colors = MaterialTheme.colorScheme
 
@@ -65,7 +65,9 @@ fun HomeScreenn(modifier: Modifier = Modifier) {
                 PostCard(
                     nome = "Raissa Soares",
                     tempo = "2h atrás",
-                    texto = "Acabei de terminar 1984...",
+                    texto = "Acabei de terminar 1984, do George Orwell, e estou simplesmente impactado.\n" +
+                            "A forma como o livro mostra um mundo controlado pelo governo, onde até os pensamentos são monitorados, é assustadoramente atual. " +
+                            "Durante a leitura fiquei me perguntando várias vezes até que ponto nossa própria sociedade poderia caminhar para algo parecido.",
                     curtidas = 128,
                     comentarios = 32,
                     avatar = R.drawable.moca_lendo,
