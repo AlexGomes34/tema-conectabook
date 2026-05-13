@@ -8,7 +8,9 @@
 
 const clubeDAO = require("../../model/DAO/clube.js");
 const messages = require("../modulo/config_messages.js");
-const { listarUsuarioID } = require("../usuario/usuario_controller.js");
+
+
+// const { listarUsuarioID } = require("../usuario/usuario_controller.js");
 
 // GET - Listar todos os clubes
 const listarClubes = async function () {
