@@ -96,9 +96,12 @@ function Perfil() {
                         nome_usuario: formData.username,
                         email: formData.email,
                         data_nascimento: formData.dataNascimento,
-                        foto_perfil: data.usuario.foto_perfil
+                        foto_perfil: data.foto_perfil || userStorage.user.foto_perfil
                     }
                 }
+
+                const responseUser = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`)
+
 
                 localStorage.setItem("user", JSON.stringify(updatedUser))
                 setUser(updatedUser)
@@ -108,6 +111,8 @@ function Perfil() {
         } catch (error) {
             console.error("Erro no PUT:", error)
             alert("Erro na requisição")
+
+            console.log(data)
 
         }
     }
