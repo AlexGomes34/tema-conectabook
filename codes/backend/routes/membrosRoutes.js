@@ -46,9 +46,6 @@ router.get('/:id', cors(), async function(request, response){
     response.json(dadosUsuario)
 })
 
-// GET - Retorna usuário que participam de um clube específico
-router.get('/', )
-
 
 
 // GET - Retorna os clubes que um usuário participa

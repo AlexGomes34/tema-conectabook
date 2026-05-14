@@ -46,6 +46,18 @@ router.get('/:id', cors(), async function (request, response) {
         response.json(dadosClube)
 })
 
+// Exemplo no seu arquivo de rotas
+router.get('/:id', cors(), async function(request, response) {
+    // Pega o ID da URL
+    let idGenero = request.params.id;
+
+    // Chama o controller
+    let result = await controllerClube.listarClubesPorGenero(idGenero);
+
+    response.status(result.status_code);
+    response.json(result);
+});
+
 
 // POST - Insere um novo clube dentro do BD
 router.post('/', cors(), bodyParserJson, async function (request, response) {
@@ -70,8 +82,8 @@ router.put('/:id', cors(), bodyParserJson, async function (request, response) {
     // Chama a função atualizar clube 
     let dadosClube = await controllerClube.atualizarClube(dadosBody, contentType, idClube)
 
-    response.status(dadosGeneros.status_code)
-    response.json(dadosGeneros)
+    response.status(dadosClube.status_code)
+    response.json(dadosClube)
 })
 
 
@@ -82,8 +94,8 @@ router.delete('/:id', cors(), async function (request, response) {
     //chama a função Excluir clube
     let dadosClube = await controllerClube.excluirClube(idClube)
 
-    response.status(dadosGeneros.status_code)
-    response.json(dadosGeneros)
+    response.status(dadosClube.status_code)
+    response.json(dadosClube)
     
 })
 
