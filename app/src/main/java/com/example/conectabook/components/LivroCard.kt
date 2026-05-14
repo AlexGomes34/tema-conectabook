@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun LivroCard(
     capa: Int,
-    título: String,
+    titulo: String,
     autor: String,
     nota: String,
     modifier: Modifier = Modifier
@@ -38,7 +38,7 @@ fun LivroCard(
     ) {
         Image(
             painter = painterResource(id = capa),
-            contentDescription = título,
+            contentDescription = titulo,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
@@ -48,7 +48,7 @@ fun LivroCard(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = título,
+        Text(text = titulo,
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
             color = colors.onBackground,

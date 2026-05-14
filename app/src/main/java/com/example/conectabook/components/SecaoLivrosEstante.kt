@@ -1,5 +1,6 @@
 package com.example.conectabook.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,38 +16,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.conectabook.R
 
-data class LivroUi(
-    val capa:Int,
-    val título: String,
+data class LivroEstanteUi(
+    val capa: Int,
+    val titulo: String,
     val autor: String,
     val nota: String
 )
 
 @Composable
-fun SecaoTitulosSugeridos(modifier: Modifier = Modifier) {
-
+fun SecaoLivrosEstante(
+    titulo: String,
+    livros: List<LivroEstanteUi>,
+    modifier: Modifier = Modifier
+) {
     val colors = MaterialTheme.colorScheme
 
+    Column(modifier = modifier.fillMaxWidth()) {
 
-    val livros = listOf(
-        LivroUi (R.drawable.kallocaina,"Kallocaína", "Karin Boye", "4,7"),
-        LivroUi(R.drawable.blade, "Blade Runner","Philip k. Dick", "4,6"),
-        LivroUi(R.drawable.circle, "Blade Runner", "Dave Eggers", "3,8"),
-        LivroUi (R.drawable.kallocaina,"Kallocaína", "Karin Boye", "4,7")
-    )
-
-    Column(modifier = Modifier
-        .fillMaxWidth()) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Títulos Sugeridos",
-                fontSize = 20.sp,
+                text = titulo,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = colors.onBackground
             )
@@ -55,20 +49,22 @@ fun SecaoTitulosSugeridos(modifier: Modifier = Modifier) {
                 text = "Ver todos",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = colors.primary
+                color = colors.primary,
+                modifier = Modifier.clickable{}
             )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
         LazyRow(
+            modifier = Modifier.height(250.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-
             items(livros) { livro ->
+
                 LivroCard(
                     capa = livro.capa,
-                    titulo = livro.título,
+                    titulo = livro.titulo,
                     autor = livro.autor,
                     nota = livro.nota
                 )
