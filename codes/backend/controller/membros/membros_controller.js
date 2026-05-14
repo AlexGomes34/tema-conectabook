@@ -1,0 +1,283 @@
+/*******************************************************************************************
+ * Objetivo: Arquivo responsável pela manipulação da camada model de membros (Controller)
+ * Projeto: ConectaBook
+ * Data: 13/05/2026
+ * Autor: Geovanna Silva
+ * Versão: 1.1
+ *******************************************************************************************/
+
+const membrosDAO = require("../../model/DAO/membros.js")
+const messages = require("../modulo/config_messages.js")
+
+
+// GET - Listar todos os membros
+const listarMembros = async function () {
+    try {
+        let result = await membrosDAO.getSelectAllMembersClubs()
+        
+        if(result) {
+            let responseData = Object.assign({}, messages.HEADER)
+            responseData.status = messages.SUCCESS_REQUEST.status
+            responseData.status_code = messages.SUCCESS_REQUEST.status_code
+            responseData.response = result
+            return responseData
+        } else {
+            return messages.ERROR_NOT_FOUND
+        }
+    } catch (error) {
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+    
+}
+
+
+// GET ID = LISTAR MEMBROS PELO ID
+const listarMembroID = async function (id) {
+    if(id == '' || id == undefined || isNaN(id)) {
+        return messages.ERROR_REQUIRED_FIELDS
+    }
+
+    try{
+        let result = await membrosDAO.getSelectByIdMember(id)
+
+        if(result){
+            let responseData = Object.assign({}, messages.HEADER);
+            responseData.status = messages.SUCCESS_REQUEST.status;
+            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+           
+            responseData.response = result[0]; 
+            return responseData;
+        } else {
+            return messages.ERROR_NOT_FOUND
+        }
+    } catch(error) {
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+    
+}
+
+
+// GET -  RETORNA OS USUÁRIOS QUE PARTICIPAM DE UM CLUBE ESPECIFICO
+const listarMembrosPorClube = async function (idClube) {
+    if(idClube == '' || idClube == undefined || isNaN(idClube) ){
+        return messages.ERROR_REQUIRED_FIELDS
+    }
+    
+    try{
+        let result = await membrosDAO.getSelectUsersByIdClub(idClube)
+
+        if(result) {
+            let responseData = Object.assign({}, messages.HEADER);
+            responseData.status = messages.SUCCESS_REQUEST.status;
+            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+            responseData.quantidade = result.length;
+            responseData.response = result;
+            return responseData;
+        } else {
+              return messages.ERROR_NOT_FOUND;
+         }
+   } catch (error) {
+            return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+        }
+}
+
+
+// GET - RETORNA OS CLUBES QUE O USUÁRIO PARTICIPA
+const listarClubesPorUsuario = async function (idUsuario) {
+
+    if(idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
+        return messages.ERROR_REQUIRED_FIELDS
+    }
+    
+    try {
+        let result = await membrosDAO.getSelectClubsThatUserParticipateByIdUser(idUsuario)
+
+        if(result) {
+          let responseData = Object.assign({}, messages.HEADER);
+          responseData.status = messages.SUCCESS_REQUEST.status;
+          responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+          responseData.quantidade = result.length; 
+          responseData.response = result;
+          return responseData;
+     } else {
+                return messages.ERROR_NOT_FOUND;
+            }
+       } catch (error) {
+                return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+     }
+ }
+
+
+// GET - RETORNA OS CLUBES QUE O USUARIO ADMINISTRA
+const listarClubesAdminPorUsuario = async function (idUsuario) {
+
+     if(idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
+        return messages.ERROR_REQUIRED_FIELDS
+    }
+    
+    try {
+        let result = await membrosDAO.getSelectClubesAdminByUser(idUsuario)
+
+        if(result) {
+          let responseData = Object.assign({}, messages.HEADER);
+          responseData.status = messages.SUCCESS_REQUEST.status;
+          responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+          responseData.quantidade = result.length; 
+          responseData.response = result;
+          return responseData;
+     } else {
+                return messages.ERROR_NOT_FOUND;
+            }
+       } catch (error) {
+                return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+     }
+ }
+
+
+// POST - CRIAR NOVO MEMBRO
+const criarMembro =  async function (membro, contentType) {
+    try {
+        if(String(contentType).toLowerCase() != 'application/json') {
+            return messages.ERROR_CONTENT_TYPE
+        }
+
+
+        if( membro.administrador == '' || membro.administrador == undefined ||
+            membro.id_usuario == '' || membro.id_usuario == undefined ||
+            membro.id_clube == '' || membro.id_clube == undefined 
+        ) {
+            return messages.ERROR_REQUIRED_FIELDS
+        } else {
+            let result = await membrosDAO.setInsertMembers(membro)
+
+            if(result){
+              let responseData = Object.assign({}, messages.HEADER);
+              responseData.status = messages.SUCCESS_CREATED_ITEM.status;
+              responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
+              responseData.response = messages.SUCCESS_CREATED_ITEM.message;
+              return responseData;
+        } else {
+            return messages.ERROR_INTERNAL_SERVER_MODEL;
+        }
+     }
+  } catch (error) {
+    return messages.ERROR_INTERNAL_SERVER_CONTROLLER
+  }
+    
+}
+
+// PUT - ATUALIZA UM MEMBRO
+const atualizarMembro = async function (membro, contentType, id) {
+    try {
+       
+        if (id == '' || id == undefined || isNaN(id)) {
+              return messages.ERROR_REQUIRED_FIELDS;
+        }
+       
+        if (String(contentType).toLowerCase() !== 'application/json') {
+                   return messages.ERROR_CONTENT_TYPE;
+        }
+
+        if (membro.administrador == '' || membro == undefined ||
+            membro.id_usuario == '' || membro == undefined ||
+            membro.id_clube == '' || membro == undefined
+        ) { 
+            return messages.ERROR_REQUIRED_FIELDS
+          } else {
+
+            let buscarId = await membrosDAO.getSelectByIdMember(id)
+
+            if(buscarId){
+                membro.id = id
+                let result = await membrosDAO.setUpdateMembers(membro)
+
+                if(result) {
+                let responseData = Object.assign({}, messages.HEADER);
+                responseData.status = messages.SUCCESS_UPDATED_ITEM.status;
+                responseData.status_code = messages.SUCCESS_UPDATED_ITEM.status_code;
+                responseData.response = messages.SUCCESS_UPDATED_ITEM.message;
+                return responseData;           
+              } else {
+                    return messages.ERROR_INTERNAL_SERVER_MODEL;
+              }
+          } else {
+                    return messages.ERROR_NOT_FOUND;
+         }
+        }
+     } catch (error) {
+            return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+        }
+}
+
+// DELETE - EXCLUIR UM MEMBRO
+const excluirMembro = async function (id) {
+    if (id == '' || id == undefined || isNaN(id)){
+        return messages.ERROR_REQUIRED_FIELDS
+    }
+
+    try{
+        let buscarId = await membrosDAO.getSelectByIdMember(id)
+
+        if(buscarId) {
+
+            let result = await membrosDAO.setDeleteMembers(id)
+
+            if(result) {
+                let responseData = Object.assign({}, messages.HEADER);
+                responseData.status = messages.SUCCESS_DELETE_ITEM.status;
+                responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code;
+                responseData.response = messages.SUCCESS_DELETE_ITEM.message;
+                return responseData;
+            } else {
+                 return messages.ERROR_INTERNAL_SERVER_MODEL;
+            }
+         } else {
+                return messages.ERROR_NOT_FOUND;
+          }
+     } catch (error) {
+               return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+         }
+}
+
+
+// DELETA OS RELACIONAMENTOS DE UM USUÁRIO
+const excluirMembrosPorIdClube =  async function (idClube){
+     if (idClube == '' || idClube == undefined || isNaN(idClube)){
+        return messages.ERROR_REQUIRED_FIELDS
+    }
+
+    try{
+        let buscarId = await membrosDAO.getSelectUsersByIdClub(idClube)
+
+
+        if (buscarId) {
+        let result = await membrosDAO.setDeleteMembersByClubeId(idClube)
+
+        if(result) {
+            let responseData = Object.assign({}, messages.HEADER);
+                responseData.status = messages.SUCCESS_DELETE_ITEM.status;
+                responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code;
+                responseData.response = messages.SUCCESS_DELETE_ITEM.message;
+                return responseData;
+            } else {
+                 return messages.ERROR_INTERNAL_SERVER_MODEL;
+            }
+         } else {
+                return messages.ERROR_NOT_FOUND;
+          }
+     } catch (error) {
+               return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+         }
+}
+
+module.exports = {
+    listarMembros,
+    listarMembroID,
+    listarClubesPorUsuario,
+    listarClubesPorUsuario,
+    criarMembro,
+    atualizarMembro,
+    excluirMembro,
+    excluirMembrosPorIdClube
+
+}

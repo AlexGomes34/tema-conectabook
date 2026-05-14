@@ -9,15 +9,30 @@ module.exports = {
     development: {
         client: 'mysql2',
         connection: {
-            host: "conectabook-server.mysql.database.azure.com",
-            user: "admindb",
-            password: "1234Abc#",
+            host: "127.0.0.1",
+            user: "root",
+            password: "bcd127",
             database: "db_conecta_book",
             port: 3306, // CORRIGIDO: Porta do MySQL é 3306
-            ssl: {
-                rejectUnauthorized: false
-            },
             charset: 'utf8mb4'
         }
     }
 };
+
+
+//module.exports = {
+//    development: {
+//        client: 'mysql2',
+//        connection: {
+//            host: "conectabook-server.mysql.database.azure.com",
+//            user: "admindb",
+//            password: "1234Abc#",
+//            database: "db_conecta_book",
+//            port: 3306, // CORRIGIDO: Porta do MySQL é 3306
+//            ssl: {
+//                rejectUnauthorized: false
+//            },
+//           charset: 'utf8mb4'
+//        }
+//    }
+//};

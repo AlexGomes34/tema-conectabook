@@ -208,3 +208,16 @@ const setDeleteMembersByClubeId = async function (id) {
         return false
     }
 }
+
+
+module.exports = {
+    getSelectAllMembersClubs,
+    getSelectByIdMember,
+    getSelectClubesAdminByUser,
+    getSelectClubsThatUserParticipateByIdUser,
+    getSelectUsersByIdClub,
+    setInsertMembers,
+    setUpdateMembers,
+    setDeleteMembers,
+    setDeleteMembersByClubeId
+}

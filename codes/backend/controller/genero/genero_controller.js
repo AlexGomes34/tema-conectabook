@@ -128,7 +128,7 @@ const excluirGenero = async function (id) {
         let buscarId = await generoDAO.getSelectByIdGenre(id);
 
         if(buscarId) {
-            // CORRIGIDO: Nome da função era setDeleteUser
+           
             let result = await generoDAO.setDeleteGenre(id);
 
             if(result) {
