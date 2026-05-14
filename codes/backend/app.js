@@ -13,6 +13,9 @@ const bodyParser = require('body-parser')
 const app = express()
 
 // Configuração global do CORS - Mais limpo e funcional
+
+app.use('/uploads', express.static('uploads'))
+
 app.use(cors())
 
 // Middleware para JSON
