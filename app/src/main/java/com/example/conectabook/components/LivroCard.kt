@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -32,7 +33,7 @@ fun LivroCard(
 
     Column(
         modifier = Modifier
-            .width(104.dp)
+            .width(118.dp)
             .background(colors.surface, RoundedCornerShape(12.dp))
             .padding(8.dp)
     ) {
@@ -42,7 +43,7 @@ fun LivroCard(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(140.dp)
+                .height(160.dp)
                 .clip(RoundedCornerShape(8.dp))
         )
 
@@ -52,14 +53,16 @@ fun LivroCard(
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
             color = colors.onBackground,
-            maxLines = 1
+            maxLines = 2, //responsavel por controlar quantidade de linhas do titulo do livro
+            overflow = TextOverflow.Ellipsis
             )
 
         Text(
             text = autor,
             fontSize = 11.sp,
             color = colors.onSurfaceVariant,
-            maxLines = 1
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
         )
 
         Spacer(modifier = Modifier.height(4.dp))
