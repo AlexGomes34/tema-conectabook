@@ -58,7 +58,7 @@ const listarMembroID = async function (id) {
 
 
 // GET -  RETORNA OS USUÁRIOS QUE PARTICIPAM DE UM CLUBE ESPECIFICO
-const listarMembrosPorClube = async function (idClube) {
+const listarMembrosPorClubeID = async function (idClube) {
     if(idClube == '' || idClube == undefined || isNaN(idClube) ){
         return messages.ERROR_REQUIRED_FIELDS
     }
@@ -83,7 +83,7 @@ const listarMembrosPorClube = async function (idClube) {
 
 
 // GET - RETORNA OS CLUBES QUE O USUÁRIO PARTICIPA
-const listarClubesPorUsuario = async function (idUsuario) {
+const listarClubesPorUsuarioID = async function (idUsuario) {
 
     if(idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
         return messages.ERROR_REQUIRED_FIELDS
@@ -109,7 +109,7 @@ const listarClubesPorUsuario = async function (idUsuario) {
 
 
 // GET - RETORNA OS CLUBES QUE O USUARIO ADMINISTRA
-const listarClubesAdminPorUsuario = async function (idUsuario) {
+const listarClubesAdminPorUsuarioID = async function (idUsuario) {
 
      if(idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
         return messages.ERROR_REQUIRED_FIELDS
@@ -167,46 +167,47 @@ const criarMembro =  async function (membro, contentType) {
 }
 
 // PUT - ATUALIZA UM MEMBRO
+// controller/membros/membros_controller.js
 const atualizarMembro = async function (membro, contentType, id) {
     try {
-       
         if (id == '' || id == undefined || isNaN(id)) {
-              return messages.ERROR_REQUIRED_FIELDS;
+            return messages.ERROR_REQUIRED_FIELDS;
         }
        
         if (String(contentType).toLowerCase() !== 'application/json') {
-                   return messages.ERROR_CONTENT_TYPE;
+            return messages.ERROR_CONTENT_TYPE;
         }
 
-        if (membro.administrador == '' || membro == undefined ||
-            membro.id_usuario == '' || membro == undefined ||
-            membro.id_clube == '' || membro == undefined
-        ) { 
+        // Simplificando a validação dos campos obrigatórios
+        if (membro.administrador === undefined || membro.id_usuario == '' || 
+            membro.id_usuario == undefined || membro.id_clube == '' || 
+            membro.id_clube == undefined) { 
             return messages.ERROR_REQUIRED_FIELDS
-          } else {
-
+        } else {
             let buscarId = await membrosDAO.getSelectByIdMember(id)
 
             if(buscarId){
-                membro.id = id
+                // AQUI: use o nome que sua DAO espera (id_membros)
+                membro.id_membros = id 
+                
                 let result = await membrosDAO.setUpdateMembers(membro)
 
                 if(result) {
-                let responseData = Object.assign({}, messages.HEADER);
-                responseData.status = messages.SUCCESS_UPDATED_ITEM.status;
-                responseData.status_code = messages.SUCCESS_UPDATED_ITEM.status_code;
-                responseData.response = messages.SUCCESS_UPDATED_ITEM.message;
-                return responseData;           
-              } else {
+                    let responseData = Object.assign({}, messages.HEADER);
+                    responseData.status = messages.SUCCESS_UPDATED_ITEM.status;
+                    responseData.status_code = messages.SUCCESS_UPDATED_ITEM.status_code;
+                    responseData.response = messages.SUCCESS_UPDATED_ITEM.message;
+                    return responseData;           
+                } else {
                     return messages.ERROR_INTERNAL_SERVER_MODEL;
-              }
-          } else {
-                    return messages.ERROR_NOT_FOUND;
-         }
+                }
+            } else {
+                return messages.ERROR_NOT_FOUND;
+            }
         }
-     } catch (error) {
-            return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
-        }
+    } catch (error) {
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+    }
 }
 
 // DELETE - EXCLUIR UM MEMBRO
@@ -273,8 +274,10 @@ const excluirMembrosPorIdClube =  async function (idClube){
 module.exports = {
     listarMembros,
     listarMembroID,
-    listarClubesPorUsuario,
-    listarClubesPorUsuario,
+    listarClubesPorUsuarioID,
+    listarClubesPorUsuarioID,
+    listarMembrosPorClubeID,
+    listarClubesAdminPorUsuarioID,
     criarMembro,
     atualizarMembro,
     excluirMembro,
