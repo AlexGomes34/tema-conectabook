@@ -109,7 +109,7 @@ const setInsertClub = async function (clube) {
                         '${clube.nome}',
                         '${clube.sobre}',
                         '${clube.regras}',
-                        '${foto}',
+                        ${foto},
                         '${clube.id_genero}'
                         )`
 

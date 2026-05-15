@@ -51,12 +51,14 @@ const setInsertBook = async function (livro) {
                         isbn,
                         titulo, 
                         autor, 
-                        descricao
+                        descricao,
+                        capa
                     ) values (
                         '${livro.isbn}',
                         '${livro.titulo}',
                         '${livro.autor}', 
-                        '${livro.descricao}'
+                        '${livro.descricao}',
+                        '${livro.capa}'
                   )`
 
         let result = await db.raw(sql)
@@ -73,15 +75,30 @@ const setInsertBook = async function (livro) {
 
 // ATUALIZA UM LIVRO NO BANCO 
 const setUpdateBook = async function (livro) {
-     let sql = `update tbl_livro set 
+    try {
+        // CORRIGIDO: Adicionada a vírgula depois do título e estruturado o SQL
+        let sql = `update tbl_livro set 
                         isbn = '${livro.isbn}',
-                        titulo = '${livro.titulo}'
+                        titulo = '${livro.titulo}',
                         autor = '${livro.autor}', 
-                        descricao = '${livro.descricao}'
-                        where id_livro = ${livro.id}`
+                        descricao = '${livro.descricao}',
+                        capa = '${livro.capa}'
+                    where id_livro = ${livro.id}`
 
         let result = await db.raw(sql)
-    
+        
+        if (result && result[0]) {
+            const header = result[0];
+            if (header.affectedRows > 0) {
+                return true;
+            }
+        }
+        return false;
+
+    } catch (error) {
+        console.log("Erro ao atualizar livro no banco:", error);
+        return false;
+    }
 }
 
 
