@@ -138,9 +138,9 @@ const setInsertMembers = async function (membros) {
                         id_usuario,
                         id_clube
                     ) values (
-                        ${membros.administrador},
-                        ${membros.id_usuario},
-                        ${membros.id_clube}
+                        '${membros.administrador}',
+                        '${membros.id_usuario}',
+                        '${membros.id_clube}'
                     )`
         
         let result = await db.raw(sql)
