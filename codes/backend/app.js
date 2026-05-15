@@ -27,6 +27,9 @@ app.use('/v1/conectaBook/generos', generoRoutes)
 const generoUsuarioRoutes = require('./routes/genero_usuarioRoutes.js')
 app.use('/v1/conectaBook/genero-usuario', generoUsuarioRoutes)
 
+const generoLivroRoutes = require('./routes/genero_livroRoutes.js')
+app.use('/v1/conectaBook/genero-livro', generoLivroRoutes)
+
 const authRoutes = require('./routes/auth_routes.js')
 app.use('/v1/conectaBook/auth', authRoutes)
 
@@ -35,6 +38,9 @@ app.use('/v1/conectaBook/clubes', clubeRoutes)
 
 const membrosRoutes = require('./routes/membrosRoutes.js')
 app.use('/v1/conectabook/membros', membrosRoutes)
+
+const livrosRoutes = require('./routes/livroRoutes.js')
+app.use('/v1/conectabook/livros', livrosRoutes)
 
 const PORT = process.env.PORT || 8080
 
