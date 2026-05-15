@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPeopleGroup, faStar, faShieldHalved } from "@fortawesome/free-solid-svg-icons"
+import { faPeopleGroup, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import Footer from "../../components/footer"
 import fotoClube1 from "../../assets/fotoClube1.jpg"
 import Button from "../../components/button"
@@ -170,8 +170,12 @@ export default function Clube() {
 
                 <div className="right-clube">
                     <div className="pesquisa">
+                        <div className="input-clube">
                         <Input
                             placeholder={"Procure por um grupo..."} />
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        </div>
+                        
                         <Button
                             onClick={() => navigate("/criarClube")}
                             text={"Criar Clube"} />

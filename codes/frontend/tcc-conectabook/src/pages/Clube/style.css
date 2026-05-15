@@ -9,6 +9,13 @@
     align-items: flex-start;
 }
 
+.input-clube{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-right:2rem;
+}
+
 /* ===== SIDEBAR ===== */
 
 .left-clube{
