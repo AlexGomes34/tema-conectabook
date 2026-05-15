@@ -3,7 +3,7 @@
  * Projeto: ConectaBook
  * Data: 06/05/2026
  * Autor: Geovanna Silva
- * Versão: 1.1 (Ajustado para retornar apenas o índice [0])
+ * Versão: 1.1 
  *******************************************************************************************/
 
 // CONEXÃO COM O BANCO DE DADOS

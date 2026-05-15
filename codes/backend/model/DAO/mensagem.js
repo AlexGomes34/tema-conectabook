@@ -42,23 +42,42 @@ const getSelectByIdMessage = async function (id) {
 }
 
 
-/* RETORNA MENSAGENS PELO ID DO USUÁRIO
-const getSelectMessagesByIdUser =  async function (idUsuario) {
-    try{
+// RETORNA MENSAGENS PELO ID DO USUÁRIO 
+const getSelectMessagesByIdUser = async function (idUsuario) {
+    try {
+        
         let sql = `
             select
-               tbl_usuario.id_usuario,
-               tbl_usuario.nome
-               from tbl_mensagem
-                     join tbl_
+                tbl_mensagem.id_mensagem,
+                tbl_usuario.id_usuario,
+                tbl_usuario.nome,
+                tbl_usuario.foto,
+                tbl_mensagem.comentario, 
+                tbl_mensagem.data_postagem,
+                tbl_mensagem.id_status,
+                tbl_mensagem.arquivo_externo
+            from tbl_usuario
+                inner join tbl_mensagem
+                    on tbl_usuario.id_usuario = tbl_mensagem.id_usuario
+            where tbl_mensagem.id_usuario = ?
+        `
 
         
-        
-        `
+        // ? faz com que o banco trate o valor apenas como dado, e não como comando
+        let result = await db.raw(sql, [idUsuario]);
+
+       
+        if (result && result[0].length > 0) {
+            return result[0]
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.error("Erro ao buscar mensagens do usuário:", error)
+        return false
     }
-    
 }
-*/
 
 // INSERE UMA MENSAGEM
 const setInsertMessage = async function (mensagem) {
@@ -153,6 +172,7 @@ const setDeleteMessagesByIdUser = async function (id) {
 module.exports = {
     getSelectAllMessages,
     getSelectByIdMessage,
+    getSelectMessagesByIdUser,
     setInsertMessage,
     setUpdateMessages,
     setDeleteMessages,
