@@ -9,7 +9,7 @@ CREATE TABLE tbl_status_livro (
 CREATE TABLE tbl_genero (
 	id_genero INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	nome varchar(30) NOT NULL,
-	descricao varchar(100) NOT NULL
+	descricao varchar(100) NULL
 );
 
 CREATE TABLE tbl_usuario (
@@ -77,26 +77,28 @@ CREATE TABLE tbl_avaliacao (
 	data_avaliacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-CREATE TABLE tbl_membros (
-	id_membros INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-	administrador BOOLEAN DEFAULT FALSE,
-	id_usuario INT NULL,	
-	FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario)
-);
-
 CREATE TABLE tbl_clube (
 	id_clube INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	nome varchar(100) NOT NULL,
 	sobre TEXT NOT NULL,
 	regras TEXT NOT NULL,
-	genero varchar(30) NOT NULL,
-	foto TEXT NOT NULL,
-	id_membros INT NOT NULL,
-	FOREIGN KEY (id_membros) REFERENCES tbl_membros (id_membros),
+	foto TEXT NULL,
     id_genero INT NOT NULL,
-	FOREIGN KEY (id_genero) REFERENCES tbl_genero (id_genero)
-    
+	FOREIGN KEY (id_genero) REFERENCES tbl_genero (id_genero),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL
 );
+
+CREATE TABLE tbl_membros (
+	id_membros INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	administrador BOOLEAN DEFAULT FALSE,
+	id_usuario INT NULL,	
+	FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario),
+    id_clube INT NOT NULL,
+	FOREIGN KEY (id_clube) REFERENCES tbl_clube (id_clube)
+);
+
+delete from tbl_clube where id_clube = 1;
+delete from tbl_membros where id_clube = 2;
 
 CREATE TABLE tbl_estante (
 	id_estante INT PRIMARY KEY NOT NULL AUTO_INCREMENT,

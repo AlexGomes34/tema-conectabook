@@ -2,13 +2,15 @@
  * Objetivo: Arquivo responsável pela manipulação da camada model de Clubes (Controller)
  * Projeto: ConectaBook
  * Data: 06/05/2026
- * Autor: Geovanna
+ * Autor: Geovanna Silva
  * Versão: 1.1
  *******************************************************************************************/
 
 const clubeDAO = require("../../model/DAO/clube.js");
 const messages = require("../modulo/config_messages.js");
-const { listarUsuarioID } = require("../usuario/usuario_controller.js");
+
+
+// const { listarUsuarioID } = require("../usuario/usuario_controller.js");
 
 // GET - Listar todos os clubes
 const listarClubes = async function () {

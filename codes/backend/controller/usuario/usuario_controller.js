@@ -57,7 +57,7 @@ const listarUsuarioID = async function(id) {
     }
 }
 
-
+// POST - Criar usuário
 const criarUsuario = async function(usuario, contentType) {
     try {
         if (String(contentType).toLowerCase() !== 'application/json') {
