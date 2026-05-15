@@ -59,6 +59,35 @@ const listarClubeID = async function (id) {
     }
 }
 
+// GET - Listar clubes filtrando pelo ID do Gênero
+const listarClubesPorGenero = async function (idGenero) {
+    try {
+        // Validação básica para garantir que o ID não está vazio ou inválido
+        if (idGenero == '' || idGenero == undefined || isNaN(idGenero)) {
+            return messages.ERROR_INVALID_ID; // Ou a mensagem de erro de ID inválido do seu arquivo
+        } else {
+            
+            // Chama o DAO passando o ID recebido
+            let result = await clubeDAO.getSelectClubsByGeneroID(idGenero);
+
+            if (result) {
+                let responseData = Object.assign({}, messages.HEADER);
+                responseData.status = messages.SUCCESS_REQUEST.status;
+                responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+                
+                // Retorna a lista de clubes filtrada
+                responseData.response = result; 
+                return responseData;
+            } else {
+                // Caso não encontre nenhum clube para esse gênero específico
+                return messages.ERROR_NOT_FOUND;
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+    }
+}
 
 //  POST - Criar novo clube
 const criarClube = async function (clube, contentType) {
@@ -70,8 +99,6 @@ const criarClube = async function (clube, contentType) {
         if(clube.nome == '' || clube.nome == undefined || 
            clube.sobre == '' || clube.sobre == undefined ||
            clube.regras == ''|| clube.regras == undefined ||
-           clube.foto == '' || clube.foto == undefined ||
-           clube.id_membros == '' || clube.id_membros == undefined ||
            clube.id_genero == '' || clube.id_genero == undefined 
         ) {
             return messages.ERROR_REQUIRED_FIELDS
@@ -108,8 +135,6 @@ const atualizarClube = async function (clube, contentType, id) {
          if(clube.nome == '' || clube.nome == undefined || 
            clube.sobre == '' || clube.sobre == undefined ||
            clube.regras == ''|| clube.regras == undefined ||
-           clube.foto == '' || clube.foto == undefined ||
-           clube.id_membros == '' || clube.id_membros == undefined ||
            clube.id_genero == '' || clube.id_genero == undefined 
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
@@ -155,7 +180,9 @@ const excluirClube = async function (id) {
             if(result) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_DELETE_ITEM.status;
-                responseData.status_code = messages.SUCCESS_DELETE_ITEM.message;
+                // CORREÇÃO AQUI: Troque .message por .status_code
+                responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code; 
+                responseData.response = messages.SUCCESS_DELETE_ITEM.message;
                 return responseData;
             } else {
                 return messages.ERROR_INTERNAL_SERVER_MODEL;
@@ -166,13 +193,13 @@ const excluirClube = async function (id) {
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-    
 }
 
 
 module.exports = {
     listarClubeID,
     listarClubes,
+    listarClubesPorGenero,
     excluirClube,
     atualizarClube,
     criarClube

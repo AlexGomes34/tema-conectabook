@@ -10,7 +10,7 @@ const db = require('../../database/connection')
 //RETORNA TODOS OS MEMBROS DE TODOS OS GRUPOS DO BANCO
 const getSelectAllMembersClubs = async function () {
     try {
-        let sql = `select * from tbl_clube order by id_membros`
+        let sql = `select * from tbl_membros order by id_membros`
 
         let result = await db.raw(sql)
 
@@ -32,7 +32,7 @@ const getSelectByIdMember = async function (id) {
 
         let result = await db.raw(sql)
 
-        if(result && result[0] > 0){
+        if(result && result[0].length > 0){
             return result[0]
         }else{
             return false
@@ -60,7 +60,7 @@ const getSelectUsersByIdClub = async function (idClube) {
                 inner join tbl_clube
                     on tbl_clube.id_clube = tbl_membros.id_clube
             where tbl_membros.id_clube = ${idClube}
-            order by tbl_membro.admin desc, tbl_usuario.nome asc`; 
+            order by tbl_membros.administrador desc, tbl_usuario.nome asc`; 
 
         let result = await db.raw(sql);
 
@@ -114,8 +114,8 @@ const getSelectClubesAdminByUser = async function (idUsuario) {
             from tbl_clube
                 inner join tbl_membros
                     on tbl_clube.id_clube = tbl_membros.id_clube
-            where tbl_membro.id_usuario = ${idUsuario} 
-              and tbl_membro.administrador = 1`; 
+            where tbl_membros.id_usuario = ${idUsuario} 
+              and tbl_membros.administrador = 1`; 
 
         let result = await db.raw(sql);
 
@@ -159,7 +159,7 @@ const setInsertMembers = async function (membros) {
 //ATUALIZA UM RELACIONAMENTO
 const setUpdateMembers = async function (membros) {
     try {
-        let sql = `update tbl_genero_usuario set 
+        let sql = `update tbl_membros set 
                         administrador = ${membros.administrador},
                         id_usuario = ${membros.id_usuario},
                         id_clube = ${membros.id_clube}
