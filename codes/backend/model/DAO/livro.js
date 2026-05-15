@@ -51,12 +51,14 @@ const setInsertBook = async function (livro) {
                         isbn,
                         titulo, 
                         autor, 
-                        descricao
+                        descricao,
+                        capa
                     ) values (
                         '${livro.isbn}',
                         '${livro.titulo}',
                         '${livro.autor}', 
-                        '${livro.descricao}'
+                        '${livro.descricao}',
+                        '${livro.capa}'
                   )`
 
         let result = await db.raw(sql)
@@ -77,7 +79,8 @@ const setUpdateBook = async function (livro) {
                         isbn = '${livro.isbn}',
                         titulo = '${livro.titulo}'
                         autor = '${livro.autor}', 
-                        descricao = '${livro.descricao}'
+                        descricao = '${livro.descricao}',
+                        capa = '${livro.capa}'
                         where id_livro = ${livro.id}`
 
         let result = await db.raw(sql)
