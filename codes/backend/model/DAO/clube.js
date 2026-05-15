@@ -9,22 +9,41 @@
 // CONEXÃO COM O BANCO DE DADOS
 const db = require('../../database/connection')
 
-//RETORNA TODOS OS CLUBES DO BANCO
-const getSelectAllClubs =  async function () {
+// RETORNA TODOS OS CLUBES
+const getSelectAllClubs = async function () {
     try {
-        let sql = `select * from tbl_clube order by id_clube asc`
-        let result = await db.raw(sql)
+        // Usamos LEFT JOIN para garantir que clubes com 0 membros também apareçam
+        // O GROUP BY é essencial para que o COUNT funcione por clube
+        let sql = `
+            select 
+                tbl_clube.id_clube, 
+                tbl_clube.nome, 
+                tbl_clube.foto, 
+                tbl_clube.sobre, 
+                tbl_genero.nome as genero,
+                count(tbl_membros.id_usuario) as total_membros
+            from tbl_clube
+                left join tbl_genero 
+                    on tbl_genero.id_genero = tbl_clube.id_genero
+                left join tbl_membros 
+                    on tbl_clube.id_clube = tbl_membros.id_clube
+            group by tbl_clube.id_clube
+            order by tbl_clube.id_clube asc`;
 
-        //Retorna apenas a lista de dados (índice 0)
-        if(result && result[0].length > 0)
-            return result[0]
+        let result = await db.raw(sql);
+
+        if (result && result[0].length > 0)
+            return result[0];
         else
-            return false
-    } catch(error) {
-        return false
+            return false;
+
+    } catch (error) {
+        console.log(error);
+        return false;
     }
-    
 }
+
+
 
 // RETORNA CLUBE PELO ID
 const getSelectByIdClub = async function(id){
@@ -43,6 +62,39 @@ const getSelectByIdClub = async function(id){
 }
 
 
+// RETORNA CLUBE PELO ID DO GENERO
+const getSelectClubsByGeneroID = async function (idGenero) {
+    try {
+        let sql = `
+            select 
+                tbl_clube.id_clube, 
+                tbl_clube.nome, 
+                tbl_clube.foto, 
+                tbl_clube.sobre, 
+                tbl_genero.nome as genero,
+                count(tbl_membros.id_usuario) as total_membros
+            from tbl_clube
+                inner join tbl_genero 
+                    on tbl_genero.id_genero = tbl_clube.id_genero
+                left join tbl_membros 
+                    on tbl_clube.id_clube = tbl_membros.id_clube
+            where tbl_clube.id_genero = ?
+            group by tbl_clube.id_clube
+            order by tbl_clube.nome asc`;
+
+        let result = await db.raw(sql, [idGenero]);
+
+        if (result && result[0].length > 0)
+            return result[0];
+        else
+            return false;
+
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
 // INSERE UM CLUBE NO BANCO
 const setInsertClub = async function (clube) {
     try {
@@ -52,23 +104,22 @@ const setInsertClub = async function (clube) {
                         sobre,
                         regras,
                         foto,
-                        id_membros,
                         id_genero
-                        )  values (
+                        ) values (
                         '${clube.nome}',
                         '${clube.sobre}',
                         '${clube.regras}',
                         '${foto}',
-                        '${clube.id_membros}',
                         '${clube.id_genero}'
                         )`
 
         let result = await db.raw(sql)
 
         // Verifica se a linha foi afetada no índice 0
-        if (result && result[0].affectedRows > 0)
+        if (result && result[0].affectedRows > 0){
+            console.log(result)
             return true
-        else
+        }else
             return false 
     } catch (error) {
         return false
@@ -78,12 +129,12 @@ const setInsertClub = async function (clube) {
 // ATUALIZA UM CLUBE NO BANCO
 const setUpdateClub = async function (clube) {
     try {
+        const foto = clube.foto ? `'${clube.foto}'` : "NULL";
         let sql = `update tbl_clube set 
                     nome = '${clube.nome}',
                     sobre = '${clube.sobre}',
                     regras = '${clube.regras}',
-                    foto = '${clube.foto}',
-                    id_membros = '${clube.id_membros}',
+                    foto = '${foto}',
                     id_genero = '${clube.id_genero}'
                 Where id_clube = ${clube.id} `
 

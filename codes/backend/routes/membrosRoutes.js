@@ -1,9 +1,9 @@
 /*******************************************************************************************
- * Objetivo: Arquivo responsável pela realização das rotas de Membros
+ * Objetivo: Arquivo responsável pelas rotas de Membros (Relacionamento Usuário/Clube)
  * Projeto: ConectaBook
- * Data: 13/05/2026
- * Autor: Geovanna Silva
- * Versão: 1.1
+ * Data: 14/05/2026
+ * Autor: Alex Henrique Da Cruz Gomes
+ * Versão: 1.0
  *******************************************************************************************/
 
 const express = require('express')
@@ -13,53 +13,87 @@ const bodyParser = require('body-parser')
 const router = express.Router() 
 const bodyParserJson = bodyParser.json()
 
+// Importação da Controller de Membros
 const controllerMembros = require('../controller/membros/membros_controller.js')
 
-// Configuração do CORS local para as rotas
+// Configuração do CORS
 router.use((request, response, next) => {
     response.header('Access-Control-Allow-Origin', '*')
     response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
     next()
 })
 
-// ENDPOINTS MEMBROS
+// --- ENDPOINTS DE CONSULTA (GET) ---
 
-// GET - Retorna uma lista de todos os membros do banco
-router.get('/', cors(), async function (request, response) {
-    // chamada da função da controller
-    let dadosMembros = await controllerMembros.listarMembros()
-
-    response.status(dadosMembros.status_code)
-    response.json(dadosMembros)
-    
+// GET - Lista todos os vínculos de membros do banco
+router.get('/', cors(), async function(request, response){
+    let dados = await controllerMembros.listarMembros()
+    response.status(dados.status_code).json(dados)
 })
 
-// GET - Retorna membros pelo id 
+// GET - Retorna os detalhes de um vínculo específico pelo ID da tabela tbl_membros
 router.get('/:id', cors(), async function(request, response){
-    let idMembro = request.params.id
-
-    // chamada da função da controller
-    let dadosMembros = await controllerMembros.listarMembroID(idMembro)
-
-
-    response.status(dadosUsuario.status_code)
-    response.json(dadosUsuario)
+    let id = request.params.id
+    let dados = await controllerMembros.listarMembroID(id)
+    response.status(dados.status_code).json(dados)
 })
 
-// GET - Retorna usuário que participam de um clube específico
-router.get('/', )
+// GET - Retorna todos os usuários que pertencem a um clube específico
+router.get('/clube/:id', cors(), async function(request, response){
+    let idClube = request.params.id
+    let dados = await controllerMembros.listarMembrosPorClubeID(idClube)
+    response.status(dados.status_code).json(dados)
+})
 
+// GET - Retorna todos os clubes que um usuário participa
+router.get('/usuario/:id', cors(), async function(request, response){
+    let idUsuario = request.params.id
+    let dados = await controllerMembros.listarClubesPorUsuarioID(idUsuario)
+    response.status(dados.status_code).json(dados)
+})
 
+// GET - Retorna os clubes onde o usuário é administrador
+router.get('/usuario/:id/admin', cors(), async function(request, response){
+    let idUsuario = request.params.id
+    let dados = await controllerMembros.listarClubesAdminPorUsuarioID(idUsuario)
+    response.status(dados.status_code).json(dados)
+})
 
-// GET - Retorna os clubes que um usuário participa
-// GET - Retorna os clubes que o usuário administra
-// SET - Insere um novo relacionamento
-// SET - Insere um relacionamento
-// SET - Atualiza um relacionamento
-// SET - Deleta um relacionamento
-// SET - Deleta os relacionamentos de um usuário pelo ID
+// --- ENDPOINTS DE MANIPULAÇÃO (POST, PUT, DELETE) ---
 
+// POST - Adiciona um usuário a um clube (vínculo de membro)
+router.post('/', cors(), bodyParserJson, async function(request, response) {
+    let dadosBody = request.body
+    let contentType = request.headers['content-type']
 
+    let result = await controllerMembros.criarMembro(dadosBody, contentType)
+    response.status(result.status_code).json(result)
+})
 
+// PUT - Atualiza o status de um membro (ex: torná-lo administrador)
+router.put('/:id', cors(), bodyParserJson, async function(request, response){
+    let idMembro = request.params.id
+    let dadosBody = request.body
+    let contentType = request.headers['content-type']
+
+    // ORDEM CORRETA: (corpo, tipo, id)
+    let result = await controllerMembros.atualizarMembro(dadosBody, contentType, idMembro)
+
+    response.status(result.status_code).json(result)
+})
+
+// DELETE - Remove um usuário de um clube pelo ID do vínculo
+router.delete('/:id', cors(), async function(request, response){
+    let idMembro = request.params.id
+    let result = await controllerMembros.excluirMembro(idMembro)
+    response.status(result.status_code).json(result)
+})
+
+// DELETE - Remove todos os membros de um clube (Útil ao excluir um clube)
+router.delete('/clube/:id', cors(), async function(request, response){
+    let idClube = request.params.id
+    let result = await controllerMembros.excluirMembrosPorIdClube(idClube)
+    response.status(result.status_code).json(result)
+})
 
 module.exports = router
