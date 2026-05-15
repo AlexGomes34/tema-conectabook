@@ -34,6 +34,10 @@
 
 .right-criarClube{
     width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 16rem;
 }
 
 .right-criarClube input{
