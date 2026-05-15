@@ -5,7 +5,7 @@ import fotoClube1 from "../../assets/fotoClube1.jpg"
 import Button from "../../components/button"
 import Input from "../../components/input"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Await, useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
 
 import "./style.css"
@@ -52,12 +52,27 @@ const CLUBE_ADM = [
     }
 ]
 
+const API_GENEROS = "http://localhost:8080/v1/conectaBook/generos"
 
 export default function Clube() {
 
     const [user, setUser] = useState(null)
     const navigate = useNavigate()
     const [clubes, setClube] = useState([])
+    const [generos, setGenero] = useState([])
+    const [generoSelecionado, setGeneroSelecionado] = useState("")
+
+    const clubesFiltrados = clubes.filter((clube) => {
+        if (generoSelecionado === "") {
+            return true
+        }
+
+        const generoEncontrado = generos.find(
+            (genero) => genero.id_genero == generoSelecionado
+        )
+
+        return clube.genero == generoEncontrado?.nome
+    })
 
 
     useEffect(() => {
@@ -72,6 +87,7 @@ export default function Clube() {
 
     useEffect(() => {
         buscarClubes()
+        buscarGeneros()
     }, [])
 
     const API_CLUBES = "http://localhost:8080/v1/conectaBook/clubes"
@@ -89,6 +105,16 @@ export default function Clube() {
 
     }
 
+    async function buscarGeneros() {
+        try {
+            const response = await fetch(API_GENEROS)
+            const data = await response.json()
+
+            setGenero(data.response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
     const clube_membro_selecionado = CLUBE_MEMBRO[0]
@@ -156,15 +182,25 @@ export default function Clube() {
                             <h2>Descubra clubes de leitura</h2>
                             <p>Encontre seu próximo clube e faça parte de histórias incríveis.</p>
                         </div>
-                        <select name="genero" id="genero">
-                            <option value="">Selecione um genero</option>
-                            <option value="acao">Ação</option>
-                            <option value="romance">aba</option>
-                            <option value="mama">aba</option>
+                        <select
+                            name="genero"
+                            id="genero"
+                            value={generoSelecionado}
+                            onChange={(e) => setGeneroSelecionado(e.target.value)}
+                        >
+                            <option value="">Todos os generos</option>
+                            {generos.map((genero) => (
+                                <option
+                                    key={genero.id_genero}
+                                    value={genero.id_genero}
+                                >
+                                    {genero.nome}
+                                </option>
+                            ))}
                         </select>
                     </div>
                     <div className="clubes">
-                        {clubes.map((clube) => {
+                        {clubesFiltrados.map((clube) => {
                             return (
                                 <div className="clube-detalhe" key={clube.id_clube}>
                                     <div className="info-left">
