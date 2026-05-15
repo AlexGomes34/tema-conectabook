@@ -92,7 +92,8 @@ const listarClubesPorGenero = async function (idGenero) {
 //  POST - Criar novo clube
 const criarClube = async function (clube, contentType) {
     try {
-        if (String(contentType).toLowerCase() !== 'application/json') {
+        if (String(contentType).toLowerCase().includes('multipart/form-data') == false
+    ) {
             return messages.ERROR_CONTENT_TYPE
         }
 
@@ -116,6 +117,7 @@ const criarClube = async function (clube, contentType) {
             }
         }
     } catch (error) {
+        console.log(error)
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }

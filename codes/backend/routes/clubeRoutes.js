@@ -14,6 +14,20 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const bodyParserJson = bodyParser.json()
 
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
+    },
+
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+
+const upload = multer({ storage })
+
 
 //Configuração do CORS para as rotas
 router.use((request, response, next) => {
@@ -30,24 +44,24 @@ router.get('/', cors(), async function (request, response) {
     console.log(dadosClube)
     response.status(dadosClube.status_code)
     response.json(dadosClube)
-    
+
 })
 
 
 
 // GET - Retorna um clube do BD filtrando pelo id
 router.get('/:id', cors(), async function (request, response) {
-        let idClube = request.params.id
-        
-        //chamada da função listarClubeID validade na controller
-        let dadosClube = await controllerClube.listarClubeID(idClube)
+    let idClube = request.params.id
 
-        response.status(dadosClube.status_code)
-        response.json(dadosClube)
+    //chamada da função listarClubeID validade na controller
+    let dadosClube = await controllerClube.listarClubeID(idClube)
+
+    response.status(dadosClube.status_code)
+    response.json(dadosClube)
 })
 
 // Exemplo no seu arquivo de rotas
-router.get('/:id', cors(), async function(request, response) {
+router.get('/:id', cors(), async function (request, response) {
     // Pega o ID da URL
     let idGenero = request.params.id;
 
@@ -58,18 +72,24 @@ router.get('/:id', cors(), async function(request, response) {
     response.json(result);
 });
 
-
 // POST - Insere um novo clube dentro do BD
-router.post('/', cors(), bodyParserJson, async function (request, response) {
+router.post('/', cors(), upload.single('foto'), async function (request, response) {
     let dadosBody = request.body
     let contentType = request.headers['content-type']
+
+    if (request.file) {
+        dadosBody.foto = request.file.filename
+    }
+
+
+    console.log(request.headers['content-type'])
 
     // Chama a função criarClube enviando os dados e o content-type
     let dadosClube = await controllerClube.criarClube(dadosBody, contentType)
 
     response.status(dadosClube.status_code)
     response.json(dadosClube)
-    
+
 })
 
 
@@ -96,7 +116,7 @@ router.delete('/:id', cors(), async function (request, response) {
 
     response.status(dadosClube.status_code)
     response.json(dadosClube)
-    
+
 })
 
 

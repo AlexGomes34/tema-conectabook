@@ -12,8 +12,8 @@ const INPUT_DATA = [
     { id: 3, name: "regras", label: "Regras", placeholder: "Descreva as regras do clube...", type: "text", required: true },
 ]
 
-const API_GENEROS        = "http://localhost:8080/v1/conectaBook/generos"
-const API_CLUBES         = "http://localhost:8080/v1/conectaBook/clubes"
+const API_GENEROS = "http://localhost:8080/v1/conectaBook/generos"
+const API_CLUBES = "http://localhost:8080/v1/conectaBook/clubes"
 
 export default function CriarClube() {
 
@@ -22,7 +22,7 @@ export default function CriarClube() {
             c => c.nome === form.nome
         )
 
-        if(clubeExiste){
+        if (clubeExiste) {
             return "Clube existente"
         }
 
@@ -30,18 +30,18 @@ export default function CriarClube() {
     }
 
     function validarFormulario() {
-        const {nome, sobre,regras, id_genero} = form
+        const { nome, sobre, regras, id_genero } = form
 
-        if(!nome.trim()) return "Nome obrigatório"
-        if(!sobre.trim()) return "Nome obrigatório"
-        if(!regras.trim()) return "Nome obrigatório"
-        if(!id_genero.trim()) return "Nome obrigatório"
+        if (!nome.trim()) return "Nome obrigatório"
+        if (!sobre.trim()) return "Nome obrigatório"
+        if (!regras.trim()) return "Nome obrigatório"
+        if (!id_genero) return "genero obrigatório"
 
         return null
     }
 
     function handleChange(e) {
-        const {name, value} = e.target
+        const { name, value } = e.target
 
         setForm({
             ...form,
@@ -54,7 +54,7 @@ export default function CriarClube() {
 
         const erro = validarFormulario()
 
-        if(erro){
+        if (erro) {
             alert(erro)
             return
         }
@@ -65,25 +65,30 @@ export default function CriarClube() {
 
             const erroDuplicado = verificarDuplicados(dataClubes.response, form)
 
-            if(erroDuplicado){
+            if (erroDuplicado) {
                 alert(erroDuplicado)
                 return
             }
 
+            const formData = new FormData()
+
+            formData.append("nome", form.nome)
+            formData.append("sobre", form.sobre)
+            formData.append("regras", form.regras)
+            formData.append("id_genero", form.id_genero)
+
+            if (form.foto) {
+                formData.append("foto", form.foto)
+            }
+
+
+
             const responseClube = await fetch(API_CLUBES, {
                 method: "POST",
-                headers:{
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    nome: form.nome,
-                    sobre: form.sobre,
-                    regras: form.regras,
-                    id_genero: form.id_genero
-                })
+                body: formData
             })
 
-            if(!responseClube.ok){
+            if (!responseClube.ok) {
                 throw new Error("Erro ao cadastrar clube");
             }
 
@@ -93,7 +98,20 @@ export default function CriarClube() {
         } catch (error) {
             console.log(error)
             alert("Erro no servidor")
-            
+
+        }
+    }
+
+    function handleFotoChange(e) {
+        const file = e.target.files[0]
+
+        if (file) {
+            setForm({
+                ...form,
+                foto: file
+            })
+
+            setPreview(URL.createObjectURL(file))
         }
     }
 
@@ -101,8 +119,11 @@ export default function CriarClube() {
         nome: "",
         sobre: "",
         regras: "",
-        id_genero: ""
+        id_genero: "",
+        foto: null
     })
+
+    const [preview, setPreview] = useState(null)
 
     const [generos, setGeneros] = useState([])
 
@@ -140,10 +161,15 @@ export default function CriarClube() {
                                         type="file"
                                         id="foto"
                                         accept="image/*"
+                                        onChange={handleFotoChange}
                                     />
 
                                     <label htmlFor="foto" className="upload-label">
-                                        +
+                                        {preview ? (
+                                            <img src={preview} alt="Preview" className="preview-image" />
+                                        ) : (
+                                            "+"
+                                        )}
                                     </label>
                                 </div>
 
@@ -151,7 +177,7 @@ export default function CriarClube() {
                                     <h2>Genero</h2>
                                     <select name="id_genero" value={form.id_genero} onChange={handleChange}>
                                         <option value="">Selecione uma opção</option>
-                                        {generos.map((genero)=>(
+                                        {generos.map((genero) => (
                                             <option key={genero.id_genero} value={genero.id_genero}>
                                                 {genero.nome}
                                             </option>
@@ -164,6 +190,7 @@ export default function CriarClube() {
                             <div className="right-criarClube">
                                 {INPUT_DATA.map((input) => (
                                     <Input
+                                        key={input.id}
                                         id={input.id}
                                         name={input.name}
                                         label={input.label}

@@ -46,7 +46,7 @@ const getSelectAllClubs = async function () {
 
 
 // RETORNA CLUBE PELO ID
-const getSelectByIdClub = async function(id){
+const getSelectByIdClub = async function (id) {
     try {
         let sql = `select * from tbl_clube where id_clube = ${id}`
         let result = await db.raw(sql)
@@ -109,19 +109,22 @@ const setInsertClub = async function (clube) {
                         '${clube.nome}',
                         '${clube.sobre}',
                         '${clube.regras}',
-                        '${foto}',
-                        '${clube.id_genero}'
+                        ${foto},
+                        ${clube.id_genero}
                         )`
+
+        console.log(sql)
 
         let result = await db.raw(sql)
 
         // Verifica se a linha foi afetada no índice 0
-        if (result && result[0].affectedRows > 0){
+        if (result && result[0].affectedRows > 0) {
             console.log(result)
             return true
-        }else
-            return false 
+        } else
+            return false
     } catch (error) {
+        console.log(error)
         return false
     }
 }
@@ -140,30 +143,30 @@ const setUpdateClub = async function (clube) {
 
         let result = await db.raw(sql)
 
-        if(result && result[0].affectedRows > 0) 
+        if (result && result[0].affectedRows > 0)
             return true
         else
             return false
     } catch (error) {
         return false
     }
-    
+
 }
 
 // DELETA UM CLUBE NO BANCO
 const setDeleteClub = async function (id) {
-    try{
+    try {
         let sql = `delete from tbl_clube where id_clube = ${id}`
         let result = await db.raw(sql)
 
-        if(result && result[0].affectedRows > 0)
+        if (result && result[0].affectedRows > 0)
             return true
         else
             return false
     } catch (error) {
         return false
     }
-    
+
 }
 
 module.exports = {

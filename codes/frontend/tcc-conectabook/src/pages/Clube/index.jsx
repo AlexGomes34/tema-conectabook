@@ -11,48 +11,8 @@ import { Link } from "react-router-dom"
 import "./style.css"
 import Header from "../../components/header"
 
-const CLUBES_DATA = [
-    {
-        id: 1,
-        nome: "Clube Semideuses",
-        genero: "Aventura",
-        quantiaMembros: 760,
-        sobre: "Um clube de leitura para fãs de mitologia e aventura, explorando histórias épicas e debatendo teorias sobre heróis e deuses.",
-        foto: fotoClube1
-    },
-    {
-        id: 2,
-        nome: "Páginas & Café",
-        genero: "Romance",
-        quantiaMembros: 540,
-        sobre: "Para quem ama histórias emocionantes acompanhadas de um bom café. Leituras leves, românticas e cheias de sentimento.",
-        foto: fotoClube1
-    },
-    {
-        id: 3,
-        nome: "Sombras & Mistérios",
-        genero: "Terror",
-        quantiaMembros: 620,
-        sobre: "Clube dedicado a histórias sombrias, suspense e terror psicológico. Ideal para quem gosta de sentir aquele frio na espinha.",
-        foto: fotoClube1
-    },
-    {
-        id: 4,
-        nome: "Universo Fantástico",
-        genero: "Fantasia",
-        quantiaMembros: 890,
-        sobre: "Dragões, magia e mundos incríveis. Aqui mergulhamos em universos fantásticos e debatemos teorias sobre sagas famosas.",
-        foto: fotoClube1
-    },
-    {
-        id: 5,
-        nome: "Leitores Críticos",
-        genero: "Clássicos",
-        quantiaMembros: 430,
-        sobre: "Focado em grandes obras da literatura mundial, com discussões profundas e análises críticas.",
-        foto: fotoClube1
-    }
-]
+import FotoClubeDefault from "../../assets/group.png"
+
 
 const CLUBE_MEMBRO = [
     {
@@ -97,6 +57,8 @@ export default function Clube() {
 
     const [user, setUser] = useState(null)
     const navigate = useNavigate()
+    const [clubes, setClube] = useState([])
+
 
     useEffect(() => {
         const userStorage = JSON.parse(localStorage.getItem("user"))
@@ -108,13 +70,34 @@ export default function Clube() {
         }
     }, [])
 
+    useEffect(() => {
+        buscarClubes()
+    }, [])
+
+    const API_CLUBES = "http://localhost:8080/v1/conectaBook/clubes"
+
+    async function buscarClubes() {
+        try {
+            const response = await fetch(API_CLUBES)
+            const data = await response.json()
+
+            setClube(data.response)
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    }
+
+
+
     const clube_membro_selecionado = CLUBE_MEMBRO[0]
     const clube_adm_selecionado = CLUBE_ADM[0]
 
     return (
         <div className="body-feedClube">
             <Header
-                fotoUser = {user?.user?.foto_perfil} />
+                fotoUser={user?.user?.foto_perfil} />
 
             <main className="main-clube">
                 <div className="left-clube">
@@ -181,11 +164,13 @@ export default function Clube() {
                         </select>
                     </div>
                     <div className="clubes">
-                        {CLUBES_DATA.map((clube) => {
+                        {clubes.map((clube) => {
                             return (
-                                <div className="clube-detalhe">
+                                <div className="clube-detalhe" key={clube.id_clube}>
                                     <div className="info-left">
-                                        <img src={clube.foto} alt="" />
+                                        <img src={clube.foto
+                                            ? `http://localhost:8080/uploads/${clube.foto}`
+                                            : FotoClubeDefault} alt="" />
                                         <div className="info-clube">
                                             <h3>{clube.nome}</h3>
                                             <div className="p-clube">
