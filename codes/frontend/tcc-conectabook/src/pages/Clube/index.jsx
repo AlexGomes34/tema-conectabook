@@ -61,19 +61,23 @@ export default function Clube() {
     const [clubes, setClube] = useState([])
     const [generos, setGenero] = useState([])
     const [generoSelecionado, setGeneroSelecionado] = useState("")
+    const API_CLUBES = "http://localhost:8080/v1/conectaBook/clubes"
+    const [pesquisa, setPesquisa] = useState("")
 
     const clubesFiltrados = clubes.filter((clube) => {
-        if (generoSelecionado === "") {
-            return true
-        }
-
-        const generoEncontrado = generos.find(
+        
+        const generoValido = 
+        generoSelecionado === "" ||
+        clube.genero ==
+        generos.find(
             (genero) => genero.id_genero == generoSelecionado
-        )
+        )?.nome
 
-        return clube.genero == generoEncontrado?.nome
+        const nomeValido = 
+        clube.nome.toLowerCase().includes(pesquisa.toLowerCase())
+
+        return generoValido && nomeValido
     })
-
 
     useEffect(() => {
         const userStorage = JSON.parse(localStorage.getItem("user"))
@@ -89,8 +93,6 @@ export default function Clube() {
         buscarClubes()
         buscarGeneros()
     }, [])
-
-    const API_CLUBES = "http://localhost:8080/v1/conectaBook/clubes"
 
     async function buscarClubes() {
         try {
@@ -172,7 +174,9 @@ export default function Clube() {
                     <div className="pesquisa">
                         <div className="input-clube">
                         <Input
-                            placeholder={"Procure por um grupo..."} />
+                            placeholder={"Procure por um grupo..."}
+                            value={pesquisa}
+                            onChange={(e) => setPesquisa(e.target.value)} />
                         <FontAwesomeIcon icon={faMagnifyingGlass} />
                         </div>
                         
