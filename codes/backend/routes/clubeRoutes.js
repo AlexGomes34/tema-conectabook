@@ -41,7 +41,6 @@ router.get('/', cors(), async function (request, response) {
     // Chamada da função listarCLubes da controller
     let dadosClube = await controllerClube.listarClubes()
 
-    console.log(dadosClube)
     response.status(dadosClube.status_code)
     response.json(dadosClube)
 
@@ -81,8 +80,6 @@ router.post('/', cors(), upload.single('foto'), async function (request, respons
         dadosBody.foto = request.file.filename
     }
 
-
-    console.log(request.headers['content-type'])
 
     // Chama a função criarClube enviando os dados e o content-type
     let dadosClube = await controllerClube.criarClube(dadosBody, contentType)

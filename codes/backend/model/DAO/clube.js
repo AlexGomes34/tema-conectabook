@@ -43,8 +43,6 @@ const getSelectAllClubs = async function () {
     }
 }
 
-
-
 // RETORNA CLUBE PELO ID
 const getSelectByIdClub = async function (id) {
     try {
@@ -60,7 +58,6 @@ const getSelectByIdClub = async function (id) {
         return false
     }
 }
-
 
 // RETORNA CLUBE PELO ID DO GENERO
 const getSelectClubsByGeneroID = async function (idGenero) {
@@ -119,8 +116,7 @@ const setInsertClub = async function (clube) {
 
         // Verifica se a linha foi afetada no índice 0
         if (result && result[0].affectedRows > 0) {
-            console.log(result)
-            return true
+            return result[0].insertId
         } else
             return false
     } catch (error) {

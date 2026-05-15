@@ -88,10 +88,36 @@ export default function CriarClube() {
                 body: formData
             })
 
-            if (!responseClube.ok) {
+            const data = await responseClube.json()
+
+            console.log("RESPOSTA DA API:", data)
+
+            if (!responseClube.ok || !data.response?.id_clube) {
                 throw new Error("Erro ao cadastrar clube");
             }
 
+            const idClube = data.response.id_clube
+
+            const usuario = JSON.parse(localStorage.getItem("user"))
+
+            console.log("USUARIO DO LOCALSTORAGE:", usuario)
+            console.log("ID USUARIO:", usuario?.user?.id)
+
+            const responseMembros = await fetch("http://localhost:8080/v1/conectaBook/membros", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id_usuario: usuario?.user?.id,
+                    id_clube: idClube,
+                    administrador: 1
+                })
+            })
+
+            if (!responseMembros.ok) {
+                throw new Error("Erro ao criar admin do clube");
+            }
 
             alert("Clube criado com sucesso")
 

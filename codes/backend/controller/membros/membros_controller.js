@@ -13,47 +13,50 @@ const messages = require("../modulo/config_messages.js")
 // GET - Listar todos os membros
 const listarMembros = async function () {
     try {
-        let result = await membrosDAO.getSelectAllMembersClubs()
-        
-        if(result) {
-            let responseData = Object.assign({}, messages.HEADER)
-            responseData.status = messages.SUCCESS_REQUEST.status
-            responseData.status_code = messages.SUCCESS_REQUEST.status_code
-            responseData.response = result
-            return responseData
-        } else {
-            return messages.ERROR_NOT_FOUND
+        const result = await membrosDAO.getSelectAllMembersClubs()
+
+        return {
+            ...messages.HEADER,
+            status: messages.SUCCESS_REQUEST.status,
+            status_code: messages.SUCCESS_REQUEST.status_code,
+            quantidade: result?.length || 0,
+            response: result || []
         }
+
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER
     }
-    
 }
 
 
 // GET ID = LISTAR MEMBROS PELO ID
 const listarMembroID = async function (id) {
-    if(id == '' || id == undefined || isNaN(id)) {
+    if (!id || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS
     }
 
-    try{
-        let result = await membrosDAO.getSelectByIdMember(id)
+    try {
+        const result = await membrosDAO.getSelectByIdMember(id)
 
-        if(result){
-            let responseData = Object.assign({}, messages.HEADER);
-            responseData.status = messages.SUCCESS_REQUEST.status;
-            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-           
-            responseData.response = result[0]; 
-            return responseData;
-        } else {
-            return messages.ERROR_NOT_FOUND
+        if (result && result.length > 0) {
+            return {
+                ...messages.HEADER,
+                status: messages.SUCCESS_REQUEST.status,
+                status_code: messages.SUCCESS_REQUEST.status_code,
+                response: result[0]
+            }
         }
-    } catch(error) {
+
+        return {
+            ...messages.HEADER,
+            status: messages.ERROR_NOT_FOUND.status,
+            status_code: messages.ERROR_NOT_FOUND.status_code,
+            response: "Membro não encontrado"
+        }
+
+    } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER
     }
-    
 }
 
 
@@ -66,7 +69,7 @@ const listarMembrosPorClubeID = async function (idClube) {
     try{
         let result = await membrosDAO.getSelectUsersByIdClub(idClube)
 
-        if(result) {
+        if(result.length >= 0) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_REQUEST.status;
             responseData.status_code = messages.SUCCESS_REQUEST.status_code;
@@ -84,83 +87,76 @@ const listarMembrosPorClubeID = async function (idClube) {
 
 // GET - RETORNA OS CLUBES QUE O USUÁRIO PARTICIPA
 const listarClubesPorUsuarioID = async function (idUsuario) {
-
-    if(idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
+    if (!idUsuario || isNaN(idUsuario)) {
         return messages.ERROR_REQUIRED_FIELDS
     }
-    
-    try {
-        let result = await membrosDAO.getSelectClubsThatUserParticipateByIdUser(idUsuario)
 
-        if(result) {
-          let responseData = Object.assign({}, messages.HEADER);
-          responseData.status = messages.SUCCESS_REQUEST.status;
-          responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-          responseData.quantidade = result.length; 
-          responseData.response = result;
-          return responseData;
-     } else {
-                return messages.ERROR_NOT_FOUND;
-            }
-       } catch (error) {
-                return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
-     }
- }
+    try {
+        const result = await membrosDAO.getSelectClubsThatUserParticipateByIdUser(idUsuario)
+
+        // 🔥 REGRA MAIS IMPORTANTE DO PROJETO
+        return {
+            ...messages.HEADER,
+            status: messages.SUCCESS_REQUEST.status,
+            status_code: messages.SUCCESS_REQUEST.status_code,
+            quantidade: result?.length || 0,
+            response: result || []
+        }
+
+    } catch (error) {
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
 
 
 // GET - RETORNA OS CLUBES QUE O USUARIO ADMINISTRA
 const listarClubesAdminPorUsuarioID = async function (idUsuario) {
-
-     if(idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
+    if (!idUsuario || isNaN(idUsuario)) {
         return messages.ERROR_REQUIRED_FIELDS
     }
-    
-    try {
-        let result = await membrosDAO.getSelectClubesAdminByUser(idUsuario)
 
-        if(result) {
-          let responseData = Object.assign({}, messages.HEADER);
-          responseData.status = messages.SUCCESS_REQUEST.status;
-          responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-          responseData.quantidade = result.length; 
-          responseData.response = result;
-          return responseData;
-     } else {
-                return messages.ERROR_NOT_FOUND;
-            }
-       } catch (error) {
-                return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
-     }
- }
+    try {
+        const result = await membrosDAO.getSelectClubesAdminByUser(idUsuario)
+
+        return {
+            ...messages.HEADER,
+            status: messages.SUCCESS_REQUEST.status,
+            status_code: messages.SUCCESS_REQUEST.status_code,
+            quantidade: result?.length || 0,
+            response: result || []
+        }
+
+    } catch (error) {
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
 
 
 // POST - CRIAR NOVO MEMBRO
 // POST - CRIAR NOVO MEMBRO
 const criarMembro = async function (membro, contentType) {
     try {
-        if (String(contentType).toLowerCase() != 'application/json') {
+        if (String(contentType).toLowerCase() !== "application/json") {
             return messages.ERROR_CONTENT_TYPE
         }
-        
+
         if (
-            membro.administrador === undefined || membro.administrador === '' || isNaN(membro.administrador) ||
-            membro.id_usuario == '' || membro.id_usuario == undefined || isNaN(membro.id_usuario) ||
-            membro.id_clube == '' || membro.id_clube == undefined || isNaN(membro.id_clube)
+            membro.administrador === undefined ||
+            membro.id_usuario === undefined ||
+            membro.id_clube === undefined
         ) {
             return messages.ERROR_REQUIRED_FIELDS
-        } else {
-            let result = await membrosDAO.setInsertMembers(membro)
-
-            if (result) {
-                let responseData = Object.assign({}, messages.HEADER);
-                responseData.status = messages.SUCCESS_CREATED_ITEM.status;
-                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
-                responseData.response = messages.SUCCESS_CREATED_ITEM.message;
-                return responseData;
-            } else {
-                return messages.ERROR_INTERNAL_SERVER_MODEL;
-            }
         }
+
+        const result = await membrosDAO.setInsertMembers(membro)
+
+        return {
+            ...messages.HEADER,
+            status: messages.SUCCESS_CREATED_ITEM.status,
+            status_code: messages.SUCCESS_CREATED_ITEM.status_code,
+            response: "Membro criado com sucesso"
+        }
+
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER
     }
@@ -192,7 +188,7 @@ const atualizarMembro = async function (membro, contentType, id) {
                 
                 let result = await membrosDAO.setUpdateMembers(membro)
 
-                if(result) {
+                if(result.length >= 0) {
                     let responseData = Object.assign({}, messages.HEADER);
                     responseData.status = messages.SUCCESS_UPDATED_ITEM.status;
                     responseData.status_code = messages.SUCCESS_UPDATED_ITEM.status_code;
@@ -223,7 +219,7 @@ const excluirMembro = async function (id) {
 
             let result = await membrosDAO.setDeleteMembers(id)
 
-            if(result) {
+            if(result.length >= 0) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_DELETE_ITEM.status;
                 responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code;
@@ -254,7 +250,7 @@ const excluirMembrosPorIdClube =  async function (idClube){
         if (buscarId) {
         let result = await membrosDAO.setDeleteMembersByClubeId(idClube)
 
-        if(result) {
+        if(result.length >= 0) {
             let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_DELETE_ITEM.status;
                 responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code;

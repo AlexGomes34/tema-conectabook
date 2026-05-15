@@ -33,25 +33,6 @@ const CLUBE_MEMBRO = [
     }
 ]
 
-const CLUBE_ADM = [
-    {
-        id: 4,
-        nome: "Universo Fantástico",
-        genero: "Fantasia",
-        quantiaMembros: 890,
-        sobre: "Dragões, magia e mundos incríveis. Aqui mergulhamos em universos fantásticos e debatemos teorias sobre sagas famosas.",
-        foto: fotoClube1
-    },
-    {
-        id: 5,
-        nome: "Leitores Críticos",
-        genero: "Clássicos",
-        quantiaMembros: 430,
-        sobre: "Focado em grandes obras da literatura mundial, com discussões profundas e análises críticas.",
-        foto: fotoClube1
-    }
-]
-
 const API_GENEROS = "http://localhost:8080/v1/conectaBook/generos"
 
 export default function Clube() {
@@ -63,18 +44,20 @@ export default function Clube() {
     const [generoSelecionado, setGeneroSelecionado] = useState("")
     const API_CLUBES = "http://localhost:8080/v1/conectaBook/clubes"
     const [pesquisa, setPesquisa] = useState("")
+    const [clubeAdmin, setClubeAdmin] = useState([])
+    const [clubeMembro, setClubeMembro] = useState([])
 
     const clubesFiltrados = clubes.filter((clube) => {
-        
-        const generoValido = 
-        generoSelecionado === "" ||
-        clube.genero ==
-        generos.find(
-            (genero) => genero.id_genero == generoSelecionado
-        )?.nome
 
-        const nomeValido = 
-        clube.nome.toLowerCase().includes(pesquisa.toLowerCase())
+        const generoValido =
+            generoSelecionado === "" ||
+            clube.genero ==
+            generos.find(
+                (genero) => genero.id_genero == generoSelecionado
+            )?.nome
+
+        const nomeValido =
+            clube.nome.toLowerCase().includes(pesquisa.toLowerCase())
 
         return generoValido && nomeValido
     })
@@ -92,6 +75,15 @@ export default function Clube() {
     useEffect(() => {
         buscarClubes()
         buscarGeneros()
+    }, [])
+
+    useEffect(() => {
+        const userStorage = JSON.parse(localStorage.getItem("user"))
+
+        if (userStorage?.user?.id) {
+            buscarClubesAdmin(userStorage.user.id)
+            buscarClubesMembro(userStorage.user.id)
+        }
     }, [])
 
     async function buscarClubes() {
@@ -118,9 +110,64 @@ export default function Clube() {
         }
     }
 
+    async function participarClube(idClube) {
+        try {
+            const response = await fetch("http://localhost:8080/v1/conectaBook/membros", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id_usuario: user.user.id,
+                    id_clube: idClube,
+                    administrador: 0
+                })
+            })
 
-    const clube_membro_selecionado = CLUBE_MEMBRO[0]
-    const clube_adm_selecionado = CLUBE_ADM[0]
+            if (!response.ok) {
+                throw new Error("Erro ao entrar no clube");
+
+            }
+
+            alert("Você entrou no clube com sucesso")
+        } catch (error) {
+            console.log(error)
+            alert("Não foi possível entrar no clube")
+        }
+    }
+
+    const meuClubeAdmin = clubeAdmin?.[0] || null
+    const meuClubeMembro = clubeMembro?.[0] || null
+
+    async function buscarClubesAdmin(idUsuario) {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}/admin/`
+            )
+
+            const data = await response.json()
+
+            setClubeAdmin(data.response)
+
+        } catch (error) {
+            console.log("Erro ao buscar clubes admin", error)
+        }
+    }
+
+    async function buscarClubesMembro(idUsuario) {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}`
+            )
+
+            const data = await response.json()
+
+            setClubeMembro(data.response)
+
+        } catch (error) {
+            console.log("Erro ao buscar clubes membro", error)
+        }
+    }
 
     return (
         <div className="body-feedClube">
@@ -135,13 +182,26 @@ export default function Clube() {
                             <h2>Clubes faço parte</h2>
                         </div>
                         <div className="clube-acess">
-                            <Link to="/feedClube" className="clubePage">
-                                <img src={clube_membro_selecionado.foto} alt="Foto do Clube" />
-                                <div className="clube-acess-text">
-                                    <h3>{clube_membro_selecionado.nome}</h3>
-                                    <p>{clube_membro_selecionado.quantiaMembros} membros</p>
+                            {meuClubeMembro ? (
+                                <Link className="clubePage">
+                                    <img
+                                        src={
+                                            meuClubeMembro.foto
+                                                ? `http://localhost:8080/uploads/${meuClubeMembro.foto}`
+                                                : FotoClubeDefault
+                                        }
+                                    />
+                                    <div className="clube-acess-text">
+                                        <h3>{meuClubeMembro.nome}</h3>
+                                        <p>{meuClubeMembro.quantiaMembros} membros</p>
+                                    </div>
+                                </Link>
+                            ) : (
+                                <div className="empty-state">
+                                    <p>Você ainda não participa de nenhum clube</p>
+                                    <Button text="Descobrir clubes" onClick={() => navigate("/clubes")} />
                                 </div>
-                            </Link>
+                            )}
                         </div>
                         <Button
                             text={"Ver Todos os clubes"}
@@ -154,14 +214,26 @@ export default function Clube() {
                             <h2>Clubes Administro</h2>
                         </div>
                         <div className="clube-acess">
-                            <Link className="clubePage">
-                                <img src={clube_adm_selecionado.foto} alt="Foto do Clube" />
-                                <div className="clube-acess-text">
-                                    <h3>{clube_adm_selecionado.nome}</h3>
-                                    <p>{clube_adm_selecionado.quantiaMembros} membros</p>
+                            {meuClubeAdmin ? (
+                                <Link className="clubePage">
+                                    <img
+                                        src={
+                                            meuClubeAdmin.foto
+                                                ? `http://localhost:8080/uploads/${meuClubeAdmin.foto}`
+                                                : FotoClubeDefault
+                                        }
+                                    />
+                                    <div className="clube-acess-text">
+                                        <h3>{meuClubeAdmin.nome}</h3>
+                                        <p>{meuClubeAdmin.quantiaMembros} membros</p>
+                                    </div>
+                                </Link>
+                            ) : (
+                                <div className="empty-state">
+                                    <p>Você ainda não administra nenhum clube</p>
+                                    <Button text="Criar clube" onClick={() => navigate("/criarClube")} />
                                 </div>
-                            </Link>
-
+                            )}
                         </div>
                         <Button
                             text={"Ver Todos os clubes"}
@@ -173,13 +245,13 @@ export default function Clube() {
                 <div className="right-clube">
                     <div className="pesquisa">
                         <div className="input-clube">
-                        <Input
-                            placeholder={"Procure por um grupo..."}
-                            value={pesquisa}
-                            onChange={(e) => setPesquisa(e.target.value)} />
-                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                            <Input
+                                placeholder={"Procure por um grupo..."}
+                                value={pesquisa}
+                                onChange={(e) => setPesquisa(e.target.value)} />
+                            <FontAwesomeIcon icon={faMagnifyingGlass} />
                         </div>
-                        
+
                         <Button
                             onClick={() => navigate("/criarClube")}
                             text={"Criar Clube"} />
@@ -230,7 +302,7 @@ export default function Clube() {
                                             <p className="sobre-text">{clube.sobre}</p>
                                         </div>
                                         <div className="button-sobre">
-                                            <Button text={"Participar do Clube"} />
+                                            <Button text={"Participar do Clube"} onClick={() => participarClube(clube.id_clube)} />
                                         </div>
 
                                     </div>

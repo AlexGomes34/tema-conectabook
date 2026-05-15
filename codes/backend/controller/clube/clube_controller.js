@@ -104,13 +104,17 @@ const criarClube = async function (clube, contentType) {
         ) {
             return messages.ERROR_REQUIRED_FIELDS
         } else {
-            let result = await clubeDAO.setInsertClub(clube);
+            let idClube = await clubeDAO.setInsertClub(clube);
 
-            if(result) {
+            if(idClube) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_CREATED_ITEM.status;
-                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
-                responseData.response = messages.SUCCESS_CREATED_ITEM.message;
+                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code
+
+                responseData.response = {
+                    id_clube: idClube
+                }
+                console.log(responseData.response)
                 return responseData;
             } else {
                 return messages.ERROR_INTERNAL_SERVER_MODEL;
