@@ -37,10 +37,13 @@ const clubeRoutes = require('./routes/clubeRoutes.js')
 app.use('/v1/conectaBook/clubes', clubeRoutes)
 
 const membrosRoutes = require('./routes/membrosRoutes.js')
-app.use('/v1/conectabook/membros', membrosRoutes)
+app.use('/v1/conectaBook/membros', membrosRoutes)
 
 const livrosRoutes = require('./routes/livroRoutes.js')
-app.use('/v1/conectabook/livros', livrosRoutes)
+app.use('/v1/conectaBook/livros', livrosRoutes)
+
+const acessoLivroRoutes = require('./routes/acessoRoutes.js')
+app.use('/v1/conectaBook/livro-acesso', acessoLivroRoutes)
 
 const PORT = process.env.PORT || 8080
 

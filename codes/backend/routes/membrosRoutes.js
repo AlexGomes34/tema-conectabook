@@ -66,8 +66,11 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
     let contentType = request.headers['content-type']
 
+    // Aqui você definiu a variável como "dados"
     let dados = await controllerMembros.criarMembro(dadosBody, contentType)
-    response.status(dados.status_code).json(result)
+    
+    // CORRIGIDO: Trocado .json(result) para .json(dados)
+    response.status(dados.status_code).json(dados)
 })
 
 // PUT - Atualiza o status de um membro (ex: torná-lo administrador)
@@ -79,21 +82,21 @@ router.put('/:id', cors(), bodyParserJson, async function(request, response){
     // ORDEM CORRETA: (corpo, tipo, id)
     let dados = await controllerMembros.atualizarMembro(dadosBody, contentType, idMembro)
 
-    response.status(dados.status_code).json(result)
+    response.status(dados.status_code).json(dados)
 })
 
 // DELETE - Remove um usuário de um clube pelo ID do vínculo
 router.delete('/:id', cors(), async function(request, response){
     let idMembro = request.params.id
     let dados = await controllerMembros.excluirMembro(idMembro)
-    response.status(dados.status_code).json(result)
+    response.status(dados.status_code).json(dados)
 })
 
 // DELETE - Remove todos os membros de um clube (Útil ao excluir um clube)
 router.delete('/clube/:id', cors(), async function(request, response){
     let idClube = request.params.id
     let dados = await controllerMembros.excluirMembrosPorIdClube(idClube)
-    response.status(dados.status_code).json(result)
+    response.status(dados.status_code).json(dados)
 })
 
 module.exports = router

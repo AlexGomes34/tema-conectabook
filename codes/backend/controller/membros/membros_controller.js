@@ -135,35 +135,35 @@ const listarClubesAdminPorUsuarioID = async function (idUsuario) {
 
 
 // POST - CRIAR NOVO MEMBRO
-const criarMembro =  async function (membro, contentType) {
+// POST - CRIAR NOVO MEMBRO
+const criarMembro = async function (membro, contentType) {
     try {
-        if(String(contentType).toLowerCase() != 'application/json') {
+        if (String(contentType).toLowerCase() != 'application/json') {
             return messages.ERROR_CONTENT_TYPE
         }
-
-
-        if( membro.administrador == '' || membro.administrador == undefined ||
-            membro.id_usuario == '' || membro.id_usuario == undefined ||
-            membro.id_clube == '' || membro.id_clube == undefined 
+        
+        if (
+            membro.administrador === undefined || membro.administrador === '' || isNaN(membro.administrador) ||
+            membro.id_usuario == '' || membro.id_usuario == undefined || isNaN(membro.id_usuario) ||
+            membro.id_clube == '' || membro.id_clube == undefined || isNaN(membro.id_clube)
         ) {
             return messages.ERROR_REQUIRED_FIELDS
         } else {
             let result = await membrosDAO.setInsertMembers(membro)
 
-            if(result){
-              let responseData = Object.assign({}, messages.HEADER);
-              responseData.status = messages.SUCCESS_CREATED_ITEM.status;
-              responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
-              responseData.response = messages.SUCCESS_CREATED_ITEM.message;
-              return responseData;
-        } else {
-            return messages.ERROR_INTERNAL_SERVER_MODEL;
+            if (result) {
+                let responseData = Object.assign({}, messages.HEADER);
+                responseData.status = messages.SUCCESS_CREATED_ITEM.status;
+                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
+                responseData.response = messages.SUCCESS_CREATED_ITEM.message;
+                return responseData;
+            } else {
+                return messages.ERROR_INTERNAL_SERVER_MODEL;
+            }
         }
-     }
-  } catch (error) {
-    return messages.ERROR_INTERNAL_SERVER_CONTROLLER
-  }
-    
+    } catch (error) {
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
 }
 
 // PUT - ATUALIZA UM MEMBRO
