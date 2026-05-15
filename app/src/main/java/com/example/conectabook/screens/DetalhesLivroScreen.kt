@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.conectabook.components.AppHeader
 import com.example.conectabook.components.SecaoHeroLivro
 
 @Composable
@@ -19,8 +20,20 @@ fun DetalhesLivroScreen(modifier: Modifier = Modifier) {
         modifier = Modifier
             .fillMaxSize()
             .background(colors.background)
-            .padding(all = 40.dp)
     ) {
-        SecaoHeroLivro()
+
+        AppHeader(
+            titulo = "detalhes do livro",
+            mostrarVoltar = true,
+            mostrarAvatar = true
+        )
+         Column(
+             modifier = Modifier.padding(24.dp)
+         ) {
+             SecaoHeroLivro()
+         }
+
+
+
     }
 }

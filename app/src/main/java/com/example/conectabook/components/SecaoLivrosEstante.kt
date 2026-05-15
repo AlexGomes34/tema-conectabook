@@ -57,7 +57,7 @@ fun SecaoLivrosEstante(
         Spacer(modifier = Modifier.height(12.dp))
 
         LazyRow(
-//            modifier = Modifier.height(285.dp),
+//           /
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(livros) { livro ->

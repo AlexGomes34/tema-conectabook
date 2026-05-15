@@ -1,27 +1,14 @@
 package com.example.conectabook.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.LibraryBooks
 import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,18 +26,20 @@ fun SecaoHeroLivro(modifier: Modifier = Modifier) {
 
     val colors = MaterialTheme.colorScheme
 
-        Row(modifier = Modifier
-            .fillMaxWidth .
-            (),
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Top
-            ) {
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.diariobanana),
-                contentDescription = "Capa do Livro",
+                contentDescription = "Capa do livro",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .width(130.dp)
-                    .height(195.dp)
+                    .width(115.dp)
+                    .height(175.dp)
                     .clip(RoundedCornerShape(12.dp))
             )
 
@@ -74,17 +63,19 @@ fun SecaoHeroLivro(modifier: Modifier = Modifier) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     repeat(5) {
                         Icon(
                             imageVector = Icons.Outlined.Star,
-                            contentDescription = "Icone de Estrela",
-                            tint = Color.Yellow,
+                            contentDescription = "Estrela",
+                            tint = Color(0xFFFFC107),
                             modifier = Modifier.size(18.dp)
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(6.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
                     Text(
                         text = "4,9",
@@ -96,69 +87,86 @@ fun SecaoHeroLivro(modifier: Modifier = Modifier) {
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AssistChip(
-                        onClick = {},
-                        label = {Text("Distopia")}
-                    )
-
-                    AssistChip(
-                        onClick = {},
-                        label = {Text("Ficção")}
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = {},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(44.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colors.primary
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.LibraryBooks,
-                    contentDescription = "null",
-                    tint = colors.onPrimary
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = "Adicionar",
-                    color = colors.onPrimary,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedButton(
-                    onClick = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(44.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(colors.primary)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Edit,
-                        contentDescription = null,
-                        tint = colors.primary
+                    AssistChip(
+                        onClick = {},
+                        label = {
+                            Text(
+                                text = "Distopia",
+                                fontSize = 12.sp
+                            )
+                        }
                     )
 
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Text(
-                        text = "Resenha",
-                        color = colors.primary,
-                        fontWeight = FontWeight.SemiBold
+                    AssistChip(
+                        onClick = {},
+                        label = {
+                            Text(
+                                text = "Ficção",
+                                fontSize = 12.sp
+                            )
+                        }
                     )
                 }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colors.primary
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.LibraryBooks,
+                contentDescription = null,
+                tint = colors.onPrimary,
+                modifier = Modifier.size(20.dp)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = "Adicionar à estante",
+                color = colors.onPrimary,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedButton(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, colors.primary)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Edit,
+                contentDescription = null,
+                tint = colors.primary,
+                modifier = Modifier.size(20.dp)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = "Escrever resenha",
+                color = colors.primary,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }
