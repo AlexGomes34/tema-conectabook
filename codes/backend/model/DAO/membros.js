@@ -87,6 +87,7 @@ const getSelectClubsThatUserParticipateByIdUser = async function (idUsuario) {
                 inner join tbl_membros
                     on tbl_clube.id_clube = tbl_membros.id_clube
             where tbl_membros.id_usuario = ${idUsuario}
+            and tbl_membros.administrador = 0
             `; 
 
         let result = await db.raw(sql);
