@@ -8,6 +8,7 @@ import Clube from '../pages/Clube/index.jsx'
 import CriarClube from '../pages/CriarClube/criarClube.jsx'
 import FeedClube from '../pages/FeedClube/index.jsx'
 import EditarClube from '../pages/EditarClube/index.jsx'
+import MeusClubes from '../pages/MeusClubes/index.jsx'
 
 function Rotas() {
     return (
@@ -22,6 +23,7 @@ function Rotas() {
                 <Route path='/criarClube' element ={<CriarClube/>}/>
                 <Route path='/editarClube' element ={<EditarClube/>}/>
                 <Route path='/feedClube' element ={<FeedClube/>}/>
+                <Route path='/meusClubes' element ={<MeusClubes/>}/>
                 <Route path='*' element ={<h1>Not Found</h1>}/>
             </Routes>
         </BrowserRouter>
