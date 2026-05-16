@@ -136,7 +136,7 @@ export default function Clube() {
         }
     }
 
-    const meuClubeAdmin = clubeAdmin?.[0] || null
+    const meuClubeAdmin = clubeAdmin?.[clubeAdmin.length - 1] || null
     const meuClubeMembro = clubeMembro?.[0] || null
 
     async function buscarClubesAdmin(idUsuario) {

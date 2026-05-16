@@ -96,12 +96,13 @@ export default function CriarClube() {
                 throw new Error("Erro ao cadastrar clube");
             }
 
-            const idClube = data.response.id_clube
-
             const usuario = JSON.parse(localStorage.getItem("user"))
+            const idUsuario = usuario?.user?.id
 
             console.log("USUARIO DO LOCALSTORAGE:", usuario)
             console.log("ID USUARIO:", usuario?.user?.id)
+
+            const idClube = data.response.id_clube || data.response.id
 
             const responseMembros = await fetch("http://localhost:8080/v1/conectaBook/membros", {
                 method: "POST",
@@ -109,7 +110,7 @@ export default function CriarClube() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    id_usuario: usuario?.user?.id,
+                    id_usuario: idUsuario,
                     id_clube: idClube,
                     administrador: 1
                 })
