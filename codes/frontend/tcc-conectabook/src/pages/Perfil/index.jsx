@@ -60,62 +60,59 @@ function Perfil() {
 
 
     async function handleUpdate() {
-        try {
-            const userStorage = JSON.parse(localStorage.getItem("user"))
+    try {
+        const userStorage = JSON.parse(localStorage.getItem("user"))
 
-            const form = new FormData()
+        const form = new FormData()
 
-            form.append("nome", formData.nome)
-            form.append("nome_usuario", formData.username)
-            form.append("email", formData.email)
-            form.append("data_nascimento", formData.dataNascimento)
+        form.append("nome", formData.nome)
+        form.append("nome_usuario", formData.username)
+        form.append("email", formData.email)
+        form.append("data_nascimento", formData.dataNascimento)
 
-            if (foto) {
-                form.append("foto", foto)
-            }
+        if (foto) {
+            form.append("foto", foto)
+        }
 
-            console.log("FOTO ENVIADA", foto)
-
-            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`, {
+        const putResponse = await fetch(
+            `http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`,
+            {
                 method: "PUT",
                 body: form
-            })
-
-            const data = await response.json()
-
-            console.log("UPDATE RESPONSE", data)
-
-            if (data.status) {
-                alert("Perfil atualizado com sucesso!")
-
-                const updatedUser = {
-                    ...userStorage,
-                    user: {
-                        ...userStorage.user,
-                        nome: formData.nome,
-                        nome_usuario: formData.username,
-                        email: formData.email,
-                        data_nascimento: formData.dataNascimento,
-                        foto_perfil: data.foto_perfil || userStorage.user.foto_perfil
-                    }
-                }
-
-                const responseUser = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`)
-
-
-                localStorage.setItem("user", JSON.stringify(updatedUser))
-                setUser(updatedUser)
-            } else {
-                alert("Erro ao atualizar perfil")
             }
-        } catch (error) {
-            console.error("Erro no PUT:", error)
-            alert("Erro na requisição")
+        )
 
-            console.log(data)
+        const putData = await putResponse.json()
 
+        if (!putData.status) {
+            alert("Erro ao atualizar perfil")
+            return
         }
+
+        const getResponse = await fetch(
+            `http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`
+        )
+
+        const getData = await getResponse.json()
+
+        const userData = getData.response || getData.user || getData
+
+        const updatedUser = {
+            ...userStorage,
+            user: userData
+        }
+
+        localStorage.setItem("user", JSON.stringify(updatedUser))
+        setUser(updatedUser)
+
+        alert("Perfil atualizado com sucesso!")
+
+    } catch (error) {
+        console.error("Erro no PUT:", error)
+        alert("Erro na requisição")
+        console.log(error)
     }
+}
 
     const [formData, setFormData] = useState({
         username: "",
