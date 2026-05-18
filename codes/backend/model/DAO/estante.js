@@ -168,3 +168,13 @@ const setDeleteBookcaseByUserId =  async function (id) {
 
 
 
+module.exports = {
+    getSelectAllBookcase,
+    getSelectByIdBookcase,
+    getSelectBookcaseByIdUser,
+    setInsertBookcase,
+    setUpdateBookcase,
+    setDeleteBookcase,
+    setDeleteBookcaseByUserId
+    
+}
