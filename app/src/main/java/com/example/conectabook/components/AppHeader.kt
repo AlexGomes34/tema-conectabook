@@ -42,14 +42,14 @@ fun AppHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(
-                RoundedCornerShape(
-                    bottomStart = 24.dp,
-                    bottomEnd = 24.dp
-                )
-            )
+//            .clip(
+//                RoundedCornerShape(
+//                    bottomStart = 24.dp,
+//                    bottomEnd = 24.dp
+//                )
+//            )
             .background(colors.primary)
-            .padding(horizontal = 20.dp, vertical = 20.dp),
+            .padding(horizontal = 20.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (mostrarVoltar) {

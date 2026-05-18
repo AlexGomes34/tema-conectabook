@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Language
@@ -35,11 +36,12 @@ fun SobreLivroCard(modifier: Modifier = Modifier) {
         colors = CardDefaults.cardColors(
             containerColor = colors.surface
         ),
-        elevation = CardDefaults.cardElevation(6.dp)
+        elevation = CardDefaults.cardElevation(3.dp),
+        shape = RoundedCornerShape(20.dp)
     ) {
         
     Column(
-        modifier = Modifier.padding(20.dp)
+        modifier = Modifier.padding(24.dp)
     ) {
         Text(
             text = "Sobre o livro",
@@ -52,7 +54,7 @@ fun SobreLivroCard(modifier: Modifier = Modifier) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             InfoLivroItem(
                 icon = Icons.Outlined.CalendarMonth,
@@ -84,8 +86,8 @@ fun SobreLivroCard(modifier: Modifier = Modifier) {
 
         Text(
             text = "Em um futuro distópico, Winston Smith vive sob vigilância constante de um regime totalitário liderado pelo Grande Irmão. Ao desafiar esse sistema, ele descobre os limites da liberdade, da verdade e da própria humanidade.",
-            fontSize = 14.sp,
-            lineHeight = 22.sp,
+            fontSize = 15.sp,
+            lineHeight = 26.sp,
             color = colors.onSurfaceVariant
         )
 
@@ -115,7 +117,7 @@ fun InfoLivroItem(
         Icon(
             imageVector = icon,
             contentDescription = titulo,
-            tint = colors.primary
+            tint = colors.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(8.dp))

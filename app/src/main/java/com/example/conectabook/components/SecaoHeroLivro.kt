@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -34,13 +35,16 @@ fun SecaoHeroLivro(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.Top
         ) {
             Image(
-                painter = painterResource(id = R.drawable.diariobanana),
+                painter = painterResource(id = R.drawable.georgeorwell),
                 contentDescription = "Capa do livro",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .width(115.dp)
-                    .height(175.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .width(130.dp)
+                    .height(195.dp)
+                    .shadow(
+                        elevation = 12.dp,
+                        shape = RoundedCornerShape(16.dp)
+                    )
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -50,14 +54,15 @@ fun SecaoHeroLivro(modifier: Modifier = Modifier) {
             ) {
                 Text(
                     text = "1984",
-                    fontSize = 28.sp,
+                    fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = colors.onBackground
                 )
 
                 Text(
                     text = "George Orwell",
-                    fontSize = 15.sp,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
                     color = colors.onSurfaceVariant
                 )
 
@@ -85,7 +90,13 @@ fun SecaoHeroLivro(modifier: Modifier = Modifier) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = "(128 avaliações)",
+                    fontSize = 12.sp,
+                    color = colors.onSurfaceVariant
+                )
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -119,10 +130,10 @@ fun SecaoHeroLivro(modifier: Modifier = Modifier) {
             onClick = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp),
-            shape = RoundedCornerShape(12.dp),
+                .height(56.dp),
+            shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colors.primary
+                containerColor = Color(0xFF1976D2)
             )
         ) {
             Icon(
@@ -148,8 +159,8 @@ fun SecaoHeroLivro(modifier: Modifier = Modifier) {
             onClick = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp),
-            shape = RoundedCornerShape(12.dp),
+                .height(56.dp),
+            shape = RoundedCornerShape(16.dp),
             border = BorderStroke(1.dp, colors.primary)
         ) {
             Icon(
