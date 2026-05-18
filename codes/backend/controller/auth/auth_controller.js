@@ -4,19 +4,17 @@
  * Data: 07/05/2026
  * Autor: Geovanna Silva
  * Autor: Alex Henrique Da Cruz Gomes 
- * Versão: 1.2
+ * Versão: 1.3
  *******************************************************************************************/
-
 
 const usuarioDAO = require('../../model/DAO/usuario.js')
 const bcrypt = require('bcrypt')
 const jwtService = require('../../jwt/jwt_service.js')
 const messages = require('../modulo/config_messages.js')
 
-
 const validarLogin = async function(dadosLogin, contentType) {
     try {
-        // 1. Validações iniciais
+       
         if (String(contentType).toLowerCase() !== 'application/json') {
             return messages.ERROR_CONTENT_TYPE;
         }
@@ -25,26 +23,26 @@ const validarLogin = async function(dadosLogin, contentType) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
-        
+      
         let usuario = await usuarioDAO.getSelectUserByEmail(dadosLogin.email);
 
         if (usuario && usuario.length > 0) {
-          
+            
             let senhaMatch = await bcrypt.compare(dadosLogin.senha, usuario[0].senha);
 
             if (senhaMatch) {
-                // Delega a criação do token para o JWT Service
-                const token = jwtService.createToken({ 
+                // Gera o token usando a função getToken 
+                // Payload contém ID e Email
+                const token = jwtService.getToken({ 
                     id: usuario[0].id_usuario, 
                     email: usuario[0].email 
                 });
 
-                //  Estrutura da resposta de sucesso  
-                //  RETORNANDO TODOS OS DADOS, INCLUINDO O ID E O TOKEN
-                    responseData.user = {
+                // Estrutura da resposta de sucesso 
+                let responseData = {
                     status: messages.SUCCESS_REQUEST.status,
                     status_code: messages.SUCCESS_REQUEST.status_code,
-                    token: token,
+                    token: token, 
                     user: {
                         id: usuario[0].id_usuario, 
                         nome: usuario[0].nome,
@@ -54,11 +52,15 @@ const validarLogin = async function(dadosLogin, contentType) {
                         foto_perfil: usuario[0].foto_perfil
                     }
                 };
+
                 return responseData;
+            } else {
+                return messages.ERROR_INVALID_USER; // Senha incorreta
             }
-            return messages.ERROR_INVALID_USER;
+        } else {
+            return messages.ERROR_NOT_FOUND; // E-mail não encontrado
         }
-        return messages.ERROR_NOT_FOUND;
+        
 
     } catch (error) {
         console.error(error);
@@ -66,4 +68,6 @@ const validarLogin = async function(dadosLogin, contentType) {
     }
 };
 
-module.exports = { validarLogin };
+module.exports = { 
+    validarLogin 
+};
