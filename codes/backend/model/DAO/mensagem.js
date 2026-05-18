@@ -40,7 +40,6 @@ const getSelectByIdMessage = async function (id) {
     
 }
 
-<<<<<<< HEAD
 // RETORNA TODAS AS MENSAGENS DE UM CLUBE ESPECÍFICO
 const getSelectMessagesByIdClub = async function (idClube) {
     try {
@@ -157,42 +156,6 @@ const getAllMainMessagesFeed = async function () {
             return false
     } catch (error) {
         console.error("Erro na DAO ao buscar feed principal geral:", error)
-=======
-
-// RETORNA MENSAGENS PELO ID DO USUÁRIO 
-const getSelectMessagesByIdUser = async function (idUsuario) {
-    try {
-        
-        let sql = `
-            select
-                tbl_mensagem.id_mensagem,
-                tbl_usuario.id_usuario,
-                tbl_usuario.nome,
-                tbl_usuario.foto,
-                tbl_mensagem.comentario, 
-                tbl_mensagem.data_postagem,
-                tbl_mensagem.id_status,
-                tbl_mensagem.arquivo_externo
-            from tbl_usuario
-                inner join tbl_mensagem
-                    on tbl_usuario.id_usuario = tbl_mensagem.id_usuario
-            where tbl_mensagem.id_usuario = ?
-        `
-
-        
-        // ? faz com que o banco trate o valor apenas como dado, e não como comando
-        let result = await db.raw(sql, [idUsuario]);
-
-       
-        if (result && result[0].length > 0) {
-            return result[0]
-        } else {
-            return false
-        }
-
-    } catch (error) {
-        console.error("Erro ao buscar mensagens do usuário:", error)
->>>>>>> 18a1a4781c17f32687e5f437c6b5c59e3cd632fe
         return false
     }
 }
@@ -391,14 +354,10 @@ const setDeleteAllMessagesByUserId = async function (idUsuario) {
 module.exports = {
     getSelectAllMessages,
     getSelectByIdMessage,
-<<<<<<< HEAD
     getSelectMessagesByIdClub,
     getRepliesByMessageId,
     getMainMessagesByClubId,
     getAllMainMessagesFeed,
-=======
-    getSelectMessagesByIdUser,
->>>>>>> 18a1a4781c17f32687e5f437c6b5c59e3cd632fe
     setInsertMessage,
     setUpdateMessages,
     setDeleteAllMessagesByClubId,
