@@ -26,43 +26,48 @@ const validarLogin = async function(dadosLogin, contentType) {
             let usuario = await usuarioDAO.getSelectUserByEmail(dadosLogin.email);
 
             if (usuario) {
-                let senhaMatch = await bcrypt.compare(dadosLogin.senha, usuario[0].senha);
+                // Como o DAO retorna um array, pegamos a primeira posição [0]
+                const dadosUsuarioBanco = usuario[0];
+
+                // Compara a senha digitada com a senha criptografada do banco
+                let senhaMatch = await bcrypt.compare(dadosLogin.senha, dadosUsuarioBanco.senha);
 
                 if (senhaMatch) {
                     let responseData = Object.assign({}, messages.HEADER);
                     responseData.status = messages.SUCCESS_REQUEST.status;
                     responseData.status_code = messages.SUCCESS_REQUEST.status_code;
                     
-                    // GERANDO O TOKEN JWT
-                    // Guardamos o ID no payload do token para identificação futura
+                    // CORRIGIDO: Alterado de 'id' para 'id_usuario' que é o nome real da coluna no banco
                     const token = jwt.sign(
-                        { id: usuario[0].id, email: usuario[0].email }, 
+                        { id: dadosUsuarioBanco.id_usuario, email: dadosUsuarioBanco.email }, 
                         SECRET, 
                         { expiresIn: '24h' }
                     );
 
-                    // RETORNANDO TODOS OS DADOS, INCLUINDO O ID E O TOKEN
+                    // RETORNANDO OS DADOS COM O TOKEN JWT EMBUTIDO
                     responseData.user = {
-                        id: usuario[0].id_usuario, // Garanta que no banco o nome da coluna seja 'id'
-                        nome: usuario[0].nome,
-                        nome_usuario: usuario[0].nome_usuario,
-                        email: usuario[0].email,
-                        data_nascimento: usuario[0].data_nascimento,
-                        foto_perfil: usuario[0].foto_perfil
+                        id: dadosUsuarioBanco.id_usuario, // Garanta o ID correto aqui
+                        nome: dadosUsuarioBanco.nome,
+                        nome_usuario: dadosUsuarioBanco.nome_usuario,
+                        email: dadosUsuarioBanco.email,
+                        data_nascimento: dadosUsuarioBanco.data_nascimento,
+                        foto_perfil: dadosUsuarioBanco.foto_perfil,
+                        token: token // Não esqueça de devolver o token para o Front-end guardar!
                     };
 
                     return responseData;
                 } else {
-                    return messages.ERROR_INVALID_USER;
+                    return messages.ERROR_NOT_FOUND; 
                 }
             } else {
                 return messages.ERROR_NOT_FOUND;
             }
         }
     } catch (error) {
-        // Log para ajudar você e seu colega a debugar no terminal
-        console.log(error); 
-        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+        console.error("🚨 ERRO CRÍTICO NA CONTROLLER DE AUTH:", error); 
+        
+        // Retorno preventivo caso a mensagem sumeden do config_messages
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER || { status: false, status_code: 500, message: "Erro interno na controller de autenticação." };
     }
 }
 

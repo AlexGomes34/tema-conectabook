@@ -76,7 +76,6 @@ const setInsertBook = async function (livro) {
 // ATUALIZA UM LIVRO NO BANCO 
 const setUpdateBook = async function (livro) {
     try {
-        // CORRIGIDO: Adicionada a vírgula depois do título e estruturado o SQL
         let sql = `update tbl_livro set 
                         isbn = '${livro.isbn}',
                         titulo = '${livro.titulo}',
