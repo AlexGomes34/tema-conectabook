@@ -1,12 +1,12 @@
 /*******************************************************************************************
- * Objetivo: Arquivo responsável pela realização do CRUD de Estantes
- * Data: 11/05/2026
+ * Objetivo: Arquivo responsável pela realização do CRUD de estante no Banco de Dados MySQL
+ * Projeto: ConectaBook
+ * Data: 12/05/2026
  * Autor: Geovanna Silva
- * Versão: 1.1 
+ * Versão: 1.1
  *******************************************************************************************/
 
-
-//CONEXÃO COM O BANCO DE DADOS
+// CONEXÃO COM O BANCO DE DADOS
 const db = require('../../database/connection')
 
 
