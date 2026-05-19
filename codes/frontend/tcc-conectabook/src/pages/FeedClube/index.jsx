@@ -16,6 +16,58 @@ import "./style.css"
 
 import { useEffect, useState } from "react";
 
+const POSTS_DATA = [
+    {
+        id: 1,
+        nome: "Renato Zimbaue",
+        foto: fotoPessoa1,
+        postagem:
+            "Terminei de ler O Hobbit e fiquei impressionado com a construção do mundo do Tolkien. A aventura consegue ser leve e épica ao mesmo tempo.",
+        curtidas: 7,
+        comentarios: 10
+    },
+
+    {
+        id: 2,
+        nome: "Ana Clara",
+        foto: fotoPessoa1,
+        postagem:
+            "Comecei Maus hoje e já senti o peso emocional da história nas primeiras páginas. A arte simples deixa tudo ainda mais impactante.",
+        curtidas: 15,
+        comentarios: 6
+    },
+
+    {
+        id: 3,
+        nome: "Lucas Ferreira",
+        foto: fotoPessoa1,
+        postagem:
+            "Vocês também têm dificuldade para escolher o próximo livro depois de terminar uma leitura muito boa? Estou nesse vazio literário agora 😭",
+        curtidas: 21,
+        comentarios: 14
+    },
+
+    {
+        id: 4,
+        nome: "Marina Costa",
+        foto: fotoPessoa1,
+        postagem:
+            "1984 continua sendo um dos livros mais assustadores que já li. É absurdo como a obra ainda parece atual.",
+        curtidas: 30,
+        comentarios: 18
+    },
+
+    {
+        id: 5,
+        nome: "Pedro Henrique",
+        foto: fotoPessoa1,
+        postagem:
+            "Passei a tarde inteira organizando minha estante e percebi que compro livros mais rápido do que consigo ler 😂",
+        curtidas: 12,
+        comentarios: 4
+    }
+]
+
 export default function FeedClube() {
 
     const [user, setUser] = useState(null)
@@ -34,7 +86,7 @@ export default function FeedClube() {
 
     const navigate = useNavigate()
     return (
-        
+
         <div className="feedClube-container">
             <Header fotoUser={user?.user?.foto_perfil} />
             <main className="main-container">
@@ -65,101 +117,30 @@ export default function FeedClube() {
                             </div>
                         </div>
 
-                        <div className="postagem">
-                            <img src={fotoPessoa1} alt="" />
+                        {POSTS_DATA.map((post) => (
+                            <div className="postagem">
+                            <img src={post.foto} alt="" />
 
                             <div className="postagem-text">
                                 <div className="info-post">
-                                    <h3>Raissa Soares</h3>
-                                    {/* <span>O pequeno principe</span> */}
+                                    <h3>{post.nome}</h3>
                                 </div>
 
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A velit obcaecati libero earum illo maxime qui, dignissimos assumenda blanditiis exercitationem. Sint accusamus eius, at vero nisi tempore earum quisquam error commodi. Commodi rem nulla debitis! Inventore sunt ex voluptates? Ullam commodi adipisci voluptatem repellat necessitatibus possimus quas asperiores voluptate consequuntur, ad aut iste voluptatum fuga quo sequi incidunt ipsa eveniet, tempora sapiente vitae tenetur nemo qui. Officiis harum, est nisi sed saepe accusamus aperiam impedit maiores voluptatem ex repellendus distinctio cumque omnis hic culpa fugit atque soluta? Temporibus, consequuntur molestiae! Vero harum, ipsum eius nobis laborum nisi et numquam. Sed.</p>
+                                <p>{post.postagem}</p>
                                 <div className="reacoes">
                                     <div className="reacao">
                                         <FontAwesomeIcon icon={faHeart} />
-                                        <p>24</p>
+                                        <p>{post.curtidas}</p>
                                     </div>
                                     <div className="reacao">
                                         <FontAwesomeIcon icon={faComment} />
-                                        <p>7</p>
+                                        <p>{post.comentarios}</p>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
-
-                        <div className="postagem">
-                            <img src={fotoPessoa1} alt="" />
-
-                            <div className="postagem-text">
-                                <div className="info-post">
-                                    <h3>Raissa Soares</h3>
-                                    {/* <span>O pequeno principe</span> */}
-                                </div>
-
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A velit obcaecati libero earum illo maxime qui, dignissimos assumenda blanditiis exercitationem. Sint accusamus eius, at vero nisi tempore earum quisquam error commodi. Commodi rem nulla debitis! Inventore sunt ex voluptates? Ullam commodi adipisci voluptatem repellat necessitatibus possimus quas asperiores voluptate consequuntur, ad aut iste voluptatum fuga quo sequi incidunt ipsa eveniet, tempora sapiente vitae tenetur nemo qui. Officiis harum, est nisi sed saepe accusamus aperiam impedit maiores voluptatem ex repellendus distinctio cumque omnis hic culpa fugit atque soluta? Temporibus, consequuntur molestiae! Vero harum, ipsum eius nobis laborum nisi et numquam. Sed.</p>
-                                <div className="reacoes">
-                                    <div className="reacao">
-                                        <FontAwesomeIcon icon={faHeart} />
-                                        <p>24</p>
-                                    </div>
-                                    <div className="reacao">
-                                        <FontAwesomeIcon icon={faComment} />
-                                        <p>7</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div className="postagem">
-                            <img src={fotoPessoa1} alt="" />
-
-                            <div className="postagem-text">
-                                <div className="info-post">
-                                    <h3>Raissa Soares</h3>
-                                    {/* <span>O pequeno principe</span> */}
-                                </div>
-
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A velit obcaecati libero earum illo maxime qui, dignissimos assumenda blanditiis exercitationem. Sint accusamus eius, at vero nisi tempore earum quisquam error commodi. Commodi rem nulla debitis! Inventore sunt ex voluptates? Ullam commodi adipisci voluptatem repellat necessitatibus possimus quas asperiores voluptate consequuntur, ad aut iste voluptatum fuga quo sequi incidunt ipsa eveniet, tempora sapiente vitae tenetur nemo qui. Officiis harum, est nisi sed saepe accusamus aperiam impedit maiores voluptatem ex repellendus distinctio cumque omnis hic culpa fugit atque soluta? Temporibus, consequuntur molestiae! Vero harum, ipsum eius nobis laborum nisi et numquam. Sed.</p>
-                                <div className="reacoes">
-                                    <div className="reacao">
-                                        <FontAwesomeIcon icon={faHeart} />
-                                        <p>24</p>
-                                    </div>
-                                    <div className="reacao">
-                                        <FontAwesomeIcon icon={faComment} />
-                                        <p>7</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div className="postagem">
-                            <img src={fotoPessoa1} alt="" />
-
-                            <div className="postagem-text">
-                                <div className="info-post">
-                                    <h3>Raissa Soares</h3>
-                                    {/* <span>O pequeno principe</span> */}
-                                </div>
-
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A velit obcaecati libero earum illo maxime qui, dignissimos assumenda blanditiis exercitationem. Sint accusamus eius, at vero nisi tempore earum quisquam error commodi. Commodi rem nulla debitis! Inventore sunt ex voluptates? Ullam commodi adipisci voluptatem repellat necessitatibus possimus quas asperiores voluptate consequuntur, ad aut iste voluptatum fuga quo sequi incidunt ipsa eveniet, tempora sapiente vitae tenetur nemo qui. Officiis harum, est nisi sed saepe accusamus aperiam impedit maiores voluptatem ex repellendus distinctio cumque omnis hic culpa fugit atque soluta? Temporibus, consequuntur molestiae! Vero harum, ipsum eius nobis laborum nisi et numquam. Sed.</p>
-                                <div className="reacoes">
-                                    <div className="reacao">
-                                        <FontAwesomeIcon icon={faHeart} />
-                                        <p>24</p>
-                                    </div>
-                                    <div className="reacao">
-                                        <FontAwesomeIcon icon={faComment} />
-                                        <p>7</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                        ))}
 
                     </div>
 

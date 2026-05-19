@@ -25,8 +25,10 @@
     width: 70vw;
     padding-inline: 1vw;
 }
+
 .right-main{
     width: 30vw;
+    padding: 3rem;
 }
 
 .main-feedClube{
