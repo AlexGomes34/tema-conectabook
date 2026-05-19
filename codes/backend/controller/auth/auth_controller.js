@@ -22,12 +22,15 @@ const validarLogin = async function(dadosLogin, contentType) {
         if (!dadosLogin.email || !dadosLogin.senha) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
-      
-        let usuario = await usuarioDAO.getSelectUserByEmail(dadosLogin.email);
 
-        if (usuario && usuario.length > 0) {
-            
-            let senhaMatch = await bcrypt.compare(dadosLogin.senha, usuario[0].senha);
+        // Busca o usuário no banco pelo e-mail
+        let dadosUsuario = await usuarioDAO.selectByEmail(dadosLogin.email);
+
+        if (dadosUsuario && dadosUsuario.length > 0) {
+            const usuarioBanco = dadosUsuario[0];
+
+            // Compara a senha digitada com a criptografada
+            let senhaMatch = await bcrypt.compare(dadosLogin.senha, usuarioBanco.senha);
 
             if (senhaMatch) {
                 // Gera o token usando o serviço externo
