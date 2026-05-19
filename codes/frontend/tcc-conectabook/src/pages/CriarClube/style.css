@@ -1,0 +1,111 @@
+.container-criarClube{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-criarClube{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.left-criarClube{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 20rem;
+    width: 50%;
+}
+
+.questionario-criarClube{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 1rem;
+    width: 100%;
+}
+
+.input-criarClube{
+    width: 100vw;
+}
+
+.right-criarClube{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 16rem;
+}
+
+.right-criarClube input{
+    width: 100%;
+}
+
+.criarClube-card{
+    width: 70vw;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.titulo-criarClube{
+    width: 100%;
+    padding: 1rem;
+}
+
+.formulario-criarClube{
+    display: flex;
+    flex-direction: column;
+    width: 55vw;
+    height: 30rem;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 1rem;
+}
+.upload-box input{
+    display: none;
+}
+
+.upload-label{
+    width: 20vw;
+    height: 100%;
+
+    border: 2px dashed #bdbdbd;
+    border-radius: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 64px;
+    font-weight: 300;
+
+    color: #8a8a8a;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    background-color: #f7f7f7;
+}
+
+.comboBox{
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    width: 20vw;
+}
+
+.preview-image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}

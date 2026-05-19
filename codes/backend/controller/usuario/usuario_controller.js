@@ -102,13 +102,14 @@ const criarUsuario = async function(usuario, contentType) {
 }
 
 // PUT - Atualizar usuário
-const atualizarUsuario = async function(usuario, contentType, id) {
+const atualizarUsuario = async function(usuario, contentType, id, file) {
     try {
         if (id == '' || id == undefined || isNaN(id)) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
-        if (String(contentType).toLowerCase() !== 'application/json') {
+        if (String(contentType).toLowerCase() !== 'application/json' &&
+         !String(contentType).toLowerCase().includes('multipart/form-data')) {
             return messages.ERROR_CONTENT_TYPE;
         }
         let buscarId = await usuarioDAO.getSelectByIdUser(id);
@@ -119,6 +120,12 @@ const atualizarUsuario = async function(usuario, contentType, id) {
                 usuario.senha = senhaCriptografada;
             } else {
                 usuario.senha = buscarId[0].senha;
+            }
+
+            if(file){
+                usuario.foto_perfil = `http://localhost:8080/uploads/${file.filename}`
+            }else{
+                usuario.foto_perfil = buscarId[0].foto_perfil
             }
 
             usuario.id = id;

@@ -93,44 +93,29 @@ const listarClubesPorGenero = async function (idGenero) {
 // POST - Inserir um Clube e criar automaticamente sua Conversa vinculada
 const criarClube = async function (dadosClube, contentType) {
     try {
-        // 1. Validação do Content-Type
-        if (String(contentType).toLowerCase() !== 'application/json') {
-            return messages.ERROR_CONTENT_TYPE;
+        if (String(contentType).toLowerCase().includes('multipart/form-data') == false
+    ) {
+            return messages.ERROR_CONTENT_TYPE
         }
 
-        // 2. Validação de campos obrigatórios do Clube (coloque os campos reais da sua tbl_clube aqui)
-        if (dadosClube.nome == '' || dadosClube.nome == undefined || dadosClube.nome.length > 100) {
-            return messages.ERROR_REQUIRED_FIELDS;
-        }
+        if(clube.nome == '' || clube.nome == undefined || 
+           clube.sobre == '' || clube.sobre == undefined ||
+           clube.regras == ''|| clube.regras == undefined ||
+           clube.id_genero == '' || clube.id_genero == undefined 
+        ) {
+            return messages.ERROR_REQUIRED_FIELDS
+        } else {
+            let idClube = await clubeDAO.setInsertClub(clube);
 
-        // 3. PASSO 1: Insere o clube na tbl_clube
-        // IMPORTANTE: A sua clubeDAO.setInsertClub(dadosClube) deve retornar o result[0].insertId do Knex!
-        let idClubeGerado = await clubeDAO.setInsertClub(dadosClube);
-
-        if (idClubeGerado) {
-            
-            // 4. PASSO 2: Agora que temos o ID do clube, preparamos o objeto para a tbl_conversa
-            const dadosConversa = {
-                id_clube: idClubeGerado
-            };
-
-            // Chamamos a conversaDAO que criamos no passo anterior
-            let idConversaGerada = await conversaDAO.setInsertConversation(dadosConversa);
-
-            if (idConversaGerada) {
-                // 5. PASSO 3: Se tudo deu certo, montamos o objeto de retorno completo para o Front-end
+            if(idClube) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_CREATED_ITEM.status;
-                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
-                
-                // Retorna os dados do clube criado juntamente com o ID da conversa dele!
-                responseData.response = {
-                    message: "Clube e chat de conversas criados com sucesso!",
-                    id_clube: idClubeGerado,
-                    id_conversa: idConversaGerada,
-                    nome_clube: dadosClube.nome
-                };
+                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code
 
+                responseData.response = {
+                    id_clube: idClube
+                }
+                console.log(responseData.response)
                 return responseData;
 
             } else {
@@ -144,7 +129,7 @@ const criarClube = async function (dadosClube, contentType) {
         }
 
     } catch (error) {
-        console.error("🚨 ERRO NA CONTROLLER AO CRIAR CLUBE COM CONVERSA:", error.message);
+        console.log(error)
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }

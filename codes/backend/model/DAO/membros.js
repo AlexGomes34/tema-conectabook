@@ -43,6 +43,27 @@ const getSelectByIdMember = async function (id) {
     }
 }
 
+// RETORNA SE O USUARIO JA PARTICIPA DO CLUBE
+const getSelectMemberByUserAndClub = async function (idUsuario, idClube) {
+    try {
+        let sql = `
+            select * from tbl_membros
+            where id_usuario = ${idUsuario}
+            and id_clube = ${idClube}
+        `
+
+        let result = await db.raw(sql)
+
+        if (result && result[0].length > 0) {
+            return true
+        } else {
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+}
+
 // RETORNAR USUÁRIOS QUE PARTICIPAM DE UM CLUBE ESPECÍFICO
 const getSelectUsersByIdClub = async function (idClube) {
     try {
@@ -82,11 +103,18 @@ const getSelectClubsThatUserParticipateByIdUser = async function (idUsuario) {
             select 
                 tbl_clube.id_clube, 
                 tbl_clube.nome, 
-                tbl_clube.foto
+                tbl_clube.foto,
+                tbl_genero.nome as genero
             from tbl_clube
+
+                inner join tbl_genero
+                on tbl_clube.id_genero = tbl_genero.id_genero
+
                 inner join tbl_membros
                     on tbl_clube.id_clube = tbl_membros.id_clube
+
             where tbl_membros.id_usuario = ${idUsuario}
+            and tbl_membros.administrador = 0
             `; 
 
         let result = await db.raw(sql);
@@ -110,8 +138,14 @@ const getSelectClubesAdminByUser = async function (idUsuario) {
                 tbl_clube.id_clube, 
                 tbl_clube.nome, 
                 tbl_clube.foto,
+                tbl_genero.nome as genero,
                 tbl_membros.administrador 
+
             from tbl_clube
+
+                inner join tbl_genero
+                    on tbl_clube.id_genero = tbl_genero.id_genero
+
                 inner join tbl_membros
                     on tbl_clube.id_clube = tbl_membros.id_clube
             where tbl_membros.id_usuario = ${idUsuario} 
@@ -213,6 +247,7 @@ const setDeleteMembersByClubeId = async function (id) {
 module.exports = {
     getSelectAllMembersClubs,
     getSelectByIdMember,
+    getSelectMemberByUserAndClub,
     getSelectClubesAdminByUser,
     getSelectClubsThatUserParticipateByIdUser,
     getSelectUsersByIdClub,

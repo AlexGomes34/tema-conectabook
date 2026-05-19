@@ -5,8 +5,6 @@ import './style.css'
 
 function Feed() {
 
-    
-
     const [user, setUser] = useState(null)
     const navigate = useNavigate()
 
@@ -23,7 +21,7 @@ function Feed() {
     return (
         <div>
             <Header
-            fotoUser = {user?.foto}
+            fotoUser = {user?.user?.foto_perfil}
             />
             <h1>Olá {user?.user.nome_usuario}</h1>
         </div>

@@ -9,6 +9,20 @@
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './uploads')
+    },
+
+    filename: function (req, file, cb) {
+        const ext = file.originalname?.split('.').pop() || 'jpg'
+        cb(null, Date.now() + '.' + ext)
+    }
+})
+
+const upload = multer({storage})
 
 const router = express.Router() 
 const bodyParserJson = bodyParser.json()
@@ -57,13 +71,15 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
 })
 
 // PUT - Atualiza um usuário dentro do BD
-router.put('/:id', cors(), bodyParserJson, async function(request, response){
+router.put('/:id', cors(), upload.single('foto'), async function(request, response){
     let dadosBody = request.body
     let idUsuario = request.params.id
     let contentType = request.headers['content-type']
 
+    let arquivo = request.file
+
     // Chama a função atualizarUsuario da controller
-    let result = await controllerUsuario.atualizarUsuario(dadosBody, contentType, idUsuario)
+    let result = await controllerUsuario.atualizarUsuario(dadosBody, contentType, idUsuario, arquivo)
 
     response.status(result.status_code)
     response.json(result)

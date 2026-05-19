@@ -1,0 +1,40 @@
+.upMain{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    padding: 1rem;
+    width: 90vw;
+}
+
+.main{
+    padding: 1rem;
+    background-color: aqua;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+}
+
+.listLivros{
+    display: flex;
+    justify-content: center;
+    background-color: blue;
+    gap: 8px;
+}
+
+.livros{
+    background-color: brown;
+    width: 90%;
+}
+
+.livro{
+    display: flex;
+    flex-direction: column;
+    width: 15vw;
+    margin: 1rem;
+}
+
+.livro img{
+    height: auto;
+    object-fit: cover;
+}
