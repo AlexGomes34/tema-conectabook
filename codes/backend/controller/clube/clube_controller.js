@@ -98,14 +98,15 @@ const criarClube = async function (dadosClube, contentType) {
             return messages.ERROR_CONTENT_TYPE
         }
 
-        if(clube.nome == '' || clube.nome == undefined || 
-           clube.sobre == '' || clube.sobre == undefined ||
-           clube.regras == ''|| clube.regras == undefined ||
-           clube.id_genero == '' || clube.id_genero == undefined 
+        if(dadosClube.nome == '' || dadosClube.nome == undefined || 
+           dadosClube.sobre == '' || dadosClube.sobre == undefined ||
+           dadosClube.regras == ''|| dadosClube.regras == undefined ||
+           dadosClube.id_genero == '' || dadosClube.id_genero == undefined 
         ) {
             return messages.ERROR_REQUIRED_FIELDS
         } else {
-            let idClube = await clubeDAO.setInsertClub(clube);
+
+            let idClube = await clubeDAO.setInsertClub(dadosClube);
 
             if(idClube) {
                 let responseData = Object.assign({}, messages.HEADER);
@@ -124,10 +125,7 @@ const criarClube = async function (dadosClube, contentType) {
                 return messages.ERROR_INTERNAL_SERVER_MODEL;
             }
 
-        } else {
-            return messages.ERROR_INTERNAL_SERVER_MODEL;
         }
-
     } catch (error) {
         console.log(error)
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;

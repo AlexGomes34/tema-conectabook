@@ -132,8 +132,6 @@ const listarClubesAdminPorUsuarioID = async function (idUsuario) {
     }
 }
 
-
-// POST - CRIAR NOVO MEMBRO
 // POST - CRIAR NOVO MEMBRO
 const criarMembro = async function (membro, contentType) {
     try {
