@@ -22,43 +22,6 @@ const validarLogin = async function(dadosLogin, contentType) {
         if (!dadosLogin.email || !dadosLogin.senha) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
-
-<<<<<<< HEAD
-            if (usuario) {
-                // Como o DAO retorna um array, pegamos a primeira posição [0]
-                const dadosUsuarioBanco = usuario[0];
-
-                // Compara a senha digitada com a senha criptografada do banco
-                let senhaMatch = await bcrypt.compare(dadosLogin.senha, dadosUsuarioBanco.senha);
-
-                if (senhaMatch) {
-                    let responseData = Object.assign({}, messages.HEADER);
-                    responseData.status = messages.SUCCESS_REQUEST.status;
-                    responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-                    
-                    // CORRIGIDO: Alterado de 'id' para 'id_usuario' que é o nome real da coluna no banco
-                    const token = jwt.sign(
-                        { id: dadosUsuarioBanco.id_usuario, email: dadosUsuarioBanco.email }, 
-                        SECRET, 
-                        { expiresIn: '24h' }
-                    );
-
-                    // RETORNANDO OS DADOS COM O TOKEN JWT EMBUTIDO
-                    responseData.user = {
-                        id: dadosUsuarioBanco.id_usuario, // Garanta o ID correto aqui
-                        nome: dadosUsuarioBanco.nome,
-                        nome_usuario: dadosUsuarioBanco.nome_usuario,
-                        email: dadosUsuarioBanco.email,
-                        data_nascimento: dadosUsuarioBanco.data_nascimento,
-                        foto_perfil: dadosUsuarioBanco.foto_perfil,
-                        token: token // Não esqueça de devolver o token para o Front-end guardar!
-                    };
-
-                    return responseData;
-                } else {
-                    return messages.ERROR_NOT_FOUND; 
-                }
-=======
       
         let usuario = await usuarioDAO.getSelectUserByEmail(dadosLogin.email);
 
@@ -90,7 +53,6 @@ const validarLogin = async function(dadosLogin, contentType) {
                 };
 
                 return responseData;
->>>>>>> 18a1a4781c17f32687e5f437c6b5c59e3cd632fe
             } else {
                 return messages.ERROR_INVALID_USER; // Senha incorreta
             }
@@ -100,15 +62,8 @@ const validarLogin = async function(dadosLogin, contentType) {
         
 
     } catch (error) {
-<<<<<<< HEAD
-        console.error("🚨 ERRO CRÍTICO NA CONTROLLER DE AUTH:", error); 
-        
-        // Retorno preventivo caso a mensagem sumeden do config_messages
-        return messages.ERROR_INTERNAL_SERVER_CONTROLLER || { status: false, status_code: 500, message: "Erro interno na controller de autenticação." };
-=======
         console.error(error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
->>>>>>> 18a1a4781c17f32687e5f437c6b5c59e3cd632fe
     }
 };
 
