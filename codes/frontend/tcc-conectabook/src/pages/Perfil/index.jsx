@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import Header from "../../components/header/index"
 import Button from "../../components/button/index"
 import Input from "../../components/input/index"
@@ -12,21 +12,106 @@ import { faFacebook, faInstagram, faXTwitter } from "@fortawesome/free-brands-sv
 import Footer from "../../components/footer"
 
 
+
 function Perfil() {
+
+    const navigate = useNavigate()
+
+    async function handleDelete() {
+        try {
+            const userStorage = JSON.parse(localStorage.getItem("user"))
+            const id = userStorage.user.id
+
+            const confirmDelete = window.confirm("Tem certeza que deseja excluir sua conta?")
+            if (!confirmDelete) return
+
+            const relacoes = await fetch(`http://localhost:8080/v1/conectaBook/genero-usuario/usuario/${id}`, {
+                method: "DELETE"
+            })
+
+            if(!relacoes.ok){
+                throw new Error("Erro ao deletar relações");
+                
+            }
+
+            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${id}`,{
+                method: "DELETE"
+            })
+
+            const data = await response.json()
+
+            if(data.status){
+                alert("Conta excluída com sucesso")
+                localStorage.removeItem("user")
+                navigate("/login")
+            }else{
+                alert("Erro ao excluir usuário")
+            }
+        } catch (error) {
+            console.error(error)
+            alert("Erro na requisição")
+        }
+    }
+
+
+
+    async function handleUpdate() {
+        try {
+            const userStorage = JSON.parse(localStorage.getItem("user"))
+
+            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nome: formData.nome,
+                    nome_usuario: formData.username,
+                    email: formData.email,
+                    data_nascimento: formData.dataNascimento
+                })
+            })
+
+            const data = await response.json()
+
+            console.log("UPDATE RESPONSE", data)
+
+            if (data.status) {
+                alert("Perfil atualizado com sucesso!")
+
+                const updatedUser = {
+                    ...userStorage,
+                    nome: formData.nome,
+                    nome_usuario: formData.username,
+                    email: formData.email,
+                    data_nascimento: formData.data_nascimento
+                }
+
+                localStorage.setItem("user", JSON.stringify(updatedUser))
+                setUser(updatedUser)
+            } else {
+                alert("Erro ao atualizar perfil")
+            }
+        } catch (error) {
+            console.error("Erro no PUT:", error)
+            alert("Erro na requisição")
+
+        }
+    }
 
     const [formData, setFormData] = useState({
         username: "",
         nome: "",
         email: "",
         senha: "",
-        nascimento: ""
+        dataNascimento: "",
+        id: ""
     })
 
     const INPUT_DATA = [
         { id: 1, name: "username", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text", required: true },
         { id: 2, name: "nome", label: "Nome Completo", placeholder: "Digite seu nome...", type: "text", required: true },
         { id: 3, name: "email", label: "E-mail", placeholder: "Digite seu e-mail...", type: "email", required: true },
-        { id: 4, name: "senha", label: "Senha", placeholder: "Digite sua senha...", type: "password", required: true },
         { id: 5, name: "dataNascimento", label: "Data de Nascimento", type: "date", required: true },
     ]
 
@@ -36,17 +121,17 @@ function Perfil() {
         const userStorage = JSON.parse(localStorage.getItem("user"))
 
         if (userStorage) {
+
             setUser(userStorage)
 
-
             setFormData({
-                username: userStorage.username || "",
-                nome: userStorage.nome || "",
-                email: userStorage.email || "",
-                senha: userStorage.senha || "",
-                dataNascimento: userStorage.dataNascimento || ""
+                username: userStorage.user.nome_usuario || "",
+                nome: userStorage.user.nome || "",
+                email: userStorage.user.email || "",
+                senha: "",
+                dataNascimento: userStorage.user.data_nascimento || "",
+                id: userStorage.user.id || ""
             })
-
         }
     }, [])
 
@@ -67,37 +152,20 @@ function Perfil() {
             <div className="up-perfil">
                 <h1>Perfil</h1>
                 <Button
-                    text={"Editar Perfil"} />
+                    text={"Editar Perfil"} onClick={handleUpdate} />
             </div>
 
             <div className="down-perfil">
                 <div className="left-perfil">
                     <div className="user-icon">
                         <img className="img-user" src={user?.foto} alt="Foto do usuário" />
-                        <h2>{user?.nome}</h2>
-                        <p>@{user?.username}</p>
+                        <h2>{user?.user.nome}</h2>
+                        <p>@{user?.user.nome_usuario}</p>
                     </div>
 
-                    <div className="informacoes-perfil">
-                        <div className="info-perfil">
-                            <FontAwesomeIcon className="icone-perfil" icon={faBook} />
-                            <div className="livros-lido-text">
-                                <p className="stats-livro">{user?.stats.livrosLidos}</p>
-                                <p>Livros Lidos</p>
-                            </div>
-                        </div>
-
-                        <div className="info-perfil">
-                            <FontAwesomeIcon className="icone-perfil" icon={faStar} />
-                            <div className="livros-lido-text">
-                                <p className="stats-livro">{user?.stats.resenhas}</p>
-                                <p>Resenhas Publicadas</p>
-                            </div>
-                        </div>
-                    </div>
 
                     <div className="excluir-conta">
-                        <Button className="button-excluir" text={"Excluir Conta"} />
+                        <Button className="button-excluir" onClick={handleDelete} text={"Excluir Conta"} />
                         <p>Essa ação não pode ser desfeita</p>
                     </div>
 
@@ -106,14 +174,14 @@ function Perfil() {
 
                 <div className="right-perfil">
                     <div className="apresentacao-perfil">
-                        <h2>Olá, {user?.nome}</h2>
+                        <h2>Olá, {user?.user.nome}</h2>
                         <p>Bem vindo á sua conta ConectaBook.</p>
                     </div>
 
                     <br />
                     <div className="inputs-perfil">
                         {INPUT_DATA.map((input) => (
-                            <div className="input-perfil">
+                            <div key={input.id} className="input-perfil">
                                 <Input
                                     name={input.name}
                                     label={input.label}
