@@ -98,31 +98,32 @@ const getSelectClubsByGeneroID = async function (idGenero) {
 // INSERE UM CLUBE NO BANCO
 const setInsertClub = async function (clube) {
     try {
-        const foto = clube.foto ? `'${clube.foto}'` : "NULL";
+        const foto = clube.foto && clube.foto !== '' ? clube.foto : null;
+
         let sql = `insert into tbl_clube (
                         nome,
                         sobre,
                         regras,
                         foto,
                         id_genero
-                        ) values (
-                        '${clube.nome}',
-                        '${clube.sobre}',
-                        '${clube.regras}',
-                        ${foto},
-                        '${clube.id_genero}'
-                        )`
+                    ) values (?, ?, ?, ?, ?)` 
+        let result = await db.raw(sql, [
+            clube.nome,
+            clube.sobre,
+            clube.regras,
+            foto,
+            clube.id_genero
+        ])
 
-        let result = await db.raw(sql)
-
-        // Verifica se a linha foi afetada no índice 0
-        if (result && result[0].affectedRows > 0){
-            console.log(result)
-            return true
-        }else
-            return false 
+        // Se a linha foi afetada, retorna o ID gerado pelo auto_increment
+        if (result && result[0] && result[0].affectedRows > 0) {
+            return result[0].insertId; // 🔥 Retorna o ID do clube novinho em folha
+        } else {
+            return false;
+        }
+        
     } catch (error) {
-        return false
+        return false;
     }
 }
 
@@ -150,20 +151,60 @@ const setUpdateClub = async function (clube) {
     
 }
 
-// DELETA UM CLUBE NO BANCO
-const setDeleteClub = async function (id) {
-    try{
-        let sql = `delete from tbl_clube where id_clube = ${id}`
-        let result = await db.raw(sql)
+// DELETA UM CLUBE LIMPANDO TODAS AS DEPENDÊNCIAS EM CASCATA VIA CÓDIGO
+const setDeleteClub = async function (idClube) {
+    // Iniciamos uma transação para garantir a segurança dos dados
+    const transaction = await db.transaction();
 
-        if(result && result[0].affectedRows > 0)
-            return true
-        else
-            return false
+    try {
+        // 1º PASSO: Buscar o ID da conversa desse clube para sabermos o que apagar nas mensagens
+        let sqlConversa = `select id_conversa from tbl_conversa where id_clube = ?`;
+        let resultadoConversa = await transaction.raw(sqlConversa, [idClube]);
+
+        if (resultadoConversa && resultadoConversa[0].length > 0) {
+            let idConversa = resultadoConversa[0][0].id_conversa;
+
+            // 2º PASSO: Deleta as curtidas das mensagens que pertencem a essa conversa
+            await transaction.raw(`
+                delete from tbl_curtida 
+                where id_mensagem in (select id_mensagem from tbl_mensagem where id_conversa = ?)
+            `, [idConversa]);
+
+            // 3º PASSO: Deleta as respostas (comentários com id_mensagem_pai) primeiro
+            await transaction.raw(`
+                delete from tbl_mensagem 
+                where id_mensagem_pai is not null and id_conversa = ?
+            `, [idConversa]);
+
+            // 4º PASSO: Deleta as mensagens principais da conversa do clube
+            await transaction.raw(`delete from tbl_mensagem where id_conversa = ?`, [idConversa]);
+
+            // 5º PASSO: Agora que a conversa está limpa, deleta a linha da tbl_conversa
+            await transaction.raw(`delete from tbl_conversa where id_conversa = ?`, [idConversa]);
+        }
+
+        // 6º PASSO: Deleta todos os membros vinculados a esse clube na tbl_membros
+        // (Ajuste o nome da tabela 'tbl_membro' ou 'tbl_clube_usuario' se for diferente no seu banco)
+        await transaction.raw(`delete from tbl_membros where id_clube = ?`, [idClube]);
+
+        // 7º PASSO: Finalmente, com todas as chaves estrangeiras limpas, deleta o clube
+        let result = await transaction.raw(`delete from tbl_clube where id_clube = ?`, [idClube]);
+
+        // Se tudo rodou sem erros até aqui, salva as alterações definitivamente no banco
+        await transaction.commit();
+
+        if (result && result[0].affectedRows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
     } catch (error) {
-        return false
+        // Se qualquer um dos passos falhar, desfaz tudo o que foi feito para não quebrar o banco
+        await transaction.rollback();
+        console.error("🚨 ERRO CRÍTICO AO DELETAR CLUBE EM CASCATA:", error.message);
+        return false;
     }
-    
 }
 
 module.exports = {

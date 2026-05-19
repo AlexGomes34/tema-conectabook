@@ -49,7 +49,7 @@ const mensagemRoutes = require('./routes/mensagemRoutes.js')
 app.use('/v1/conectaBook/mensagem', mensagemRoutes)
 
 const conversaRoutes = require('./routes/conversaRoutes.js')
-app.use('/v1/conectaBook/conversa', mensagemRoutes);
+app.use('/v1/conectaBook/conversa', conversaRoutes);
 
 const PORT = process.env.PORT || 8080
 
