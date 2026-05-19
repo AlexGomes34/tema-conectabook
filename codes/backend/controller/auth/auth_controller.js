@@ -24,9 +24,10 @@ const validarLogin = async function(dadosLogin, contentType) {
         }
 
         // Busca o usuário no banco pelo e-mail
-        let dadosUsuario = await usuarioDAO.selectByEmail(dadosLogin.email);
+        let dadosUsuario = await usuarioDAO.getSelectUserByEmail(dadosLogin.email);
 
         if (dadosUsuario && dadosUsuario.length > 0) {
+            
             const usuarioBanco = dadosUsuario[0];
 
             // Compara a senha digitada com a criptografada
