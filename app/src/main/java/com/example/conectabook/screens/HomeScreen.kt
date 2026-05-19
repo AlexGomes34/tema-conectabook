@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.conectabook.R
 import com.example.conectabook.components.BottomBar
 import com.example.conectabook.components.CriarPostcard
@@ -21,13 +22,15 @@ import com.example.conectabook.components.SecaoClubes
 import com.example.conectabook.components.SecaoTitulosSugeridos
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier) {
 
     val colors = MaterialTheme.colorScheme
 
     Scaffold(
         bottomBar = {
-            BottomBar()
+            BottomBar(navController = navController)
         }
     ) { paddingValues ->
 

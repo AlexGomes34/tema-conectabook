@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.conectabook.R
 import com.example.conectabook.components.LivroEstanteUi
 import com.example.conectabook.components.ResumoEstanteCard
@@ -32,7 +33,9 @@ import com.example.conectabook.components.SecaoLivrosEstante
 import com.example.conectabook.components.SecaoResumoEstante
 
 @Composable
-fun LivrosScreen(modifier: Modifier = Modifier) {
+fun LivrosScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier) {
 
     val colors = MaterialTheme.colorScheme
     var busca by remember { mutableStateOf("") }
@@ -86,7 +89,7 @@ fun LivrosScreen(modifier: Modifier = Modifier) {
 
     Scaffold(
         bottomBar = {
-            BottomBar()
+            BottomBar(navController = navController)
         }
     ) {
         paddingValues ->

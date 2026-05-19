@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.example.conectabook.navigation.AppNavigation
 import com.example.conectabook.screens.DetalhesLivroScreen
 import com.example.conectabook.screens.LivrosScreen
 import com.example.conectabook.ui.theme.ConectaBookTheme
@@ -18,11 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ConectaBookTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    DetalhesLivroScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppNavigation()
             }
         }
     }

@@ -43,7 +43,11 @@ import com.example.conectabook.viewmodel.LoginViewModel
 
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(
+    onEntrarClick: () -> Unit = {},
+    modifier: Modifier = Modifier) {
+
+
 
     val viewModel: LoginViewModel = viewModel()
 
@@ -207,10 +211,10 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 
                 Button(
                     onClick = {
-                        val valido = viewModel.validarLogin()
-                        if (valido) {
-                            //Todo: home(fazer navegação)
-                        }
+//                        val valido = viewModel.validarLogin()
+//                        if (valido) {
+                            onEntrarClick()
+//                        }
                     },
                     enabled = viewModel.habilitarClicar,
                     modifier = Modifier

@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.conectabook.components.AppHeader
 import com.example.conectabook.components.BottomBar
 import com.example.conectabook.components.SecaoComunidadeLivro
@@ -23,12 +24,14 @@ import com.example.conectabook.components.SecaoTitulosSugeridos
 import com.example.conectabook.components.SobreLivroCard
 
 @Composable
-fun DetalhesLivroScreen(modifier: Modifier = Modifier) {
+fun DetalhesLivroScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier) {
 
     val colors = MaterialTheme.colorScheme
 
     Scaffold(
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar(navController = navController) }
     ) { paddingValues ->
 
         LazyColumn(

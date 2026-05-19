@@ -13,9 +13,13 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import com.example.conectabook.navigation.Routes
 
 @Composable
-fun BottomBar() {
+fun BottomBar(
+    navController: NavController
+) {
 
     val colors = MaterialTheme.colorScheme
 
@@ -41,7 +45,9 @@ fun BottomBar() {
 
         NavigationBarItem(
             selected = false,
-            onClick = {},
+            onClick = {
+                navController.navigate(Routes.LIVROS)
+            },
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.Search,
@@ -55,7 +61,9 @@ fun BottomBar() {
 
         NavigationBarItem(
             selected = true,
-            onClick = {},
+            onClick = {
+                navController.navigate(Routes.HOME)
+            },
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.Home,
