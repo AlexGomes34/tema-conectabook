@@ -114,21 +114,108 @@ const getSelectUserByEmail = async function(email) {
     }
 }
 
-//DELETA UM USUARIO DENTRO DO BANCO
-const setDeleteUser = async function (id) {
+// DELETA UM USUÁRIO LIMPANDO TODAS AS SUAS CONEXÕES EM CASCATA (INCLUINDO AVALIAÇÕES)
+const setDeleteUser = async function (idUsuario) {
+    const transaction = await db.transaction();
+
     try {
-        let sql = `delete from tbl_usuario where id_usuario = ${id}`
-        let result = await db.raw(sql)
+        // =========================================================================
+        // 1º PASSO: LIMPAR CURTIDAS DO USUÁRIO
+        // =========================================================================
+        await transaction.raw(`delete from tbl_curtida where id_usuario = ?`, [idUsuario]);
 
-        if(result && result[0].affectedRows > 0)
-            return true
-        else
-            return false
+        await transaction.raw(`
+            delete from tbl_curtida 
+            where id_mensagem in (
+                select id_mensagem from tbl_mensagem 
+                where id_mensagem_pai in (select id_mensagem from tbl_mensagem where id_usuario = ?)
+            )
+        `, [idUsuario]);
 
-    }catch(error){
-        return false
+        await transaction.raw(`
+            delete from tbl_curtida 
+            where id_mensagem in (select id_mensagem from tbl_mensagem where id_usuario = ?)
+        `, [idUsuario]);
+
+        // =========================================================================
+        // 2º PASSO: LIMPAR COMENTÁRIOS E RESPOSTAS NOS POSTS DELE
+        // =========================================================================
+        await transaction.raw(`
+            delete from tbl_mensagem 
+            where id_mensagem_pai in (
+                select id_mensagem from (select id_mensagem from tbl_mensagem where id_usuario = ?) as tm
+            )
+        `, [idUsuario]);
+
+        await transaction.raw(`delete from tbl_mensagem where id_usuario = ?`, [idUsuario]);
+
+        // =========================================================================
+        // 3º PASSO: LIMPAR RELACIONAMENTOS INTERMEDIÁRIOS (NOTIFICAÇÕES, AVALIAÇÕES, ESTANTE, ETC.)
+        // =========================================================================
+        
+        // 1. 🔥 NOVO: Remove todas as notificações vinculadas a este usuário
+        // (Garante que limpa tanto as que ele recebeu quanto as que ele gerou, dependendo de como modelaram a FK)
+        // Se a sua tabela tiver apenas a coluna 'id_usuario', use a linha abaixo:
+        await transaction.raw(`delete from tbl_notificacao where id_usuario = ?`, [idUsuario]);
+        
+        // Se na sua tabela de notificação tiver quem recebeu E quem enviou (ex: id_usuario_remetente / id_usuario_destino), descomente e use:
+        // await transaction.raw(`delete from tbl_notificacao where id_usuario_remetente = ? or id_usuario_destino = ?`, [idUsuario, idUsuario]);
+
+        // 2. Apaga primeiro da tbl_avaliacao_livro onde a avaliação pertence ao usuário
+        await transaction.raw(`
+            delete from tbl_avaliacao_livro 
+            where id_avaliacao in (
+                select id_avaliacao from (
+                    select id_avaliacao from tbl_avaliacao where id_usuario = ?
+                ) as temp_livro
+            )
+        `, [idUsuario]);
+
+        // 3. Apaga da tbl_avaliacao_cafeteria onde a avaliação pertence ao usuário
+        await transaction.raw(`
+            delete from tbl_avaliacao_cafeteria 
+            where id_avaliacao in (
+                select id_avaliacao from (
+                    select id_avaliacao from tbl_avaliacao where id_usuario = ?
+                ) as temp_cafeteria
+            )
+        `, [idUsuario]);
+
+        // 4. Agora que as duas tabelas intermediárias liberaram as chaves, apaga da tbl_avaliacao de fato
+        await transaction.raw(`delete from tbl_avaliacao where id_usuario = ?`, [idUsuario]);
+
+        // 5. Remove o histórico de acessos aos livros desse usuário
+        await transaction.raw(`delete from tbl_acesso_livro where id_usuario = ?`, [idUsuario]);
+
+        // 6. Remove os livros salvos na estante desse usuário
+        await transaction.raw(`delete from tbl_estante where id_usuario = ?`, [idUsuario]);
+
+        // 7. Remove o vínculo do usuário com seus gêneros literários favoritos
+        await transaction.raw(`delete from tbl_genero_usuario where id_usuario = ?`, [idUsuario]);
+
+        // 8. Remove o usuário de todos os clubes onde ele faz parte
+        await transaction.raw(`delete from tbl_membros where id_usuario = ?`, [idUsuario]);
+
+        // =========================================================================
+        // 4º PASSO: EXCLUSÃO DO PERFIL DO USUÁRIO
+        // =========================================================================
+        let result = await transaction.raw(`delete from tbl_usuario where id_usuario = ?`, [idUsuario]);
+
+        // Confirma e aplica todas as deleções juntas de forma segura
+        await transaction.commit();
+
+        if (result && result[0].affectedRows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        // Se qualquer uma das tabelas falhar ou não for encontrada, desfaz o lote inteiro
+        await transaction.rollback();
+        console.error("🚨 ERRO CRÍTICO AO DELETAR USUÁRIO EM CASCATA:", error.message);
+        return false;
     }
-    
 }
 
 module.exports = {
