@@ -9,7 +9,6 @@
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-
 // Gera o token 
 const getToken = (usuario) => {
     return jwt.sign(usuario, process.env.JWT_SECRET, { expiresIn: '24h' })

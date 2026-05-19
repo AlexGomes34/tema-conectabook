@@ -9,7 +9,7 @@
 
 const usuarioDAO = require('../../model/DAO/usuario.js')
 const bcrypt = require('bcrypt')
-const jwtService = require('../../jwt/jwt_service.js')
+const jwtService = require('../../jwt/jwt_service.js') 
 const messages = require('../modulo/config_messages.js')
 
 const validarLogin = async function(dadosLogin, contentType) {
@@ -30,26 +30,25 @@ const validarLogin = async function(dadosLogin, contentType) {
             let senhaMatch = await bcrypt.compare(dadosLogin.senha, usuario[0].senha);
 
             if (senhaMatch) {
-                // Gera o token usando a função getToken 
-                // Payload contém ID e Email
+                // Gera o token usando o serviço externo
+                // Passa apenas os dados essenciais para o payload
                 const token = jwtService.getToken({ 
-                    id: usuario[0].id_usuario, 
-                    email: usuario[0].email 
+                    id: usuarioBanco.id_usuario, 
+                    email: usuarioBanco.email 
                 });
 
-                // Estrutura da resposta de sucesso 
-                let responseData = {
-                    status: messages.SUCCESS_REQUEST.status,
-                    status_code: messages.SUCCESS_REQUEST.status_code,
-                    token: token, 
-                    user: {
-                        id: usuario[0].id_usuario, 
-                        nome: usuario[0].nome,
-                        nome_usuario: usuario[0].nome_usuario,
-                        email: usuario[0].email,
-                        data_nascimento: usuario[0].data_nascimento,
-                        foto_perfil: usuario[0].foto_perfil
-                    }
+                //  Monta o objeto de sucesso
+                let responseData = Object.assign({}, messages.HEADER);
+                responseData.status = messages.SUCCESS_REQUEST.status;
+                responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+                
+                responseData.user = {
+                    id: usuarioBanco.id_usuario,
+                    nome: usuarioBanco.nome,
+                    nome_usuario: usuarioBanco.nome_usuario,
+                    email: usuarioBanco.email,
+                    foto_perfil: usuarioBanco.foto_perfil,
+                    token: token // Token gerado pelo serviço
                 };
 
                 return responseData;
@@ -59,14 +58,13 @@ const validarLogin = async function(dadosLogin, contentType) {
         } else {
             return messages.ERROR_NOT_FOUND; // E-mail não encontrado
         }
-        
 
     } catch (error) {
         console.error(error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-};
+}
 
 module.exports = { 
     validarLogin 
-};
+}
