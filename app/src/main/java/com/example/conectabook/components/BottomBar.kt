@@ -13,7 +13,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.conectabook.navigation.Routes
 
 @Composable
@@ -22,6 +24,9 @@ fun BottomBar(
 ) {
 
     val colors = MaterialTheme.colorScheme
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val rotaAtual = navBackStackEntry?.destination?.route
 
     NavigationBar(
         containerColor = colors.surface
@@ -44,7 +49,7 @@ fun BottomBar(
 
 
         NavigationBarItem(
-            selected = false,
+            selected = rotaAtual == Routes.LIVROS,
             onClick = {
                 navController.navigate(Routes.LIVROS)
             },
@@ -60,7 +65,7 @@ fun BottomBar(
         )
 
         NavigationBarItem(
-            selected = true,
+            selected = rotaAtual == Routes.HOME,
             onClick = {
                 navController.navigate(Routes.HOME)
             },
