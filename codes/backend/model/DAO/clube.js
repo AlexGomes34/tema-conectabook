@@ -95,7 +95,8 @@ const getSelectClubsByGeneroID = async function (idGenero) {
 // INSERE UM CLUBE NO BANCO
 const setInsertClub = async function (clube) {
     try {
-        const foto = clube.foto ? `'${clube.foto}'` : "NULL";
+        const foto = clube.foto && clube.foto !== '' ? clube.foto : null;
+
         let sql = `insert into tbl_clube (
                         nome,
                         sobre,
@@ -160,7 +161,10 @@ const setDeleteClub = async function (id) {
         else
             return false
     } catch (error) {
-        return false
+        // Se qualquer um dos passos falhar, desfaz tudo o que foi feito para não quebrar o banco
+        await transaction.rollback();
+        console.error("🚨 ERRO CRÍTICO AO DELETAR CLUBE EM CASCATA:", error.message);
+        return false;
     }
 
 }

@@ -7,6 +7,7 @@
  *******************************************************************************************/
 
 const clubeDAO = require("../../model/DAO/clube.js");
+const conversaDAO = require("../../model/DAO/conversa.js")
 const messages = require("../modulo/config_messages.js");
 
 
@@ -89,8 +90,8 @@ const listarClubesPorGenero = async function (idGenero) {
     }
 }
 
-//  POST - Criar novo clube
-const criarClube = async function (clube, contentType) {
+// POST - Inserir um Clube e criar automaticamente sua Conversa vinculada
+const criarClube = async function (dadosClube, contentType) {
     try {
         if (String(contentType).toLowerCase().includes('multipart/form-data') == false
     ) {
@@ -116,16 +117,22 @@ const criarClube = async function (clube, contentType) {
                 }
                 console.log(responseData.response)
                 return responseData;
+
             } else {
+                // Se falhar ao criar a conversa, idealmente você faria um delete do clube para não expor lixo,
+                // ou usaria uma transaction global na DAO.
                 return messages.ERROR_INTERNAL_SERVER_MODEL;
             }
+
+        } else {
+            return messages.ERROR_INTERNAL_SERVER_MODEL;
         }
+
     } catch (error) {
         console.log(error)
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
-
 
 // PUT - Atualizar clube 
 const atualizarClube = async function (clube, contentType, id) {

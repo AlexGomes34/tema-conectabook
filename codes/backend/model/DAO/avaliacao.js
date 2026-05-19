@@ -41,6 +41,16 @@ const getSelectByIdRating =  async function  (id) {
     
 }
 
+/* RETORNA AVALIAÇÃO PELO ID DO USUARIO
+const getSelectRatingByIdUser = async function (idUsuario) {
+    try {
+        let sql = `
+           select
+               tbl_avaliacao`
+    }
+    
+}
+*/
 
 //INSERE UMA AVALIAÇÃO 
 const setInsertRating = async function (avaliacao) {
@@ -108,7 +118,7 @@ const setDeleteRating = async function (id) {
     }
 }
 
-
+// DELETA OS RELACIONAMENTOS DE UM USUÁRIO
 
 module.exports = {
     getSelectAllRatings,
