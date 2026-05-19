@@ -22,7 +22,10 @@ const validarLogin = async function(dadosLogin, contentType) {
         if (!dadosLogin.email || !dadosLogin.senha) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
+      
+        let usuario = await usuarioDAO.getSelectUserByEmail(dadosLogin.email);
 
+<<<<<<< HEAD
         // Busca o usuário no banco pelo e-mail
         let dadosUsuario = await usuarioDAO.getSelectUserByEmail(dadosLogin.email);
 
@@ -32,6 +35,11 @@ const validarLogin = async function(dadosLogin, contentType) {
 
             // Compara a senha digitada com a criptografada
             let senhaMatch = await bcrypt.compare(dadosLogin.senha, usuarioBanco.senha);
+=======
+        if (usuario && usuario.length > 0) {
+            
+            let senhaMatch = await bcrypt.compare(dadosLogin.senha, usuario[0].senha);
+>>>>>>> f94e17dca28fa4ffe89ae898942648023b27a338
 
             if (senhaMatch) {
                 // Gera o token usando o serviço externo
@@ -56,7 +64,6 @@ const validarLogin = async function(dadosLogin, contentType) {
                 };
 
                 return responseData;
-
             } else {
                 return messages.ERROR_INVALID_USER; // Senha incorreta
             }
@@ -65,12 +72,8 @@ const validarLogin = async function(dadosLogin, contentType) {
         }
 
     } catch (error) {
-        console.error("ERRO NA AUTH CONTROLLER:", error);
-        return messages.ERROR_INTERNAL_SERVER_CONTROLLER || { 
-            status: false, 
-            status_code: 500, 
-            message: "Erro interno no servidor." 
-        };
+        console.error(error);
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
 
