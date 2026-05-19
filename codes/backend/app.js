@@ -45,6 +45,9 @@ app.use('/v1/conectaBook/livros', livrosRoutes)
 const acessoLivroRoutes = require('./routes/acessoRoutes.js')
 app.use('/v1/conectaBook/livro-acesso', acessoLivroRoutes)
 
+const mensagemRoutes = require('./routes/mensagemRoutes.js')
+app.use('/v1/conectaBook/mensagem', mensagemRoutes)
+
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, function(){

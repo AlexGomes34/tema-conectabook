@@ -19,6 +19,14 @@ router.post('/login', jsonParser, async function(request, response) {
 
     let result = await authController.validarLogin(dadosBody, contentType)
 
+    if (!result || !result.status_code) {
+        return response.status(500).json({
+            status: false,
+            status_code: 500,
+            message: "Erro interno: A controller de autenticação não retornou uma resposta válida."
+        })
+    }
+
     response.status(result.status_code).json(result);
 });
 

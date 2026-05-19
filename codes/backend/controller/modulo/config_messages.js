@@ -12,7 +12,7 @@ const dataAtual = new Date()
 /************************************MENSAGENS DE PADRONIZAÇÃO DO PROJETO************************************************ */
 
 const HEADER = {
-                            development:        'Alex Henrique Da Cruz Gomes/Geovanna',
+                            development:        'Alex Gomes/Geovanna Silva',
                             api_description:    'API para manipular dados do ConectaBook',  
                             version:            '1.0.00.00',   
                             request_date:       dataAtual.toLocaleDateString(),

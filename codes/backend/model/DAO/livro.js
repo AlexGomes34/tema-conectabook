@@ -3,7 +3,7 @@
  * Projeto: ConectaBook
  * Data: 06/05/2026
  * Autor: Geovanna Silva
- * Versão: 1.1 (Ajustado para retornar apenas o índice [0])
+ * Versão: 1.1 
  *******************************************************************************************/
 
 // CONEXÃO COM O BANCO DE DADOS
@@ -76,7 +76,6 @@ const setInsertBook = async function (livro) {
 // ATUALIZA UM LIVRO NO BANCO 
 const setUpdateBook = async function (livro) {
     try {
-        // CORRIGIDO: Adicionada a vírgula depois do título e estruturado o SQL
         let sql = `update tbl_livro set 
                         isbn = '${livro.isbn}',
                         titulo = '${livro.titulo}',
