@@ -25,7 +25,7 @@ function Perfil() {
     async function handleDelete() {
         try {
             const userStorage = JSON.parse(localStorage.getItem("user"))
-            const id = userStorage.user.id_usuario_usuario
+            const id = userStorage.user.id_usuario
 
             const confirmDelete = window.confirm("Tem certeza que deseja excluir sua conta?")
             if (!confirmDelete) return

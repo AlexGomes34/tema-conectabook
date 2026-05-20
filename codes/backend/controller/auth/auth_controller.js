@@ -2,70 +2,73 @@
  * Objetivo: Arquivo responsável pela manipulação da camada de usuários no Banco de Dados MySQL
  * Projeto: ConectaBook
  * Data: 07/05/2026
- * Autor: Alex Henrique Da Cruz Gomes
- * Versão: 1.1
+ * Autor: Geovanna Silva
+ * Autor: Alex Henrique Da Cruz Gomes 
+ * Versão: 1.3
  *******************************************************************************************/
-const usuarioDAO = require('../../model/DAO/usuario.js');
-const messages = require('../modulo/config_messages.js');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken'); 
 
-// Chave secreta para o JWT (Idealmente deve vir de um arquivo .env)
-const SECRET = 'conectabook_secret_key_2026';
+const usuarioDAO = require('../../model/DAO/usuario.js')
+const bcrypt = require('bcrypt')
+const jwtService = require('../../jwt/jwt_service.js') 
+const messages = require('../modulo/config_messages.js')
 
 const validarLogin = async function(dadosLogin, contentType) {
     try {
+       
         if (String(contentType).toLowerCase() !== 'application/json') {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        if (dadosLogin.email == '' || dadosLogin.email == undefined || 
-            dadosLogin.senha == '' || dadosLogin.senha == undefined) {
+        if (!dadosLogin.email || !dadosLogin.senha) {
             return messages.ERROR_REQUIRED_FIELDS;
-        } else {
-            let usuario = await usuarioDAO.getSelectUserByEmail(dadosLogin.email);
-
-            if (usuario) {
-                let senhaMatch = await bcrypt.compare(dadosLogin.senha, usuario[0].senha);
-
-                if (senhaMatch) {
-                    let responseData = Object.assign({}, messages.HEADER);
-                    responseData.status = messages.SUCCESS_REQUEST.status;
-                    responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-                    
-                    // GERANDO O TOKEN JWT
-                    // Guardamos o ID no payload do token para identificação futura
-                    const token = jwt.sign(
-                        { id: usuario[0].id, email: usuario[0].email }, 
-                        SECRET, 
-                        { expiresIn: '24h' }
-                    );
-
-                    // RETORNANDO TODOS OS DADOS, INCLUINDO O ID E O TOKEN
-                    responseData.user = {
-                        id: usuario[0].id_usuario, // Garanta que no banco o nome da coluna seja 'id'
-                        nome: usuario[0].nome,
-                        nome_usuario: usuario[0].nome_usuario,
-                        email: usuario[0].email,
-                        data_nascimento: usuario[0].data_nascimento,
-                        foto_perfil: usuario[0].foto_perfil
-                    };
-
-                    return responseData;
-                } else {
-                    return messages.ERROR_INVALID_USER;
-                }
-            } else {
-                return messages.ERROR_NOT_FOUND;
-            }
         }
+
+        // Busca o usuário no banco pelo e-mail
+        let dadosUsuario = await usuarioDAO.getSelectUserByEmail(dadosLogin.email);
+
+        if (dadosUsuario && dadosUsuario.length > 0) {
+            
+            const usuarioBanco = dadosUsuario[0];
+
+            // Compara a senha digitada com a criptografada
+            let senhaMatch = await bcrypt.compare(dadosLogin.senha, usuarioBanco.senha);
+
+            if (senhaMatch) {
+                // Gera o token usando o serviço externo
+                // Passa apenas os dados essenciais para o payload
+                const token = jwtService.getToken({ 
+                    id: usuarioBanco.id_usuario, 
+                    email: usuarioBanco.email 
+                });
+
+                //  Monta o objeto de sucesso
+                let responseData = Object.assign({}, messages.HEADER);
+                responseData.status = messages.SUCCESS_REQUEST.status;
+                responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+                
+                responseData.user = {
+                    id: usuarioBanco.id_usuario,
+                    nome: usuarioBanco.nome,
+                    nome_usuario: usuarioBanco.nome_usuario,
+                    email: usuarioBanco.email,
+                    foto_perfil: usuarioBanco.foto_perfil,
+                    token: token // Token gerado pelo serviço
+                };
+
+                return responseData;
+            } else {
+                return messages.ERROR_INVALID_USER; // Senha incorreta
+            }
+        } else {
+            return messages.ERROR_NOT_FOUND; // E-mail não encontrado
+        }
+
     } catch (error) {
-        // Log para ajudar você e seu colega a debugar no terminal
-        console.log(error); 
+        console.error(error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
 
-module.exports = {
-    validarLogin
-};
+module.exports = { 
+    validarLogin 
+}

@@ -7,6 +7,7 @@
  *******************************************************************************************/
 
 const clubeDAO = require("../../model/DAO/clube.js");
+const conversaDAO = require("../../model/DAO/conversa.js")
 const messages = require("../modulo/config_messages.js");
 
 
@@ -89,43 +90,52 @@ const listarClubesPorGenero = async function (idGenero) {
     }
 }
 
-//  POST - Criar novo clube
-const criarClube = async function (clube, contentType) {
+// POST - Inserir um Clube e criar automaticamente sua Conversa vinculada
+const criarClube = async function (dadosClube, contentType) {
     try {
-        if (String(contentType).toLowerCase().includes('multipart/form-data') == false
-    ) {
-            return messages.ERROR_CONTENT_TYPE
+
+        if (
+            String(contentType).toLowerCase().includes('multipart/form-data') == false
+        ) {
+            return messages.ERROR_CONTENT_TYPE;
         }
 
-        if(clube.nome == '' || clube.nome == undefined || 
-           clube.sobre == '' || clube.sobre == undefined ||
-           clube.regras == ''|| clube.regras == undefined ||
-           clube.id_genero == '' || clube.id_genero == undefined 
+        if (
+            dadosClube.nome == '' || dadosClube.nome == undefined ||
+            dadosClube.sobre == '' || dadosClube.sobre == undefined ||
+            dadosClube.regras == '' || dadosClube.regras == undefined ||
+            dadosClube.id_genero == '' || dadosClube.id_genero == undefined
         ) {
-            return messages.ERROR_REQUIRED_FIELDS
-        } else {
-            let idClube = await clubeDAO.setInsertClub(clube);
 
-            if(idClube) {
+            return messages.ERROR_REQUIRED_FIELDS;
+
+        } else {
+
+            let idClube = await clubeDAO.setInsertClub(dadosClube);
+
+            if (idClube) {
+
                 let responseData = Object.assign({}, messages.HEADER);
+
                 responseData.status = messages.SUCCESS_CREATED_ITEM.status;
-                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code
+                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
 
                 responseData.response = {
                     id_clube: idClube
-                }
-                console.log(responseData.response)
+                };
+
                 return responseData;
+
             } else {
                 return messages.ERROR_INTERNAL_SERVER_MODEL;
             }
         }
+
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
-
 
 // PUT - Atualizar clube 
 const atualizarClube = async function (clube, contentType, id) {
