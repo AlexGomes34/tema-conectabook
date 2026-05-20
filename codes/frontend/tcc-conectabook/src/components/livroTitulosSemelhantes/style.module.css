@@ -24,6 +24,10 @@
     padding: 1rem;
 }
 
+.bodyLivro{
+    padding: 0px 3vw;
+}
+
 .livro img{
     height: auto;
     object-fit: cover;

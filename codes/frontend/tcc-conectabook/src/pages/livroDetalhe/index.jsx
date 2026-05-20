@@ -8,9 +8,13 @@ import Button from "../../components/button/index.jsx"
 import styles from "./style.module.css"
 
 import LivroTitulosSemelhantes from "../../components/livroTitulosSemelhantes/index.jsx"
+import { useNavigate } from "react-router-dom";
+
+
 
 
 export default function LivroDetalhe() {
+    const navigate = useNavigate()
     return (
         <div>
             <Header />
@@ -46,15 +50,16 @@ export default function LivroDetalhe() {
                         <div className={styles.buttons}>
                             <div className={styles.avaliacaoButtons}>
                                 <Button text={"Favoritar"} />
-                                <Button text={"Avaliacoes"} />
+                                <Button text={"Avaliacoes"} onClick={() => navigate('/livroAvaliacoes')} />
                             </div>
                             <Button text={"Adicionar a estante"} 
                             className={styles.adicionarEstante}/>
                         </div>
                     </div>
                 </div>
-                <LivroTitulosSemelhantes/>
             </main>
+            
+                <LivroTitulosSemelhantes/>
             <Footer />
         </div>
     )
