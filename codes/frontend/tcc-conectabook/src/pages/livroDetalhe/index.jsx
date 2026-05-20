@@ -7,6 +7,9 @@ import Button from "../../components/button/index.jsx"
 
 import styles from "./style.module.css"
 
+import LivroTitulosSemelhantes from "../../components/livroTitulosSemelhantes/index.jsx"
+
+
 export default function LivroDetalhe() {
     return (
         <div>
@@ -50,44 +53,7 @@ export default function LivroDetalhe() {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div className={styles.titulosSemelhantesText}>
-                        <p>Titulos Semelhantes</p>
-                        <p>Ver Todos</p>
-                    </div>
-                    <div className={styles.titulosSemelhantes}>
-                        <div className={styles.tituloSemelhante}>
-                            <img src={fotoLivro1} alt="" />
-                            <p>O pequeno principe</p>
-                            <p>Autor do Livro</p>
-                        </div>
-                        <div className={styles.tituloSemelhante}>
-                            <img src={fotoLivro1} alt="" />
-                            <p>O pequeno principe</p>
-                            <p>Autor do Livro</p>
-                        </div>
-                        <div className={styles.tituloSemelhante}>
-                            <img src={fotoLivro1} alt="" />
-                            <p>O pequeno principe</p>
-                            <p>Autor do Livro</p>
-                        </div>
-                        <div className={styles.tituloSemelhante}>
-                            <img src={fotoLivro1} alt="" />
-                            <p>O pequeno principe</p>
-                            <p>Autor do Livro</p>
-                        </div>
-                        <div className={styles.tituloSemelhante}>
-                            <img src={fotoLivro1} alt="" />
-                            <p>O pequeno principe</p>
-                            <p>Autor do Livro</p>
-                        </div>
-                        <div className={styles.tituloSemelhante}>
-                            <img src={fotoLivro1} alt="" />
-                            <p>O pequeno principe</p>
-                            <p>Autor do Livro</p>
-                        </div>
-                    </div>
-                </div>
+                <LivroTitulosSemelhantes/>
             </main>
             <Footer />
         </div>
