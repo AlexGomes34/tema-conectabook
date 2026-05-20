@@ -25,25 +25,22 @@ function Perfil() {
     async function handleDelete() {
         try {
             const userStorage = JSON.parse(localStorage.getItem("user"))
-            const id = userStorage.user.id_usuario
+
+            const userId =
+                userStorage.user.id ||
+                userStorage.user.id_usuario
 
             const confirmDelete = window.confirm("Tem certeza que deseja excluir sua conta?")
+
             if (!confirmDelete) return
 
-            const relacoes = await fetch(`http://localhost:8080/v1/conectaBook/genero-usuario/usuario/${userStorage.user.id_usuario}`, {
-                method: "DELETE"
-            })
-
-            if (!relacoes.ok) {
-                throw new Error("Erro ao deletar relações");
-
-            }
-
-            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id_usuario}`, {
+            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userId}`, {
                 method: "DELETE"
             })
 
             const data = await response.json()
+
+            console.log(data)
 
             if (data.status) {
                 alert("Conta excluída com sucesso")
@@ -75,8 +72,12 @@ function Perfil() {
                 form.append("foto", foto)
             }
 
+            const userId =
+                userStorage.user.id ||
+                userStorage.user.id_usuario
+
             const putResponse = await fetch(
-                `http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id_usuario}`,
+                `http://localhost:8080/v1/conectaBook/usuarios/${userId}`,
                 {
                     method: "PUT",
                     body: form
@@ -91,12 +92,15 @@ function Perfil() {
             }
 
             const getResponse = await fetch(
-                `http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id_usuario}`
+                `http://localhost:8080/v1/conectaBook/usuarios/${userId}`
             )
 
             const getData = await getResponse.json()
 
             const userData = getData.response || getData.user || getData
+
+            console.log("USER STORAGE:", userStorage)
+            console.log("USER DATA:", userData)
 
             const updatedUser = {
                 ...userStorage,
@@ -162,11 +166,10 @@ function Perfil() {
     useEffect(() => {
         const userStorage = JSON.parse(localStorage.getItem("user"))
 
-        console.log(userStorage.user)
-
         if (userStorage) {
 
             setUser(userStorage)
+
 
             setFormData({
                 username: userStorage.user.nome_usuario || "",
@@ -187,6 +190,8 @@ function Perfil() {
             [name]: value
         }))
     }
+
+
 
     return (
         <div>
