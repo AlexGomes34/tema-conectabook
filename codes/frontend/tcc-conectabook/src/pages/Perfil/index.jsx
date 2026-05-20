@@ -21,15 +21,16 @@ function Perfil() {
 
     const navigate = useNavigate()
 
+
     async function handleDelete() {
         try {
             const userStorage = JSON.parse(localStorage.getItem("user"))
-            const id = userStorage.user.id
+            const id = userStorage.user.id_usuario_usuario
 
             const confirmDelete = window.confirm("Tem certeza que deseja excluir sua conta?")
             if (!confirmDelete) return
 
-            const relacoes = await fetch(`http://localhost:8080/v1/conectaBook/genero-usuario/usuario/${id}`, {
+            const relacoes = await fetch(`http://localhost:8080/v1/conectaBook/genero-usuario/usuario/${userStorage.user.id_usuario}`, {
                 method: "DELETE"
             })
 
@@ -38,7 +39,7 @@ function Perfil() {
 
             }
 
-            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${id}`, {
+            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id_usuario}`, {
                 method: "DELETE"
             })
 
@@ -60,59 +61,59 @@ function Perfil() {
 
 
     async function handleUpdate() {
-    try {
-        const userStorage = JSON.parse(localStorage.getItem("user"))
+        try {
+            const userStorage = JSON.parse(localStorage.getItem("user"))
 
-        const form = new FormData()
+            const form = new FormData()
 
-        form.append("nome", formData.nome)
-        form.append("nome_usuario", formData.username)
-        form.append("email", formData.email)
-        form.append("data_nascimento", formData.dataNascimento)
+            form.append("nome", formData.nome)
+            form.append("nome_usuario", formData.username)
+            form.append("email", formData.email)
+            form.append("data_nascimento", formData.dataNascimento)
 
-        if (foto) {
-            form.append("foto", foto)
-        }
-
-        const putResponse = await fetch(
-            `http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`,
-            {
-                method: "PUT",
-                body: form
+            if (foto) {
+                form.append("foto", foto)
             }
-        )
 
-        const putData = await putResponse.json()
+            const putResponse = await fetch(
+                `http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id_usuario}`,
+                {
+                    method: "PUT",
+                    body: form
+                }
+            )
 
-        if (!putData.status) {
-            alert("Erro ao atualizar perfil")
-            return
+            const putData = await putResponse.json()
+
+            if (!putData.status) {
+                alert("Erro ao atualizar perfil")
+                return
+            }
+
+            const getResponse = await fetch(
+                `http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id_usuario}`
+            )
+
+            const getData = await getResponse.json()
+
+            const userData = getData.response || getData.user || getData
+
+            const updatedUser = {
+                ...userStorage,
+                user: userData
+            }
+
+            localStorage.setItem("user", JSON.stringify(updatedUser))
+            setUser(updatedUser)
+
+            alert("Perfil atualizado com sucesso!")
+
+        } catch (error) {
+            console.error("Erro no PUT:", error)
+            alert("Erro na requisição")
+            console.log(error)
         }
-
-        const getResponse = await fetch(
-            `http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`
-        )
-
-        const getData = await getResponse.json()
-
-        const userData = getData.response || getData.user || getData
-
-        const updatedUser = {
-            ...userStorage,
-            user: userData
-        }
-
-        localStorage.setItem("user", JSON.stringify(updatedUser))
-        setUser(updatedUser)
-
-        alert("Perfil atualizado com sucesso!")
-
-    } catch (error) {
-        console.error("Erro no PUT:", error)
-        alert("Erro na requisição")
-        console.log(error)
     }
-}
 
     const [formData, setFormData] = useState({
         username: "",
@@ -161,6 +162,8 @@ function Perfil() {
     useEffect(() => {
         const userStorage = JSON.parse(localStorage.getItem("user"))
 
+        console.log(userStorage.user)
+
         if (userStorage) {
 
             setUser(userStorage)
@@ -171,7 +174,7 @@ function Perfil() {
                 email: userStorage.user.email || "",
                 senha: "",
                 dataNascimento: userStorage.user.data_nascimento || "",
-                id: userStorage.user.id || ""
+                id: userStorage.user.id_usuario || ""
             })
         }
     }, [])

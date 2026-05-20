@@ -81,9 +81,9 @@ export default function Clube() {
     useEffect(() => {
         const userStorage = JSON.parse(localStorage.getItem("user"))
 
-        if (userStorage?.user?.id) {
-            buscarClubesAdmin(userStorage.user.id)
-            buscarClubesMembro(userStorage.user.id)
+        if (userStorage?.user?.id_usuario) {
+            buscarClubesAdmin(userStorage.user.id_usuario)
+            buscarClubesMembro(userStorage.user.id_usuario)
         }
     }, [])
 
@@ -119,7 +119,7 @@ export default function Clube() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    id_usuario: user.user.id,
+                    id_usuario: user.user.id_usuario,
                     id_clube: idClube,
                     administrador: 0
                 })

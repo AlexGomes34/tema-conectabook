@@ -97,7 +97,7 @@ export default function CriarClube() {
             }
 
             const usuario = JSON.parse(localStorage.getItem("user"))
-            const idUsuario = usuario?.user?.id
+            const idUsuario = usuario?.user?.id_usuario
 
             console.log("USUARIO DO LOCALSTORAGE:", usuario)
             console.log("ID USUARIO:", usuario?.user?.id)
