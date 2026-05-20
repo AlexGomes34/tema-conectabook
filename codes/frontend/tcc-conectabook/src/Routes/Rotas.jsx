@@ -10,6 +10,7 @@ import FeedClube from '../pages/FeedClube/index.jsx'
 import EditarClube from '../pages/EditarClube/index.jsx'
 import MeusClubes from '../pages/MeusClubes/index.jsx'
 import Livro from '../pages/livros/index.jsx'
+import LivroDetalhe from '../pages/livroDetalhe/index.jsx'
 
 function Rotas() {
     return (
@@ -26,6 +27,7 @@ function Rotas() {
                 <Route path='/feedClube' element ={<FeedClube/>}/>
                 <Route path='/meusClubes' element ={<MeusClubes/>}/>
                 <Route path='/livros' element ={<Livro/>}/>
+                <Route path='/livroDetalhe' element ={<LivroDetalhe/>}/>
                 <Route path='*' element ={<h1>Not Found</h1>}/>
             </Routes>
         </BrowserRouter>

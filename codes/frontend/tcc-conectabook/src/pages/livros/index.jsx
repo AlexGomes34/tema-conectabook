@@ -5,8 +5,22 @@ import Header from "../../components/header/index.jsx"
 import Footer from "../../components/footer/index.jsx"
 
 import fotoLivro1 from "../../assets/fotoLivro1.jpg"
+import Button from "../../components/button/index.jsx"
+import { useNavigate } from "react-router-dom"
+
+const LIVROS_DATA = [
+    { id: 1, nome: "O Pequeno Príncipe", autor: "Antoine de Saint-Exupéry", avaliacao: 4.67, imagem: fotoLivro1 },
+    { id: 2, nome: "O Pequeno Príncipe", autor: "Antoine de Saint-Exupéry", avaliacao: 4.63, imagem: fotoLivro1 },
+    { id: 3, nome: "O Pequeno Príncipe", autor: "Antoine de Saint-Exupéry", avaliacao: 4.80, imagem: fotoLivro1 },
+    { id: 4, nome: "O Pequeno Príncipe", autor: "Antoine de Saint-Exupéry", avaliacao: 4.55, imagem: fotoLivro1 },
+    { id: 5, nome: "O Pequeno Príncipe", autor: "Antoine de Saint-Exupéry", avaliacao: 4.90, imagem: fotoLivro1 },
+    { id: 6, nome: "O Pequeno Príncipe", autor: "Antoine de Saint-Exupéry", avaliacao: 4.70, imagem: fotoLivro1 },
+]
+
 
 export default function Livro() {
+
+    const navigate = useNavigate()
     return (
         <div>
             <Header />
@@ -24,87 +38,44 @@ export default function Livro() {
                     </div>
                 </div>
                 <div className={styles.livros}>
-                    <h3>Livros em destaque</h3>
-                    <p>Ver todos</p>
+                    <div className={styles.divMain}>
+                        <h3>Livros em destaque</h3>
+                        <p>Ver todos</p>
+                    </div>
                     <div className={styles.listLivros}>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
+                        {LIVROS_DATA.map((livro) => (
+                            <div key={livro.id} className={styles.livro}>
+                                <img src={livro.imagem} alt={livro.nome} />
+                                <h4>{livro.nome}</h4>
+                                <p>{livro.autor}</p>
+                                <p>{livro.avaliacao}</p>
+                                <Button
+                                    text={"Ver Livro"}
+                                    className={styles.button}
+                                    onClick={() => navigate('/livroDetalhe')}
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className={styles.livros}>
-                    <h3>Minha estante</h3>
-                    <p>Ver todos</p>
+                    <div className={styles.divMain}>
+                        <h3>Minha estante</h3>
+                        <p>Ver todos</p>
+                    </div>
                     <div className={styles.listLivros}>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
-                        <div className={styles.livro}>
-                            <img src={fotoLivro1} alt="" />
-                            <h4>O pequeno príncipe</h4>
-                            <p>Autor do livro</p>
-                            <p>4.63</p>
-                        </div>
+                        {LIVROS_DATA.map((livro) => (
+                            <div key={livro.id} className={styles.livro}>
+                                <img src={livro.imagem} alt={livro.nome} />
+                                <h4>{livro.nome}</h4>
+                                <p>{livro.autor}</p>
+                                <p>{livro.avaliacao}</p>
+                                <Button
+                                    text={"Ver Livro"}
+                                    className={styles.button}
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
