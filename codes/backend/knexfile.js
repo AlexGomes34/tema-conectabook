@@ -11,7 +11,7 @@ module.exports = {
         connection: {
             host: "127.0.0.1",
             user: "root",
-            password: "bcd127",
+            password: "",
             database: "db_conecta_book",
             port: 3306, // CORRIGIDO: Porta do MySQL é 3306
             charset: 'utf8mb4'

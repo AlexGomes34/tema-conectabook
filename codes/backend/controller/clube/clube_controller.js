@@ -93,41 +93,45 @@ const listarClubesPorGenero = async function (idGenero) {
 // POST - Inserir um Clube e criar automaticamente sua Conversa vinculada
 const criarClube = async function (dadosClube, contentType) {
     try {
-        if (String(contentType).toLowerCase().includes('multipart/form-data') == false
-    ) {
-            return messages.ERROR_CONTENT_TYPE
+
+        if (
+            String(contentType).toLowerCase().includes('multipart/form-data') == false
+        ) {
+            return messages.ERROR_CONTENT_TYPE;
         }
 
-        if(dadosClube.nome == '' || dadosClube.nome == undefined || 
-           dadosClube.sobre == '' || dadosClube.sobre == undefined ||
-           dadosClube.regras == ''|| dadosClube.regras == undefined ||
-           dadosClube.id_genero == '' || dadosClube.id_genero == undefined 
+        if (
+            dadosClube.nome == '' || dadosClube.nome == undefined ||
+            dadosClube.sobre == '' || dadosClube.sobre == undefined ||
+            dadosClube.regras == '' || dadosClube.regras == undefined ||
+            dadosClube.id_genero == '' || dadosClube.id_genero == undefined
         ) {
-            return messages.ERROR_REQUIRED_FIELDS
+
+            return messages.ERROR_REQUIRED_FIELDS;
+
         } else {
 
             let idClube = await clubeDAO.setInsertClub(dadosClube);
 
-            if(idClube) {
+            if (idClube) {
+
                 let responseData = Object.assign({}, messages.HEADER);
+
                 responseData.status = messages.SUCCESS_CREATED_ITEM.status;
-                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code
+                responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
 
                 responseData.response = {
                     id_clube: idClube
-                }
-                console.log(responseData.response)
+                };
+
                 return responseData;
 
             } else {
-                // Se falhar ao criar a conversa, idealmente você faria um delete do clube para não expor lixo,
-                // ou usaria uma transaction global na DAO.
                 return messages.ERROR_INTERNAL_SERVER_MODEL;
             }
-
         }
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }

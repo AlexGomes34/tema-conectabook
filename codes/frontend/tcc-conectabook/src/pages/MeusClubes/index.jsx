@@ -70,8 +70,8 @@ export default function MeusClubes() {
 
         if (tipo === "todos") {
             const [resMembro, resAdmin] = await Promise.all([
-                fetch(`http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id}`),
-                fetch(`http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id}/admin`)
+                fetch(`http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id_usuario}`),
+                fetch(`http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id_usuario}/admin`)
             ])
 
             const dataMembro = await resMembro.json()
@@ -97,11 +97,11 @@ export default function MeusClubes() {
         }
 
         if (tipo === "membro") {
-            url = `http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id}`
+            url = `http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id_usuario}`
         }
 
         if (tipo === "admin") {
-            url = url = `http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id}/admin`
+            url = url = `http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id_usuario}/admin`
         }
 
         const res = await fetch(url)
