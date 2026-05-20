@@ -130,7 +130,6 @@ const criarClube = async function (dadosClube, contentType) {
                 return messages.ERROR_INTERNAL_SERVER_MODEL;
             }
         }
-
     } catch (error) {
         console.log(error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
