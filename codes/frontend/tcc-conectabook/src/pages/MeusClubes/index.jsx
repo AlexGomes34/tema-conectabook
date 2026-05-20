@@ -65,13 +65,14 @@ export default function MeusClubes() {
 
     async function buscarClubes(tipo = "todos") {
         let url = API_CLUBES
+        const idUsuario = userStorage.user.id_usuario || userStorage.user.id
 
         console.log(userStorage)
 
         if (tipo === "todos") {
             const [resMembro, resAdmin] = await Promise.all([
-                fetch(`http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id_usuario}`),
-                fetch(`http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id_usuario}/admin`)
+                fetch(`http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}`),
+                fetch(`http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}/admin`)
             ])
 
             const dataMembro = await resMembro.json()
@@ -97,11 +98,11 @@ export default function MeusClubes() {
         }
 
         if (tipo === "membro") {
-            url = `http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id_usuario}`
+            url = `http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}`
         }
 
         if (tipo === "admin") {
-            url = url = `http://localhost:8080/v1/conectaBook/membros/usuario/${userStorage.user.id_usuario}/admin`
+            url = url = `http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}/admin`
         }
 
         const res = await fetch(url)

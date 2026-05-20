@@ -97,18 +97,18 @@ export default function CriarClube() {
             }
 
             const usuario = JSON.parse(localStorage.getItem("user"))
-            const idUsuario = usuario?.user?.id_usuario
+            const idUsuario = usuario?.user?.id_usuario || usuario?.user.id
 
             console.log("USUARIO DO LOCALSTORAGE:", usuario)
-            console.log("ID USUARIO:", usuario?.user?.id_usuario)
+            console.log("ID USUARIO:", idUsuario)
+
+            const idClube = data.response.id_clube || data.response.id
 
             console.log({
                 id_usuario: idUsuario,
                 id_clube: idClube,
                 administrador: 1
             })
-
-            const idClube = data.response.id_clube || data.response.id
 
             const responseMembros = await fetch("http://localhost:8080/v1/conectaBook/membros", {
                 method: "POST",
