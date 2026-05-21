@@ -47,8 +47,8 @@ export default function livroAvaliacao() {
                 <div>
                     <div className={styles.livroTitulo}>
                         <div >
-                            <h1>1984</h1>
-                            <p>George Orwell</p>
+                            <h1>O pequeno principe</h1>
+                            <p>Antoine de saint-exupery</p>
                         </div>
                         <Button text={"Publicar"} />
                     </div>
