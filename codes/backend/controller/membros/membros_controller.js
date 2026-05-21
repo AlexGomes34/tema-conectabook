@@ -117,7 +117,7 @@ const listarClubesAdminPorUsuarioID = async function (idUsuario) {
     }
 
     try {
-        const result = await membrosDAO.getSelectClubesAdminByUser(idUsuario)
+        const result = await membrosDAO.getSelectClubsAdminByUser(idUsuario)
 
         return {
             ...messages.HEADER,
