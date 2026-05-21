@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import "./style.css"
 
 import { useEffect, useState } from "react";
+import LeftFeed from "../../components/feed/index.jsx";
 
 const POSTS_DATA = [
     {
@@ -98,51 +99,8 @@ export default function FeedClube() {
                     <Button onClick={() => navigate("/editarClube")} text="Editar" />
                 </div>
                 <div className="main-feedClube">
-                    <div className="left-main">
-                        <div className="titulo-left-main">
-                            <h2>Amantes de Percy Jackson</h2>
-                            <p>320 membros</p>
-                        </div>
-
-                        <div className="input-postagem">
-                            <div className="inputComFoto">
-                                <img src={fotoPessoa1} alt="" />
-                                <Input
-                                    placeholder="O que está pensando?"
-                                />
-                            </div>
-                            <div className="inputComArquivo">
-                                <Button text="Arquivo" />
-                                <Button text="Postar" />
-                            </div>
-                        </div>
-
-                        {POSTS_DATA.map((post) => (
-                            <div className="postagem">
-                                <img src={post.foto} alt="" />
-
-                                <div className="postagem-text">
-                                    <div className="info-post">
-                                        <h3>{post.nome}</h3>
-                                    </div>
-
-                                    <p>{post.postagem}</p>
-                                    <div className="reacoes">
-                                        <div className="reacao">
-                                            <FontAwesomeIcon icon={faHeart} />
-                                            <p>{post.curtidas}</p>
-                                        </div>
-                                        <div className="reacao">
-                                            <FontAwesomeIcon icon={faComment} />
-                                            <p>{post.comentarios}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        ))}
-
-                    </div>
+                    
+                    <LeftFeed posts={POSTS_DATA}/>
 
                     <div className="right-main">
                         <div className="sobre">

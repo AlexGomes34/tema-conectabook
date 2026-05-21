@@ -1,0 +1,68 @@
+.img-user{
+    height: auto;
+    width: 10rem;
+}
+
+.mainFeed{
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem;
+}
+
+.titulos img{
+    height: 150px;
+    width: auto;
+}
+
+.clubes{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.clube{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.titulos{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.clube img{
+    height: 50px;
+    object-fit: cover;
+    width: 50px;
+    border-radius: 50%;
+}
+
+.feedPageRight{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 20%;
+}
+
+.divRight{
+    border-radius: 8px;
+    box-shadow: 1px 1px 5px grey;
+    padding: 2rem;
+}
+
+.divRightTitulo{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0px;
+}
+
+.avaliacao{
+    display: flex;
+    align-items: center;
+    padding: 1rem 0px;
+    gap: 1rem;
+}

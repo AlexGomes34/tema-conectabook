@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from '../pages/Login/index.jsx'
 import Home from '../pages/Home/index.jsx'
 import Cadastro from '../pages/Cadastro/index.jsx'
-import Feed from '../pages/feed/index.jsx'
+import FeedPage from '../pages/feedPage/index.jsx'
 import Perfil from '../pages/Perfil/index.jsx'
 import Clube from '../pages/Clube/index.jsx'
 import CriarClube from '../pages/CriarClube/criarClube.jsx'
@@ -21,7 +21,7 @@ function Rotas() {
                 <Route path='/' element ={<Home/>}/>
                 <Route path='/login' element ={<Login/>}/>
                 <Route path='/cadastro' element ={<Cadastro/>}/>
-                <Route path='/feed' element ={<Feed/>}/>
+                <Route path='/feed' element ={<FeedPage/>}/>
                 <Route path='/perfil' element ={<Perfil/>}/>
                 <Route path='/clube' element ={<Clube/>}/>
                 <Route path='/membros' element ={<Membros/>}/>
