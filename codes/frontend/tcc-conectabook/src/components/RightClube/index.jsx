@@ -79,7 +79,7 @@ export default function RightClube({
 
                                     <div className="p-clube">
                                         <p>{clube.genero}</p>
-                                        <p>{clube.quantiaMembros} membros</p>
+                                        <p>{clube.membros} membros</p>
                                     </div>
 
                                     <div className="sobre-clube">

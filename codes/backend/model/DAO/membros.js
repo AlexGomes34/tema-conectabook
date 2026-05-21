@@ -100,21 +100,27 @@ const getSelectUsersByIdClub = async function (idClube) {
 const getSelectClubsThatUserParticipateByIdUser = async function (idUsuario) {
     try {
         let sql = `
-            select 
-                tbl_clube.id_clube, 
-                tbl_clube.nome, 
-                tbl_clube.foto,
-                tbl_genero.nome as genero
-            from tbl_clube
+            
+select 
+    tbl_clube.id_clube, 
+    tbl_clube.nome, 
+    tbl_clube.foto,
+    tbl_clube.sobre,
+    tbl_genero.nome as genero,
+    (
+        select count(*) 
+        from tbl_membros 
+        where tbl_membros.id_clube = tbl_clube.id_clube
+    ) as membros
+from tbl_clube
 
-                inner join tbl_genero
-                on tbl_clube.id_genero = tbl_genero.id_genero
+    inner join tbl_genero
+    on tbl_clube.id_genero = tbl_genero.id_genero
 
-                inner join tbl_membros
-                    on tbl_clube.id_clube = tbl_membros.id_clube
-
-            where tbl_membros.id_usuario = ${idUsuario}
-            and tbl_membros.administrador = 0
+    inner join tbl_membros
+        on tbl_clube.id_clube = tbl_membros.id_clube
+	where tbl_membros.id_usuario = ${idUsuario}
+	and tbl_membros.administrador = 0
             `; 
 
         let result = await db.raw(sql);
@@ -131,15 +137,22 @@ const getSelectClubsThatUserParticipateByIdUser = async function (idUsuario) {
 }
 
 //RETORNA OS CLUBES QUE O USUARIO ADMINISTRA
-const getSelectClubesAdminByUser = async function (idUsuario) {
+const getSelectClubsAdminByUser = async function (idUsuario) {
     try {
         let sql = `
             select 
                 tbl_clube.id_clube, 
                 tbl_clube.nome, 
                 tbl_clube.foto,
+                tbl_clube.sobre,
                 tbl_genero.nome as genero,
-                tbl_membros.administrador 
+                tbl_membros.administrador,
+
+                (
+        select count(*) 
+        from tbl_membros 
+        where tbl_membros.id_clube = tbl_clube.id_clube
+    ) as membros 
 
             from tbl_clube
 
@@ -248,7 +261,7 @@ module.exports = {
     getSelectAllMembersClubs,
     getSelectByIdMember,
     getSelectMemberByUserAndClub,
-    getSelectClubesAdminByUser,
+    getSelectClubsAdminByUser,
     getSelectClubsThatUserParticipateByIdUser,
     getSelectUsersByIdClub,
     setInsertMembers,
