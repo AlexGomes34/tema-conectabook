@@ -41,16 +41,35 @@ const getSelectByIdRating =  async function  (id) {
     
 }
 
-/* RETORNA AVALIAÇÃO PELO ID DO USUARIO
+// RETORNA AVALIAÇÃO PELO ID DO USUARIO
 const getSelectRatingByIdUser = async function (idUsuario) {
     try {
         let sql = `
            select
-               tbl_avaliacao`
-    }
+               tbl_avaliacao.id_avaliacao,
+               tbl_avaliacao.estrelas,
+               tbl_avaliacao.mensagem,
+               tbl_avaliacao.data_avaliacao,
+               tbl_usuario.nome as usuario
+            from tbl_avaliacao
+                inner join tbl_usuario
+                    on tbl_usuario.id_usuario = tbl_avaliacao.id_usuario
+            where tbl_avaliacao.id_usuario = ?
+            order by tbl_avaliacao.data_avaliacao asc`
+
     
+        let result = await db.raw(sql, [idUsuario]);
+
+        if (result && result[0] && result[0].length > 0) 
+            return result[0];
+        else
+            return false  
+    } catch (error) {
+        console.error("Erro ao buscar avaliações:", error);
+        return false; 
+    }
 }
-*/
+
 
 //INSERE UMA AVALIAÇÃO 
 const setInsertRating = async function (avaliacao) {
