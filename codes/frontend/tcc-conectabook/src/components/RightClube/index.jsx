@@ -74,34 +74,40 @@ export default function RightClube({
                             />
 
                             <div className="info-clube">
-                                <h3>{clube.nome}</h3>
+                                <div className="left-sobre">
+                                    <h3>{clube.nome}</h3>
 
-                                <div className="p-clube">
-                                    <p>{clube.genero}</p>
-                                    <p>{clube.quantiaMembros} membros</p>
+                                    <div className="p-clube">
+                                        <p>{clube.genero}</p>
+                                        <p>{clube.quantiaMembros} membros</p>
+                                    </div>
+
+                                    <div className="sobre-clube">
+                                        <div className="sobre-clube-text">
+                                            <h4>Sobre o clube</h4>
+                                            <p className="sobre-text">{clube.sobre}</p>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                                <div className="button-sobre">
+                                    <Button
+                                        text={meusClubes ? "Entrar no Feed" : "Participar do Clube"}
+                                        onClick={() => {
+                                            if (meusClubes) {
+                                                navigate(`/feedClube`)
+                                            } else {
+                                                participarClube(clube.id_clube)
+                                            }
+                                        }}
+                                    />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="sobre-clube">
-                            <div className="sobre-clube-text">
-                                <h4>Sobre o clube</h4>
-                                <p className="sobre-text">{clube.sobre}</p>
-                            </div>
 
-                            <div className="button-sobre">
-                                <Button
-                                    text={meusClubes ? "Entrar no Feed" : "Participar do Clube"}
-                                    onClick={() => {
-                                        if (meusClubes) {
-                                            navigate(`/feedClube`)
-                                        } else {
-                                            participarClube(clube.id_clube)
-                                        }
-                                    }}
-                                />
-                            </div>
-                        </div>
 
                     </div>
                 ))}

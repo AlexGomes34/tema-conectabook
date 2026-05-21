@@ -109,7 +109,6 @@ function Home() {
     <div>
       <HeaderHome />
       <main className='home-main'>
-
         <div className='info'>
           <div className="textos">
             <h1>ConectaBook: Uma plataforma para conexão de leitores.</h1>

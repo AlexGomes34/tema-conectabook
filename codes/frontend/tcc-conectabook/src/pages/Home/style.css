@@ -40,6 +40,7 @@ img {
 
 /* HERO / MAIN */
 .home-main {
+    margin: 0;
     padding: 32px;
     display: flex;
     width: 100%;

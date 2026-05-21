@@ -6,6 +6,10 @@
     width: 90vw;
 }
 
+.upMainRight{
+    width: 20vw;
+}
+
 .main{
     padding: 1rem;
     display: flex;
@@ -19,12 +23,15 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem;
+    margin: 1rem 0px;
 }
 
 .listLivros{
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     gap: 8px;
+    padding-bottom: 1rem;
+    margin: 1rem 0px;
 }
 
 .button{
@@ -39,9 +46,9 @@
 .livro{
     display: flex;
     flex-direction: column;
-    width: 15vw;
+    width: 10vw;
     margin: 1rem;
-    border: 1px solid black;
+    box-shadow: 1px 1px 5px grey;
     border-radius: 8px;
     padding: 1rem;
 }
