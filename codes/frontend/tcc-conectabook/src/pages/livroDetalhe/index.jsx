@@ -9,15 +9,30 @@ import styles from "./style.module.css"
 
 import LivroTitulosSemelhantes from "../../components/livroTitulosSemelhantes/index.jsx"
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 
 
 
 export default function LivroDetalhe() {
+
+    const [user, setUser] = useState(null)
+    
+        useEffect(() => {
+    
+            const userStorage = JSON.parse(
+                localStorage.getItem("user")
+            )
+    
+            if (userStorage) {
+                setUser(userStorage)
+            }
+    
+        }, [])
     const navigate = useNavigate()
     return (
         <div>
-            <Header />
+            <Header fotoUser={user?.user?.foto_perfil}/>
             <main>
                 <div className={styles.mainUp}>
                     <div>

@@ -185,6 +185,7 @@ export default function MeusClubes() {
                     setGeneroSelecionado={setGeneroSelecionado}
                     clubesFiltrados={clubesFiltrados}
                     participarClube={participarClube}
+                    meusClubes={true}
                 />
             </div>
 

@@ -12,6 +12,7 @@ import MeusClubes from '../pages/MeusClubes/index.jsx'
 import Livro from '../pages/livros/index.jsx'
 import LivroDetalhe from '../pages/livroDetalhe/index.jsx'
 import LivroAvaliacoes from '../pages/livroAvaliacoes/index.jsx'
+import Membros from '../pages/Membros/index.jsx'
 
 function Rotas() {
     return (
@@ -23,6 +24,7 @@ function Rotas() {
                 <Route path='/feed' element ={<Feed/>}/>
                 <Route path='/perfil' element ={<Perfil/>}/>
                 <Route path='/clube' element ={<Clube/>}/>
+                <Route path='/membros' element ={<Membros/>}/>
                 <Route path='/criarClube' element ={<CriarClube/>}/>
                 <Route path='/editarClube' element ={<EditarClube/>}/>
                 <Route path='/feedClube' element ={<FeedClube/>}/>

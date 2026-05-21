@@ -1,0 +1,33 @@
+.mainMembro{
+    display: flex;
+    flex-direction: column;
+}
+
+.membro img{
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    width: 50px;
+}
+
+.membrosButton{
+    display: flex;
+    justify-content: space-between;
+}
+
+.membros{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.membro{
+    padding: 1rem;
+    border: 1px solid black;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 25vw;
+}

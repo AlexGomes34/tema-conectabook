@@ -18,12 +18,10 @@
 .up-main{
     display: flex;
     justify-content: space-between;
-    padding: 1rem;
 }
 
 .left-main{
     width: 70vw;
-    padding-inline: 1vw;
 }
 
 .right-main{
@@ -142,7 +140,7 @@
     flex-direction: column;
     justify-content: space-around;
     background: #fcfcfd;
-    height: 13rem;
+    height: auto;
     border-radius: 20px;
     padding: 24px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
@@ -172,7 +170,7 @@
 
 .clubesMesmoGenero{
     background: #fcfcfd;
-    height: 19rem;
+    height: auto;
     border-radius: 20px;
     padding: 24px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
@@ -184,7 +182,7 @@
 
 .sobre{
     background: #fcfcfd;
-    height: 13rem;
+    height: auto;
     border-radius: 20px;
     padding: 24px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);

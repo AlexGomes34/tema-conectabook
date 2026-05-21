@@ -6,7 +6,9 @@ import Footer from "../../components/footer/index.jsx"
 
 import fotoLivro1 from "../../assets/fotoLivro1.jpg"
 import Button from "../../components/button/index.jsx"
-import { useNavigate } from "react-router-dom"
+
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const LIVROS_DATA = [
     { id: 1, nome: "O Pequeno Príncipe", autor: "Antoine de Saint-Exupéry", avaliacao: 4.67, imagem: fotoLivro1 },
@@ -18,12 +20,28 @@ const LIVROS_DATA = [
 ]
 
 
+
 export default function Livro() {
+
+    const [user, setUser] = useState(null)
+
+    useEffect(() => {
+
+        const userStorage = JSON.parse(
+            localStorage.getItem("user")
+        )
+
+        if (userStorage) {
+            setUser(userStorage)
+        }
+
+    }, [])
+
 
     const navigate = useNavigate()
     return (
         <div>
-            <Header />
+            <Header fotoUser={user?.user?.foto_perfil} />
             <div className={styles.main}>
                 <div className={styles.upMain}>
                     <div className={styles.upMainLeft}>

@@ -13,7 +13,8 @@ export default function RightClube({
     generoSelecionado,
     setGeneroSelecionado,
     clubesFiltrados,
-    participarClube
+    participarClube,
+    meusClubes = false
 }) {
     return (
         <div className="right-clube">
@@ -90,8 +91,14 @@ export default function RightClube({
 
                             <div className="button-sobre">
                                 <Button
-                                    text="Participar do Clube"
-                                    onClick={() => participarClube(clube.id_clube)}
+                                    text={meusClubes ? "Entrar no Feed" : "Participar do Clube"}
+                                    onClick={() => {
+                                        if (meusClubes) {
+                                            navigate(`/feedClube`)
+                                        } else {
+                                            participarClube(clube.id_clube)
+                                        }
+                                    }}
                                 />
                             </div>
                         </div>

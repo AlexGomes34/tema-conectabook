@@ -93,7 +93,7 @@ export default function FeedClube() {
                 <div className="up-main">
                     <div className="up-left-main">
                         <Button text="Feed" />
-                        <Button text="Membros" />
+                        <Button text="Membros" onClick={() => navigate('/membros')} />
                     </div>
                     <Button onClick={() => navigate("/editarClube")} text="Editar" />
                 </div>
@@ -119,27 +119,27 @@ export default function FeedClube() {
 
                         {POSTS_DATA.map((post) => (
                             <div className="postagem">
-                            <img src={post.foto} alt="" />
+                                <img src={post.foto} alt="" />
 
-                            <div className="postagem-text">
-                                <div className="info-post">
-                                    <h3>{post.nome}</h3>
+                                <div className="postagem-text">
+                                    <div className="info-post">
+                                        <h3>{post.nome}</h3>
+                                    </div>
+
+                                    <p>{post.postagem}</p>
+                                    <div className="reacoes">
+                                        <div className="reacao">
+                                            <FontAwesomeIcon icon={faHeart} />
+                                            <p>{post.curtidas}</p>
+                                        </div>
+                                        <div className="reacao">
+                                            <FontAwesomeIcon icon={faComment} />
+                                            <p>{post.comentarios}</p>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <p>{post.postagem}</p>
-                                <div className="reacoes">
-                                    <div className="reacao">
-                                        <FontAwesomeIcon icon={faHeart} />
-                                        <p>{post.curtidas}</p>
-                                    </div>
-                                    <div className="reacao">
-                                        <FontAwesomeIcon icon={faComment} />
-                                        <p>{post.comentarios}</p>
-                                    </div>
-                                </div>
                             </div>
-
-                        </div>
                         ))}
 
                     </div>
@@ -148,7 +148,13 @@ export default function FeedClube() {
                         <div className="sobre">
                             <h3>Sobre</h3>
                             <p>
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Delectus quo, suscipit repudiandae sit placeat aperiam ipsa quas totam explicabo nobis exercitationem porro est vitae voluptate asperiores enim laudantium ipsam dolore?
+                                Somos mais do que um clube de leitura — somos um acampamento para semideuses apaixonados pelo universo de Percy Jackson & the Olympians.
+
+                                Aqui, leitores se reúnem para explorar mitologia grega, teorias sobre os personagens, batalhas épicas, profecias e todos os momentos marcantes das aventuras de Percy, Annabeth, Grover e companhia.
+
+                                Nosso clube é um espaço para compartilhar opiniões, fazer amizades, participar de debates, indicar livros do universo de Rick Riordan e viver a experiência de leitura de forma divertida e interativa.
+
+                                Se você já escolheu seu chalé no Acampamento Meio-Sangue, este é o lugar certo para você
                             </p>
                         </div>
                         <div className="administradores">

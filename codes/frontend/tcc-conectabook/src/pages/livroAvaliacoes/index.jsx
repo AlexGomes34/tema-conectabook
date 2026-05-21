@@ -12,10 +12,30 @@ import styles from "./style.module.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faTags, faPeopleGroup } from '@fortawesome/free-solid-svg-icons';
 
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+            
+
 export default function livroAvaliacao() {
+
+    const [user, setUser] = useState(null)
+    
+        useEffect(() => {
+    
+            const userStorage = JSON.parse(
+                localStorage.getItem("user")
+            )
+    
+            if (userStorage) {
+                setUser(userStorage)
+            }
+    
+        }, [])
+    const navigate = useNavigate()
     return (
         <div>
-            <Header />
+            <Header fotoUser={user?.user?.foto_perfil}/>
             <main>
                 <div>
                     <img src={fotoLivro1} alt="" />
