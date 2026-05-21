@@ -161,15 +161,15 @@ export default function FeedClube() {
                             <h3>Administradores</h3>
                             <div className="adm">
                                 <img src={fotoPessoa1} alt="" />
-                                <p>Batata123</p>
+                                <p>Renato Soares</p>
                             </div>
                             <div className="adm">
                                 <img src={fotoPessoa1} alt="" />
-                                <p>Chiclete com banana</p>
+                                <p>Luciano Lucas</p>
                             </div>
                             <div className="adm">
                                 <img src={fotoPessoa1} alt="" />
-                                <p>Chipanze de asa</p>
+                                <p>Hebert Silva</p>
                             </div>
                         </div>
                         <div className="clubesMesmoGenero">
