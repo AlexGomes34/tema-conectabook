@@ -1,17 +1,18 @@
 /*******************************************************************************************
- * Objetivo: Arquivo responsável pela manipulação da camada model de Gêneros 
+ * Objetivo: Arquivo responsável pela manipulação da camada model de Avaliações
  * Projeto: ConectaBook
- * Data: 06/05/2026
- * Autor: Geovanna Silva
- * Versão: 1.1
+ * Data: 21/05/2026
+ * Autor: Alex Gomes
+ * Versão: 1.0
  *******************************************************************************************/
-const generoDAO = require("../../model/DAO/genero.js"); // CORRIGIDO: Removido o ponto extra
+
+const avaliacaoDAO = require("../../model/DAO/avaliacao.js"); // Altere o caminho se necessário
 const messages = require("../modulo/config_messages.js");
 
-// GET - Listar todos os gêneros
-const listarGeneros = async function () {
+// GET - Listar todas as avaliações
+const listarAvaliacoes = async function () {
     try {
-        let result = await generoDAO.getSelectAllGenres();
+        let result = await avaliacaoDAO.getSelectAllRatings();
 
         if (result) {
             let responseData = Object.assign({}, messages.HEADER);
@@ -27,21 +28,20 @@ const listarGeneros = async function () {
     }
 }
 
-// GET id - Listar gênero pelo ID
-const listarGeneroID = async function (id) {
+// GET id - Listar avaliação pelo ID
+const listarAvaliacaoID = async function (id) {
     if (id == '' || id == undefined || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
     
     try {
-        let result = await generoDAO.getSelectByIdGenre(id);
+        let result = await avaliacaoDAO.getSelectByIdRating(id);
 
         if (result) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_REQUEST.status;
             responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-            // CORRIGIDO: Atribuindo o resultado para aparecer no JSON
-            responseData.response = result[0]; 
+            responseData.response = result[0]; // Retorna a primeira ocorrência encontrada
             return responseData;
         } else {
             return messages.ERROR_NOT_FOUND;
@@ -51,18 +51,22 @@ const listarGeneroID = async function (id) {
     }
 }
 
-// POST - Criar novo gênero
-const criarGenero = async function (genero, contentType) {
+// POST - Criar nova avaliação
+const criarAvaliacao = async function (avaliacao, contentType) {
     try {
         if (String(contentType).toLowerCase() !== 'application/json') {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        // Validação: Apenas o NOME é obrigatório, a descrição pode ser opcional
-        if(genero.nome == '' || genero.nome == undefined) {
+        // Validação dos campos obrigatórios que a sua DAO exige no INSERT
+        if (
+            avaliacao.estrelas == '' || avaliacao.estrelas == undefined || isNaN(avaliacao.estrelas) ||
+            avaliacao.id_usuario == '' || avaliacao.id_usuario == undefined || isNaN(avaliacao.id_usuario) ||
+            avaliacao.data_avaliacao == '' || avaliacao.data_avaliacao == undefined
+        ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
-            let result = await generoDAO.setInsertGenre(genero);
+            let result = await avaliacaoDAO.setInsertRating(avaliacao);
 
             if(result) {
                 let responseData = Object.assign({}, messages.HEADER);
@@ -78,10 +82,10 @@ const criarGenero = async function (genero, contentType) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
-// PUT - Atualizar gênero
-const atualizarGenero = async function (genero, contentType, id) {
-    try {
 
+// PUT - Atualizar avaliação
+const atualizarAvaliacao = async function (avaliacao, contentType, id) {
+    try {
         if (id == '' || id == undefined || isNaN(id)) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
@@ -90,15 +94,22 @@ const atualizarGenero = async function (genero, contentType, id) {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        if (genero.nome == '' || genero.nome == undefined || genero.nome.length > 100) {
+        // Validação dos campos obrigatórios para o UPDATE
+        if (
+            avaliacao.estrelas == '' || avaliacao.estrelas == undefined || isNaN(avaliacao.estrelas) ||
+            avaliacao.mensagem == '' || avaliacao.mensagem == undefined ||
+            avaliacao.id_usuario == '' || avaliacao.id_usuario == undefined || isNaN(avaliacao.id_usuario) ||
+            avaliacao.data_avaliacao == '' || avaliacao.data_avaliacao == undefined
+        ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
             
-            let buscarId = await generoDAO.getSelectByIdGenre(id);
+            // Verifica se o ID passado realmente existe no banco antes de atualizar
+            let buscarId = await avaliacaoDAO.getSelectByIdRating(id);
 
             if (buscarId) {
-                genero.id = id;
-                let result = await generoDAO.setUpdateGenre(genero);
+                avaliacao.id = id; // Injeta o ID vindo da URL no objeto de dados
+                let result = await avaliacaoDAO.setUpdateRating(avaliacao);
 
                 if (result) {
                     let responseData = Object.assign({}, messages.HEADER);
@@ -118,18 +129,17 @@ const atualizarGenero = async function (genero, contentType, id) {
     }
 }
 
-// DELETE - Excluir gênero
-const excluirGenero = async function (id) {
+// DELETE - Excluir avaliação
+const excluirAvaliacao = async function (id) {
     if (id == '' || id == undefined || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
 
     try {
-        let buscarId = await generoDAO.getSelectByIdGenre(id);
+        let buscarId = await avaliacaoDAO.getSelectByIdRating(id);
 
         if(buscarId) {
-           
-            let result = await generoDAO.setDeleteGenre(id);
+            let result = await avaliacaoDAO.setDeleteRating(id);
 
             if(result) {
                 let responseData = Object.assign({}, messages.HEADER);
@@ -149,9 +159,9 @@ const excluirGenero = async function (id) {
 }
 
 module.exports = {
-    listarGeneroID,
-    listarGeneros,
-    excluirGenero,
-    atualizarGenero,
-    criarGenero
+    listarAvaliacoes,
+    listarAvaliacaoID,
+    criarAvaliacao,
+    atualizarAvaliacao,
+    excluirAvaliacao
 }

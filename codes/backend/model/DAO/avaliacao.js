@@ -41,20 +41,12 @@ const getSelectByIdRating =  async function  (id) {
     
 }
 
-/* RETORNA AVALIAÇÃO PELO ID DO USUARIO
-const getSelectRatingByIdUser = async function (idUsuario) {
-    try {
-        let sql = `
-           select
-               tbl_avaliacao`
-    }
-    
-}
-*/
-
 //INSERE UMA AVALIAÇÃO 
 const setInsertRating = async function (avaliacao) {
     try {
+        const mensagem = avaliacao.mensagem && avaliacao.mensagem !== '' ? avaliacao.mensagem : null;
+        const data = avaliacao.data_avaliacao && avaliacao.data_avaliacao !== '' ? avaliacao.data_avaliacao : null; 
+
         let sql = `insert into tbl_avaliacao (
                     estrelas,
                     mensagem,
@@ -62,9 +54,9 @@ const setInsertRating = async function (avaliacao) {
                     data_avaliacao
                     ) values (
                      '${avaliacao.estrelas}',
-                     '${avaliacao.mensagem}',
+                     '${mensagem}',
                      '${avaliacao.id_usuario}',
-                     '${avaliacao.data_avaliacao}'        
+                     '${data}'        
                     )`
 
     let result = await db.raw(sql);
