@@ -14,7 +14,7 @@ const LIVROS_DATA = [
 export default function LivroTitulosSemelhantes() {
 
     return (
-        <div>
+        <div className={styles.bodyLivro}>
             <div className={styles.titulosSemelhantesText}>
                 <p>Titulos Semelhantes</p>
                 <p>Ver Todos</p>

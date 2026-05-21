@@ -8,12 +8,31 @@ import Button from "../../components/button/index.jsx"
 import styles from "./style.module.css"
 
 import LivroTitulosSemelhantes from "../../components/livroTitulosSemelhantes/index.jsx"
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+
 
 
 export default function LivroDetalhe() {
+
+    const [user, setUser] = useState(null)
+    
+        useEffect(() => {
+    
+            const userStorage = JSON.parse(
+                localStorage.getItem("user")
+            )
+    
+            if (userStorage) {
+                setUser(userStorage)
+            }
+    
+        }, [])
+    const navigate = useNavigate()
     return (
         <div>
-            <Header />
+            <Header fotoUser={user?.user?.foto_perfil}/>
             <main>
                 <div className={styles.mainUp}>
                     <div>
@@ -46,15 +65,16 @@ export default function LivroDetalhe() {
                         <div className={styles.buttons}>
                             <div className={styles.avaliacaoButtons}>
                                 <Button text={"Favoritar"} />
-                                <Button text={"Avaliacoes"} />
+                                <Button text={"Avaliacoes"} onClick={() => navigate('/livroAvaliacoes')} />
                             </div>
                             <Button text={"Adicionar a estante"} 
                             className={styles.adicionarEstante}/>
                         </div>
                     </div>
                 </div>
-                <LivroTitulosSemelhantes/>
             </main>
+            
+                <LivroTitulosSemelhantes/>
             <Footer />
         </div>
     )

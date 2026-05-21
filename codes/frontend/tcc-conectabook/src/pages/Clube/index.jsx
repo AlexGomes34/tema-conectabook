@@ -80,10 +80,11 @@ export default function Clube() {
 
     useEffect(() => {
         const userStorage = JSON.parse(localStorage.getItem("user"))
+        const idUsuario = userStorage.user.id_usuario || userStorage.user.id
 
-        if (userStorage?.user?.id_usuario) {
-            buscarClubesAdmin(userStorage.user.id_usuario)
-            buscarClubesMembro(userStorage.user.id_usuario)
+        if (idUsuario) {
+            buscarClubesAdmin(idUsuario)
+            buscarClubesMembro(idUsuario)
         }
     }, [])
 
@@ -112,6 +113,8 @@ export default function Clube() {
     }
 
     async function participarClube(idClube) {
+
+        const idUsuario = user.user.id_usuario || user.user.id
         try {
             const response = await fetch("http://localhost:8080/v1/conectaBook/membros", {
                 method: "POST",
@@ -119,7 +122,7 @@ export default function Clube() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    id_usuario: user.user.id_usuario,
+                    id_usuario: idUsuario,
                     id_clube: idClube,
                     administrador: 0
                 })
@@ -253,6 +256,7 @@ export default function Clube() {
                     generos={generos}
                     clubesFiltrados={clubesFiltrados}
                     participarClube={participarClube}
+                    meusClubes={false}
                 />
             </main>
 

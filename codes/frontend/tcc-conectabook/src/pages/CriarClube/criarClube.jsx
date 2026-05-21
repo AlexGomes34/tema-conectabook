@@ -100,11 +100,10 @@ export default function CriarClube() {
             const idUsuario = usuario?.user?.id_usuario || usuario?.user?.id
 
             console.log("USUARIO DO LOCALSTORAGE:", usuario)
-            console.log("ID USUARIO:", usuario?.user?.id_usuario)
-
-            
+            console.log("ID USUARIO:", idUsuario)
 
             const idClube = data.response.id_clube || data.response.id
+
 
             console.log({
                 id_usuario: idUsuario,
