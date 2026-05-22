@@ -61,8 +61,7 @@ const criarAvaliacao = async function (avaliacao, contentType) {
         // Validação dos campos obrigatórios que a sua DAO exige no INSERT
         if (
             avaliacao.estrelas == '' || avaliacao.estrelas == undefined || isNaN(avaliacao.estrelas) ||
-            avaliacao.id_usuario == '' || avaliacao.id_usuario == undefined || isNaN(avaliacao.id_usuario) ||
-            avaliacao.data_avaliacao == '' || avaliacao.data_avaliacao == undefined
+            avaliacao.id_usuario == '' || avaliacao.id_usuario == undefined || isNaN(avaliacao.id_usuario)
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
@@ -97,9 +96,7 @@ const atualizarAvaliacao = async function (avaliacao, contentType, id) {
         // Validação dos campos obrigatórios para o UPDATE
         if (
             avaliacao.estrelas == '' || avaliacao.estrelas == undefined || isNaN(avaliacao.estrelas) ||
-            avaliacao.mensagem == '' || avaliacao.mensagem == undefined ||
-            avaliacao.id_usuario == '' || avaliacao.id_usuario == undefined || isNaN(avaliacao.id_usuario) ||
-            avaliacao.data_avaliacao == '' || avaliacao.data_avaliacao == undefined
+            avaliacao.id_usuario == '' || avaliacao.id_usuario == undefined || isNaN(avaliacao.id_usuario)
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {

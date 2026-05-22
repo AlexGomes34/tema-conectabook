@@ -41,25 +41,28 @@ const getSelectByIdRating =  async function  (id) {
     
 }
 
-//INSERE UMA AVALIAÇÃO 
+// INSERE UMA AVALIAÇÃO 
 const setInsertRating = async function (avaliacao) {
     try {
-        const mensagem = avaliacao.mensagem && avaliacao.mensagem !== '' ? avaliacao.mensagem : null;
-        const data = avaliacao.data_avaliacao && avaliacao.data_avaliacao !== '' ? avaliacao.data_avaliacao : null; 
+        // Se houver valor, envolve em aspas simples. Se for nulo/vazio, passa a palavra NULL pura (sem aspas)
+        const mensagemSql = avaliacao.mensagem && avaliacao.mensagem !== '' 
+            ? `'${avaliacao.mensagem}'` 
+            : 'NULL';
 
+        // 🔥 Removemos as aspas simples de volta de ${mensagemSql} e ${dataSql} na query:
         let sql = `insert into tbl_avaliacao (
                     estrelas,
                     mensagem,
                     id_usuario,
                     data_avaliacao
                     ) values (
-                     '${avaliacao.estrelas}',
-                     '${mensagem}',
-                     '${avaliacao.id_usuario}',
-                     '${data}'        
-                    )`
+                     ${avaliacao.estrelas},
+                     ${mensagemSql},
+                     ${avaliacao.id_usuario},
+                     NOW()
+                    )`;
 
-    let result = await db.raw(sql);
+        let result = await db.raw(sql);
 
         if (result && result[0].affectedRows > 0)
             return true;
@@ -67,6 +70,7 @@ const setInsertRating = async function (avaliacao) {
             return false;
 
     } catch (error) {
+        console.log(error); // Dica: coloque esse console.log temporário se precisar ver erros do banco
         return false;
     }
 }
@@ -74,39 +78,65 @@ const setInsertRating = async function (avaliacao) {
 
 // ATUALIZA UMA AVALIAÇÃO
 const setUpdateRating = async function (avaliacao) {
-    try{
+    try {
+        // Trata a mensagem (se for string vazia ou null, vira NULL sem aspas)
+        const mensagemSql = avaliacao.mensagem && avaliacao.mensagem !== '' 
+            ? `'${avaliacao.mensagem}'` 
+            : 'NULL';
+
         let sql = `update tbl_avaliacao set
-                       estrelas = '${avaliacao.estrelas}',
-                       mensagem = '${avaliacao.mensagem}',
-                       id_usuario = '${avaliacao.id_usuario}',
-                       data_avaliacao = '${avaliacao.data_avaliacao}'
-                  where id_avaliacao = ${avaliacao.id}`
+                       estrelas = ${avaliacao.estrelas},
+                       mensagem = ${mensagemSql},
+                       id_usuario = ${avaliacao.id_usuario},
+                       data_avaliacao = NOW()
+                  where id_avaliacao = ${avaliacao.id}`;
 
-         let result = await db.raw(sql)
+        let result = await db.raw(sql);
 
-        if (result && result[0].affectedRows > 0)
-            return true
+        // Se o registro já tiver esses mesmos dados no banco, o affectedRows pode ser 0.
+        // Mudamos para >= 0 ou checamos se o result ocorreu com sucesso para não dar falso erro.
+        if (result && result[0].warningStatus >= 0)
+            return true;
         else
-            return false
+            return false;
 
     } catch (error) {
-        return false
+        console.error("Erro no setUpdateRating:", error);
+        return false;
     }
 }
 
-
 // DELETA UMA AVALIAÇÃO 
 const setDeleteRating = async function (id) {
-    try{
-        let sql = `delete from tbl_avaliacao where id_avaliacao = ${id}`
-        let result = await db.raw(sql)
+    // Iniciamos a transação isolada no Knex
+    const trx = await db.transaction();
 
+    try {
+        // 1. Deleta os relacionamentos na tabela tbl_avaliacao_livro
+        let sqlLivro = `delete from tbl_avaliacao_livro where id_avaliacao = ${id}`;
+        await trx.raw(sqlLivro);
+
+        // 2. Deleta os relacionamentos na tabela tbl_avaliacao_cafeteria
+        let sqlCafeteria = `delete from tbl_avaliacao_cafeteria where id_avaliacao = ${id}`;
+        await trx.raw(sqlCafeteria);
+
+        // 3. Deleta a avaliação principal na tbl_avaliacao
+        let sqlAvaliacao = `delete from tbl_avaliacao where id_avaliacao = ${id}`;
+        let result = await trx.raw(sqlAvaliacao);
+
+        // Se chegou até aqui sem erros, grava de vez as alterações no banco
+        await trx.commit();
+
+        // Verifica se a avaliação principal foi realmente afetada/removida
         if (result && result[0].affectedRows > 0)
-            return true
+            return true;
         else
-            return false
+            return false;
+
     } catch (error) {
-        return false
+        // ❌ Se qualquer uma das queries falhar, desfaz TUDO o que foi feito acima
+        await trx.rollback();
+        return false;
     }
 }
 
