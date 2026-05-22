@@ -13,6 +13,7 @@ import Livro from '../pages/livros/index.jsx'
 import LivroDetalhe from '../pages/livroDetalhe/index.jsx'
 import LivroAvaliacoes from '../pages/livroAvaliacoes/index.jsx'
 import Membros from '../pages/Membros/index.jsx'
+import Cafeteria from '../pages/cafeteria/index.jsx'
 
 function Rotas() {
     return (
@@ -32,6 +33,7 @@ function Rotas() {
                 <Route path='/livros' element ={<Livro/>}/>
                 <Route path='/livroDetalhe' element ={<LivroDetalhe/>}/>
                 <Route path='/livroAvaliacoes' element ={<LivroAvaliacoes/>}/>
+                <Route path='/cafeteria' element ={<Cafeteria/>}/>
                 <Route path='*' element ={<h1>Not Found</h1>}/>
             </Routes>
         </BrowserRouter>
