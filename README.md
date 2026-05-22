@@ -49,6 +49,9 @@ Semestre: 2026/1
 ├── 📂 referências              
 │   └── 📄 bibliografia.bib
 
+## Apresentação
+https://gamma.app/docs/ConectaBook-lq9m7tn9wr1131q?mode=doc
+
 ## Authors
 
 - [@Isabelle](https://github.com/Isabelleabreu)
