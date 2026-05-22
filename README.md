@@ -51,6 +51,7 @@ Semestre: 2026/1
 
 ## Apresentação
 https://gamma.app/docs/ConectaBook-lq9m7tn9wr1131q?mode=doc
+https://gamma.app/docs/Conectando-leitores-historias-e-experiencias-va49p141akboo3e
 
 ## Authors
 
