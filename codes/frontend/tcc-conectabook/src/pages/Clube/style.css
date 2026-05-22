@@ -235,8 +235,9 @@ select{
 
 .info-clube{
     display: flex;
-
-    flex-direction: column;
+    width: 800px;
+    justify-content: space-between;
+    align-items: center;
 
     gap: 1rem;
 }
@@ -244,7 +245,8 @@ select{
 /* ===== SOBRE ===== */
 
 .sobre-clube{
-    width: 100%;
+    width: 550px;
+    height: 100%;
 
     max-width: 40rem;
 
@@ -261,10 +263,16 @@ select{
     line-height: 1.6;
 }
 
+.left-sobre{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+}
+
 /* ===== BOTÃO ===== */
 
 .button-sobre{
     display: flex;
-
-    justify-content: flex-end;
+    align-self: flex-end;
 }

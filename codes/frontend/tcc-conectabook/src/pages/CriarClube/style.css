@@ -26,6 +26,7 @@
     justify-content: space-between;
     padding-inline: 1rem;
     width: 100%;
+    height: 90px;
 }
 
 .input-criarClube{
@@ -75,7 +76,7 @@
 
 .upload-label{
     width: 20vw;
-    height: 100%;
+    height: 270px;
 
     border: 2px dashed #bdbdbd;
     border-radius: 16px;
@@ -94,6 +95,8 @@
     transition: 0.2s;
 
     background-color: #f7f7f7;
+
+    overflow: hidden;
 }
 
 .comboBox{
