@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faCrown } from '@fortawesome/free-solid-svg-icons';
 
 import styles from "./style.module.css"
+
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 

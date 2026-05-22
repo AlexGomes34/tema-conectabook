@@ -11,8 +11,8 @@
 }
 
 .titulos img{
-    height: 150px;
-    width: auto;
+    height: auto;
+    width: 5vw;
 }
 
 .clubes{
@@ -33,11 +33,13 @@
     gap: 1rem;
 }
 
-.clube img{
+
+.clubesFeed img{
     height: 50px;
     object-fit: cover;
     width: 50px;
     border-radius: 50%;
+    
 }
 
 .feedPageRight{

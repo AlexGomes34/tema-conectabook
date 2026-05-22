@@ -70,54 +70,6 @@ function Feed() {
                 "Passei a tarde inteira organizando minha estante e percebi que compro livros mais rápido do que consigo ler 😂",
             curtidas: 12,
             comentarios: 4
-        },{
-            id: 1,
-            nome: "Renato Zimbaue",
-            foto: fotoPessoa1,
-            postagem:
-                "Terminei de ler O Hobbit e fiquei impressionado com a construção do mundo do Tolkien. A aventura consegue ser leve e épica ao mesmo tempo.",
-            curtidas: 7,
-            comentarios: 10
-        },
-
-        {
-            id: 2,
-            nome: "Ana Clara",
-            foto: fotoPessoa1,
-            postagem:
-                "Comecei Maus hoje e já senti o peso emocional da história nas primeiras páginas. A arte simples deixa tudo ainda mais impactante.",
-            curtidas: 15,
-            comentarios: 6
-        },
-
-        {
-            id: 3,
-            nome: "Lucas Ferreira",
-            foto: fotoPessoa1,
-            postagem:
-                "Vocês também têm dificuldade para escolher o próximo livro depois de terminar uma leitura muito boa? Estou nesse vazio literário agora 😭",
-            curtidas: 21,
-            comentarios: 14
-        },
-
-        {
-            id: 4,
-            nome: "Marina Costa",
-            foto: fotoPessoa1,
-            postagem:
-                "1984 continua sendo um dos livros mais assustadores que já li. É absurdo como a obra ainda parece atual.",
-            curtidas: 30,
-            comentarios: 18
-        },
-
-        {
-            id: 5,
-            nome: "Pedro Henrique",
-            foto: fotoPessoa1,
-            postagem:
-                "Passei a tarde inteira organizando minha estante e percebi que compro livros mais rápido do que consigo ler 😂",
-            curtidas: 12,
-            comentarios: 4
         }
     ]
 
@@ -213,30 +165,30 @@ function Feed() {
                             <h3>Meus Clube de Literatura</h3>
                             <p>Ver todos</p>
                         </div>
-                        <div className={styles.clubes}>
+                        <div className={styles.clubesFeed}>
                             <div className={styles.clube}>
-                                <img src={fotoClube1} alt="" />
+                                <img className={styles.imagemClube} src={fotoClube1} alt="" />
                                 <div>
                                     <h4>Clube de Livro</h4>
                                     <p>1,2k membros</p>
                                 </div>
                             </div>
                             <div className={styles.clube}>
-                                <img src={fotoClube1} alt="" />
+                                <img className={styles.imagemClube} src={fotoClube1} alt="" />
                                 <div>
                                     <h4>Clube de Livro</h4>
                                     <p>1,2k membros</p>
                                 </div>
                             </div>
                             <div className={styles.clube}>
-                                <img src={fotoClube1} alt="" />
+                                <img className={styles.imagemClube} src={fotoClube1} alt="" />
                                 <div>
                                     <h4>Clube de Livro</h4>
                                     <p>1,2k membros</p>
                                 </div>
                             </div>
                             <div className={styles.clube}>
-                                <img src={fotoClube1} alt="" />
+                                <img className={styles.imagemClube} src={fotoClube1} alt="" />
                                 <div>
                                     <h4>Clube de Livro</h4>
                                     <p>1,2k membros</p>
