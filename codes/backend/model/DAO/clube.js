@@ -210,6 +210,7 @@ const setDeleteClub = async function (idClube) {
 module.exports = {
     getSelectAllClubs,
     getSelectByIdClub,
+    getSelectClubsByGeneroID,
     setInsertClub,
     setUpdateClub,
     setDeleteClub

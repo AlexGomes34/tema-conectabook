@@ -45,7 +45,35 @@ const getSelectByIdLike = async function (id) {
     
 }
 
+//RETORNA CURTIDA PELO ID DA MENSAGEM
+
 //RETORNA CURTIDAS PELO ID DO USUÁRIO
+const getSelectLikeByIdUser = async function (idUsuario) {
+    try {
+        let sql =  `
+        select
+                tbl_curtida.id_curtida,
+                tbl_curtida.id_usuario,
+                tbl_curtida.id_mensagem,
+                tbl_usuario as nome_usuario,
+            from tbl_curtida
+                  inner join tbl_usuario
+                      on tbl_usuario.id_usuario = tbl_curtida.id_usuario
+            where tbl_curtida.id_usuario = ? 
+         `
+         let result = await db.raw(sql, [idUsuario]);
+
+         if (result && result[0].length > 0)
+             return result[0];
+         else
+             return false;
+ 
+     } catch (error) {
+         console.log("Erro ao buscar curtidas", error);
+         return false;
+     }
+ }
+ 
 
 //INSERE UMA CURTIDA
 const setInsertLike = async function (curtida) {
@@ -105,15 +133,32 @@ const setDeleteLike = async function (id) {
         return false
     }
 }
-//DELETA UMA CURTIDA POR USUÁRIO
 
+//DELETA UMA CURTIDA POR USUÁRIO
+const setDeleteLikeByIdUser = async function (id) {
+    try {
+        let sql = `delete from tbl_curtida where id_usuario = ${id}`
+        let result = await db.raw(sql)
+
+        if(result && result[0].affectedRows > 0)
+            return true
+        else
+            return false
+
+    } catch(error) {
+
+    }
+    
+}
 
 
 
 module.exports = {
     getSelectAllLikes,
     getSelectByIdLike,
+    getSelectLikeByIdUser,
     setInsertLike,
     setUpdateLike,
-    setDeleteLike
+    setDeleteLike,
+    setDeleteLikeByIdUser
 }
