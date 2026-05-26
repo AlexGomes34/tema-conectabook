@@ -13,67 +13,20 @@ import Footer from "../../components/footer"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faStar,
-  faStarHalfStroke
+    faStar,
+    faStarHalfStroke
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 
 function Feed() {
 
-    const POSTS_DATA = [
-        {
-            id: 1,
-            nome: "Renato Zimbaue",
-            foto: fotoPessoa1,
-            postagem:
-                "Terminei de ler O Hobbit e fiquei impressionado com a construção do mundo do Tolkien. A aventura consegue ser leve e épica ao mesmo tempo.",
-            curtidas: 7,
-            comentarios: 10
-        },
+    const POSTS_API = "http://localhost:8080/v1/conectaBook/mensagem/feed/principal"
 
-        {
-            id: 2,
-            nome: "Ana Clara",
-            foto: fotoPessoa1,
-            postagem:
-                "Comecei Maus hoje e já senti o peso emocional da história nas primeiras páginas. A arte simples deixa tudo ainda mais impactante.",
-            curtidas: 15,
-            comentarios: 6
-        },
 
-        {
-            id: 3,
-            nome: "Lucas Ferreira",
-            foto: fotoPessoa1,
-            postagem:
-                "Vocês também têm dificuldade para escolher o próximo livro depois de terminar uma leitura muito boa? Estou nesse vazio literário agora 😭",
-            curtidas: 21,
-            comentarios: 14
-        },
-
-        {
-            id: 4,
-            nome: "Marina Costa",
-            foto: fotoPessoa1,
-            postagem:
-                "1984 continua sendo um dos livros mais assustadores que já li. É absurdo como a obra ainda parece atual.",
-            curtidas: 30,
-            comentarios: 18
-        },
-
-        {
-            id: 5,
-            nome: "Pedro Henrique",
-            foto: fotoPessoa1,
-            postagem:
-                "Passei a tarde inteira organizando minha estante e percebi que compro livros mais rápido do que consigo ler 😂",
-            curtidas: 12,
-            comentarios: 4
-        }
-    ]
-
+    const [posts, setPosts] = useState([])
     const [user, setUser] = useState(null)
+
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -84,15 +37,34 @@ function Feed() {
         } else {
             setUser(userStorage)
         }
+
+        async function getPosts() {
+            try {
+                const response = await fetch(POSTS_API)
+
+                const data = await response.json()
+
+                console.log(data.response)
+
+                setPosts(data.response)
+            } catch (error) {
+                console.log(error)
+
+            }
+        }
+
+        getPosts()
     }, [])
 
+
     return (
+
         <div>
             <Header
                 fotoUser={user?.user?.foto_perfil}
             />
             <div className={styles.mainFeed}>
-                <LeftFeed posts={POSTS_DATA} />
+                <LeftFeed posts={posts} />
                 <div className={styles.feedPageRight}>
                     <div className={styles.divRight}>
                         <div className={styles.divRightTitulo}>
@@ -107,12 +79,12 @@ function Feed() {
                                 <div>
                                     <div className={styles.avaliacao}>
                                         <div>
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+
                                         </div>
                                         <p>4.6</p>
                                     </div>
@@ -127,12 +99,12 @@ function Feed() {
                                 <div>
                                     <div className={styles.avaliacao}>
                                         <div>
-                                            <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+
                                         </div>
                                         <p>4.6</p>
                                     </div>
@@ -147,12 +119,12 @@ function Feed() {
                                 <div>
                                     <div className={styles.avaliacao}>
                                         <div>
-                                            <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+
                                         </div>
                                         <p>4.6</p>
                                     </div>
@@ -211,12 +183,12 @@ function Feed() {
                                 <div>
                                     <div className={styles.avaliacao}>
                                         <div>
-                                            <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+
                                         </div>
                                         <p>4.6</p>
                                     </div>
@@ -231,12 +203,12 @@ function Feed() {
                                 <div>
                                     <div className={styles.avaliacao}>
                                         <div>
-                                            <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+
                                         </div>
                                         <p>4.6</p>
                                     </div>
@@ -251,12 +223,12 @@ function Feed() {
                                 <div>
                                     <div className={styles.avaliacao}>
                                         <div>
-                                            <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        <FontAwesomeIcon icon={faStar} style={{color: "rgb(255, 212, 59)",}} />
-                                        
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+
                                         </div>
                                         <p>4.6</p>
                                     </div>
@@ -266,7 +238,7 @@ function Feed() {
                     </div>
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </div>
 
     )

@@ -28,10 +28,11 @@
 
 .listLivros{
     display: flex;
-    justify-content: space-around;
-    gap: 8px;
+    justify-content: center;
+    gap: 10rem;
     padding-bottom: 1rem;
     margin: 1rem 0px;
+    flex-wrap: wrap;
 }
 
 .button{

@@ -9,7 +9,7 @@ export function CafeCard({ cafe }) {
       <h3>{nome}</h3>
       <p>🕐 {horario}</p>
       <p>📞 {tel}</p>
-      {site && <a href={site} target="_blank" rel="noreferrer">🌐 Site</a>}
+      {site && <a className="tagCafeteria" href={site} target="_blank" rel="noreferrer">🌐 Site</a>}
     </div>
   )
 }

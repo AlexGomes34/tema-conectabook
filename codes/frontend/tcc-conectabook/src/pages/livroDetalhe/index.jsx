@@ -32,16 +32,27 @@ export default function LivroDetalhe() {
         }, [])
 
         useEffect(() => {
+
             async function fetchLivro() {
+        
                 try {
-                    const res = await fetch(`https://openlibrary.org/works/${id}.json`)
+        
+                    const res = await fetch(
+                        `https://openlibrary.org/works/${id}.json`
+                    )
+        
                     const data = await res.json()
+        
                     console.log(data)
         
+                    // =========================
                     // AUTOR
+                    // =========================
+        
                     let authorName = "Autor desconhecido"
         
                     if (data.authors?.length > 0) {
+        
                         const authorKey = data.authors[0].author.key
         
                         const authorRes = await fetch(
@@ -53,34 +64,47 @@ export default function LivroDetalhe() {
                         authorName = authorData.name
                     }
         
+                    // =========================
                     // GÊNERO
-                    const genero =
-                        data.subjects?.[0] ?? "Gênero não informado"
+                    // =========================
         
-                    // ANO + PÁGINAS
+                    const genero =
+                        data.subjects?.[0] ??
+                        "Gênero não informado"
+        
+                    // =========================
+                    // EDIÇÕES
+                    // =========================
+        
                     let paginas = "Não informado"
                     let anoPublicacao = "Não informado"
         
-                    // pega uma edição do livro
-                    if (data.editions?.key) {
+                    const editionsRes = await fetch(
+                        `https://openlibrary.org/works/${id}/editions.json?limit=1`
+                    )
         
-                        const editionsRes = await fetch(
-                            `https://openlibrary.org${data.editions.key}.json`
-                        )
+                    const editionsData = await editionsRes.json()
         
-                        const editionsData = await editionsRes.json()
+                    const edition = editionsData.entries?.[0]
+        
+                    if (edition) {
         
                         paginas =
-                            editionsData.number_of_pages ??
+                            edition.number_of_pages ??
                             "Não informado"
         
                         anoPublicacao =
-                            editionsData.publish_date ??
+                            edition.publish_date ??
                             "Não informado"
                     }
         
+                    // =========================
+                    // LIVRO FINAL
+                    // =========================
+        
                     setLivro({
                         title: data.title,
+        
                         author: authorName,
         
                         description:
@@ -100,11 +124,15 @@ export default function LivroDetalhe() {
                     })
         
                 } catch (error) {
+        
                     console.log(error)
+        
                 }
+        
             }
         
             fetchLivro()
+        
         }, [id])
 
     const navigate = useNavigate()
