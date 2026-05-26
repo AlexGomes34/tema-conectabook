@@ -8,11 +8,14 @@ import Button from "../../components/button/index.jsx"
 import styles from "./style.module.css"
 
 import LivroTitulosSemelhantes from "../../components/livroTitulosSemelhantes/index.jsx"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 
 export default function LivroDetalhe() {
+
+    const { id } = useParams();
+    const [livro, setLivro] = useState(null);
 
     const [user, setUser] = useState(null)
     
@@ -27,37 +30,110 @@ export default function LivroDetalhe() {
             }
     
         }, [])
+
+        useEffect(() => {
+            async function fetchLivro() {
+                try {
+                    const res = await fetch(`https://openlibrary.org/works/${id}.json`)
+                    const data = await res.json()
+                    console.log(data)
+        
+                    // AUTOR
+                    let authorName = "Autor desconhecido"
+        
+                    if (data.authors?.length > 0) {
+                        const authorKey = data.authors[0].author.key
+        
+                        const authorRes = await fetch(
+                            `https://openlibrary.org${authorKey}.json`
+                        )
+        
+                        const authorData = await authorRes.json()
+        
+                        authorName = authorData.name
+                    }
+        
+                    // GÊNERO
+                    const genero =
+                        data.subjects?.[0] ?? "Gênero não informado"
+        
+                    // ANO + PÁGINAS
+                    let paginas = "Não informado"
+                    let anoPublicacao = "Não informado"
+        
+                    // pega uma edição do livro
+                    if (data.editions?.key) {
+        
+                        const editionsRes = await fetch(
+                            `https://openlibrary.org${data.editions.key}.json`
+                        )
+        
+                        const editionsData = await editionsRes.json()
+        
+                        paginas =
+                            editionsData.number_of_pages ??
+                            "Não informado"
+        
+                        anoPublicacao =
+                            editionsData.publish_date ??
+                            "Não informado"
+                    }
+        
+                    setLivro({
+                        title: data.title,
+                        author: authorName,
+        
+                        description:
+                            data.description?.value ??
+                            data.description ??
+                            "Sem descrição.",
+        
+                        genero,
+        
+                        paginas,
+        
+                        anoPublicacao,
+        
+                        coverUrl: data.covers?.[0]
+                            ? `https://covers.openlibrary.org/b/id/${data.covers[0]}-L.jpg`
+                            : fotoLivro1
+                    })
+        
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        
+            fetchLivro()
+        }, [id])
+
     const navigate = useNavigate()
+
+    if(!livro) return <p>Carregando...</p>
     return (
         <div>
             <Header fotoUser={user?.user?.foto_perfil}/>
             <main>
                 <div className={styles.mainUp}>
                     <div>
-                        <img src={fotoLivro1} alt="" />
+                        <img src={livro.coverUrl} alt="" />
                     </div>
                     <div className={styles.leftUpMain}>
                         <div className={styles.leftUpMainText}>
-                            <h1>O pequeno principe</h1>
-                            <h2>Autor do Livro</h2>
+                            <h1>{livro.title}</h1>
+                            <h2>{livro.author}</h2>
                             <div className={styles.infosLivro}>
                                 <div className={styles.infoLivro}>
-                                    <p>Aventura</p>
+                                    <p>{livro.genero}</p>
                                 </div>
                                 <div className={styles.infoLivro}>
-                                    <p>Publicado em 1954</p>
+                                    <p>{livro.anoPublicacao}</p>
                                 </div>
                                 <div className={styles.infoLivro}>
-                                    <p>328 páginas</p>
+                                    <p>{livro.paginas}</p>
                                 </div>
                             </div>
-                            <p className={styles.sobreLivro}>
-                                Mussum Ipsum, cacilds vidis litro abertis.  Praesent vel viverra nisi. Mauris aliquet nunc non turpis scelerisque, eget. Suco de cevadiss, é um leite divinis, qui tem lupuliz, matis, aguis e fermentis. Interagi no mé, cursus quis, vehicula ac nisi. Negão é teu passadis, eu sou faxa pretis.
-
-                                Si num tem leite então bota uma pinga aí cumpadi! Bota 1 metro de cachacis aí pra viagem! Delegadis gente finis, bibendum egestas augue arcu ut est. Diuretics paradis num copo é motivis de denguis.
-
-                                Admodum accumsan disputationi eu sit. Vide electram sadipscing et per. Vehicula non. Ut sed ex eros. Vivamus sit amet nibh non tellus tristique interdum. Si u mundo tá muito paradis? Toma um mé que o mundo vai girarzis! Mauris nec dolor in eros commodo tempor. Aenean aliquam molestie leo, vitae iaculis nisl.
-                            </p>
+                            <p className={styles.sobreLivro}>{livro.description}</p>
                         </div>
 
                         <div className={styles.buttons}>

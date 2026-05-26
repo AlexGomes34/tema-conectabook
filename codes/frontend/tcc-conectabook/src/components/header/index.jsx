@@ -14,7 +14,6 @@ function Header({ fotoUser }) {
             <Link className='a' to="/livros">Livros</Link>
             <Link className='a' to="/feed">Feed</Link>
             <Link className='a' to="/cafeteria">Cafeteria</Link>
-            <Link to={"/eventos"} className='a' href="">Eventos</Link>
             <Link to={"/perfil"} className='user'>
                 <img className='fotoUser' src=
                 {fotoUser || fotoDefault} alt="" />
