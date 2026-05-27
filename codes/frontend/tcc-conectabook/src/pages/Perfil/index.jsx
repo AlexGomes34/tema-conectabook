@@ -11,40 +11,42 @@ import { faBook, faStar, faShieldHalved } from "@fortawesome/free-solid-svg-icon
 import { faFacebook, faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons"
 import Footer from "../../components/footer"
 
+import userDefault from "../../assets/userDefault.webp"
+
+import imageCompression from "browser-image-compression"
+
 
 
 function Perfil() {
 
     const navigate = useNavigate()
 
+
     async function handleDelete() {
         try {
             const userStorage = JSON.parse(localStorage.getItem("user"))
-            const id = userStorage.user.id
+
+            const userId =
+                userStorage.user.id ||
+                userStorage.user.id_usuario
 
             const confirmDelete = window.confirm("Tem certeza que deseja excluir sua conta?")
+
             if (!confirmDelete) return
 
-            const relacoes = await fetch(`http://localhost:8080/v1/conectaBook/genero-usuario/usuario/${id}`, {
-                method: "DELETE"
-            })
-
-            if(!relacoes.ok){
-                throw new Error("Erro ao deletar relações");
-                
-            }
-
-            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${id}`,{
+            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userId}`, {
                 method: "DELETE"
             })
 
             const data = await response.json()
 
-            if(data.status){
+            console.log(data)
+
+            if (data.status) {
                 alert("Conta excluída com sucesso")
                 localStorage.removeItem("user")
                 navigate("/login")
-            }else{
+            } else {
                 alert("Erro ao excluir usuário")
             }
         } catch (error) {
@@ -59,43 +61,61 @@ function Perfil() {
         try {
             const userStorage = JSON.parse(localStorage.getItem("user"))
 
-            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userStorage.user.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    nome: formData.nome,
-                    nome_usuario: formData.username,
-                    email: formData.email,
-                    data_nascimento: formData.dataNascimento
-                })
-            })
+            const form = new FormData()
 
-            const data = await response.json()
+            form.append("nome", formData.nome)
+            form.append("nome_usuario", formData.username)
+            form.append("email", formData.email)
+            form.append("data_nascimento", formData.dataNascimento)
 
-            console.log("UPDATE RESPONSE", data)
-
-            if (data.status) {
-                alert("Perfil atualizado com sucesso!")
-
-                const updatedUser = {
-                    ...userStorage,
-                    nome: formData.nome,
-                    nome_usuario: formData.username,
-                    email: formData.email,
-                    data_nascimento: formData.data_nascimento
-                }
-
-                localStorage.setItem("user", JSON.stringify(updatedUser))
-                setUser(updatedUser)
-            } else {
-                alert("Erro ao atualizar perfil")
+            if (foto) {
+                form.append("foto", foto)
             }
+
+            const userId =
+                userStorage.user.id ||
+                userStorage.user.id_usuario
+
+            const putResponse = await fetch(
+                `http://localhost:8080/v1/conectaBook/usuarios/${userId}`,
+                {
+                    method: "PUT",
+                    body: form
+                }
+            )
+
+            const putData = await putResponse.json()
+
+            if (!putData.status) {
+                alert("Erro ao atualizar perfil")
+                return
+            }
+
+            const getResponse = await fetch(
+                `http://localhost:8080/v1/conectaBook/usuarios/${userId}`
+            )
+
+            const getData = await getResponse.json()
+
+            const userData = getData.response || getData.user || getData
+
+            console.log("USER STORAGE:", userStorage)
+            console.log("USER DATA:", userData)
+
+            const updatedUser = {
+                ...userStorage,
+                user: userData
+            }
+
+            localStorage.setItem("user", JSON.stringify(updatedUser))
+            setUser(updatedUser)
+
+            alert("Perfil atualizado com sucesso!")
+
         } catch (error) {
             console.error("Erro no PUT:", error)
             alert("Erro na requisição")
-
+            console.log(error)
         }
     }
 
@@ -107,6 +127,32 @@ function Perfil() {
         dataNascimento: "",
         id: ""
     })
+
+    const [foto, setFoto] = useState(null)
+    const [preview, setPreview] = useState(null)
+
+    async function handleFotoChange(e) {
+        const file = e.target.files[0]
+
+        if (!file) return
+
+        const compressedFile = await imageCompression(file, {
+            maxSizeMB: 0.2,
+            maxWidthOrHeight: 500,
+            useWebWorker: true
+        })
+
+        const fileFinal = new File([compressedFile], file.name, {
+            type: file.type
+        })
+
+        setFoto(fileFinal)
+
+        setPreview(URL.createObjectURL(fileFinal))
+
+        console.log("FILE ORIGINAL:", file)
+        console.log("COMPRESSED FILE:", compressedFile)
+    }
 
     const INPUT_DATA = [
         { id: 1, name: "username", label: "Nome de Usuário", placeholder: "Digite seu usuário...", type: "text", required: true },
@@ -124,13 +170,14 @@ function Perfil() {
 
             setUser(userStorage)
 
+
             setFormData({
                 username: userStorage.user.nome_usuario || "",
                 nome: userStorage.user.nome || "",
                 email: userStorage.user.email || "",
                 senha: "",
                 dataNascimento: userStorage.user.data_nascimento || "",
-                id: userStorage.user.id || ""
+                id: userStorage.user.id_usuario || ""
             })
         }
     }, [])
@@ -144,10 +191,12 @@ function Perfil() {
         }))
     }
 
+
+
     return (
         <div>
             <Header
-                fotoUser={user?.foto}
+                fotoUser={user?.user?.foto_perfil}
             />
             <div className="up-perfil">
                 <h1>Perfil</h1>
@@ -158,7 +207,16 @@ function Perfil() {
             <div className="down-perfil">
                 <div className="left-perfil">
                     <div className="user-icon">
-                        <img className="img-user" src={user?.foto} alt="Foto do usuário" />
+                        <img className="img-user"
+                            src={preview || user?.user?.foto_perfil || userDefault}
+                            alt="Foto do usuário"
+                        />
+
+                        <input type="file"
+                            accept="image/*"
+                            onChange={handleFotoChange} />
+
+
                         <h2>{user?.user.nome}</h2>
                         <p>@{user?.user.nome_usuario}</p>
                     </div>

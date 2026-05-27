@@ -1,7 +1,7 @@
 import './input.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-function Input({ label, placeholder, value, onChange, type = "text", name, required, faIcon }) {
+function Input({ label, placeholder, value, onChange, type = "text", name, required, faIcon, className }) {
     return (
         <div className='input-group'>
             <div className="label">
@@ -9,6 +9,7 @@ function Input({ label, placeholder, value, onChange, type = "text", name, requi
                 <label>{label}</label>
             </div>
             <input
+                className={className}
                 name={name}
                 type={type}
                 placeholder={placeholder}

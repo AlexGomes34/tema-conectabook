@@ -13,48 +13,48 @@ const messages = require("../modulo/config_messages.js");
 const listarLivros = async function () {
     try {
 
-let result = await livroDAO.getSelectAllBooks();
+        let result = await livroDAO.getSelectAllBooks();
 
-if(result) {
-    let responseData = Object.assign({}, messages.HEADER);
-    responseData.status = messages.SUCCESS_REQUEST.status;
-    responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-    responseData.response = result;
-    return responseData;
-} else {
-    return messages.ERROR_NOT_FOUND;
-}
+        if (result) {
+            let responseData = Object.assign({}, messages.HEADER);
+            responseData.status = messages.SUCCESS_REQUEST.status;
+            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+            responseData.response = result;
+            return responseData;
+        } else {
+            return messages.ERROR_NOT_FOUND;
+        }
 
-    } catch(error) {
+    } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-    
+
 }
 
 
 //GET ID - Listar livros pelo ID
-const listarLivrosID = async function (id){
-    if(id == '' || id == undefined || isNaN(id)){
+const listarLivrosID = async function (id) {
+    if (id == '' || id == undefined || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
 
-    try{
-         let result = await livroDAO.getSelectByIdBook(id);
+    try {
+        let result = await livroDAO.getSelectByIdBook(id);
 
-         if(result) {
+        if (result) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_REQUEST.status;
             responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-             // O DAO já retorna o array de dados filtrado, pela a primeira posição
+            // O DAO já retorna o array de dados filtrado, pela a primeira posição
             responseData.response = result[0];
             return responseData;
-         } else {
+        } else {
             return messages.ERROR_NOT_FOUND;
-         }
+        }
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-    
+
 }
 
 
@@ -69,15 +69,15 @@ const criarLivro = async function (livro, contentType) {
         if (
             livro.isbn == '' || livro.isbn == undefined ||
             livro.titulo == '' || livro.titulo == undefined ||
-            livro.autor == '' || livro.autor == undefined || 
-            livro.descricao == '' || livro.descricao == undefined 
-        
+            livro.autor == '' || livro.autor == undefined ||
+            livro.descricao == '' || livro.descricao == undefined
+
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
             let result = await livroDAO.setInsertBook(livro);
 
-            if(result) {
+            if (result) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_CREATED_ITEM.status;
                 responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
@@ -89,7 +89,7 @@ const criarLivro = async function (livro, contentType) {
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-    
+
 }
 
 
@@ -107,34 +107,34 @@ const atualizarLivro = async function (livro, contentType, id) {
         if (
             livro.isbn == '' || livro.isbn == undefined ||
             livro.titulo == '' || livro.titulo == undefined ||
-            livro.autor == '' || livro.autor == undefined || 
-            livro.descricao == '' || livro.descricao == undefined 
+            livro.autor == '' || livro.autor == undefined ||
+            livro.descricao == '' || livro.descricao == undefined
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
-             let buscarId = await livroDAO.getSelectByIdBook(id);
+            let buscarId = await livroDAO.getSelectByIdBook(id);
 
-             if(buscarId) {
+            if (buscarId) {
                 livro.id = id;
                 let result = await livroDAO.setUpdateBook(livro);
 
-                if(result) {
+                if (result) {
                     let responseData = Object.assign({}, messages.HEADER);
-                   responseData.status = messages.SUCCESS_UPDATED_ITEM.status;
-                   responseData.status_code = messages.SUCCESS_UPDATED_ITEM.status_code;
-                   responseData.response = messages.SUCCESS_UPDATED_ITEM.message;
-                   return responseData;
+                    responseData.status = messages.SUCCESS_UPDATED_ITEM.status;
+                    responseData.status_code = messages.SUCCESS_UPDATED_ITEM.status_code;
+                    responseData.response = messages.SUCCESS_UPDATED_ITEM.message;
+                    return responseData;
                 } else {
                     return messages.ERROR_INTERNAL_SERVER_MODEL;
                 }
-             } else {
+            } else {
                 return messages.ERROR_NOT_FOUND;
-             }
+            }
         }
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-    
+
 }
 
 // DELETE -  Excluir livro
@@ -146,25 +146,25 @@ const excluirLivro = async function (id) {
     try {
         let buscarId = await livroDAO.getSelectByIdBook(id);
 
-        if(buscarId) {
-             let result = await livroDAO.setDeleteBook(id);
+        if (buscarId) {
+            let result = await livroDAO.setDeleteBook(id);
 
             if (result) {
-            let responseData = Object.assign({}, messages.HEADER);
-            responseData.status = messages.SUCCESS_DELETE_ITEM.status;
-            responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code;
-            responseData.response = messages.SUCCESS_DELETE_ITEM.message;
-            return responseData;
-          } else {
-            return messages.ERROR_INTERNAL_SERVER_MODEL;
-          }
-      } else {
-        return messages.ERROR_NOT_FOUND;
+                let responseData = Object.assign({}, messages.HEADER);
+                responseData.status = messages.SUCCESS_DELETE_ITEM.status;
+                responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code;
+                responseData.response = messages.SUCCESS_DELETE_ITEM.message;
+                return responseData;
+            } else {
+                return messages.ERROR_INTERNAL_SERVER_MODEL;
+            }
+        } else {
+            return messages.ERROR_NOT_FOUND;
+        }
+    } catch (error) {
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-   } catch (error) {
-      return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
-   }
-    
+
 }
 
 module.exports = {

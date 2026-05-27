@@ -43,6 +43,27 @@ const getSelectByIdMember = async function (id) {
     }
 }
 
+// RETORNA SE O USUARIO JA PARTICIPA DO CLUBE
+const getSelectMemberByUserAndClub = async function (idUsuario, idClube) {
+    try {
+        let sql = `
+            select * from tbl_membros
+            where id_usuario = ${idUsuario}
+            and id_clube = ${idClube}
+        `
+
+        let result = await db.raw(sql)
+
+        if (result && result[0].length > 0) {
+            return true
+        } else {
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+}
+
 // RETORNAR USUÁRIOS QUE PARTICIPAM DE UM CLUBE ESPECÍFICO
 const getSelectUsersByIdClub = async function (idClube) {
     try {
@@ -79,14 +100,27 @@ const getSelectUsersByIdClub = async function (idClube) {
 const getSelectClubsThatUserParticipateByIdUser = async function (idUsuario) {
     try {
         let sql = `
-            select 
-                tbl_clube.id_clube, 
-                tbl_clube.nome, 
-                tbl_clube.foto
-            from tbl_clube
-                inner join tbl_membros
-                    on tbl_clube.id_clube = tbl_membros.id_clube
-            where tbl_membros.id_usuario = ${idUsuario}
+            
+select 
+    tbl_clube.id_clube, 
+    tbl_clube.nome, 
+    tbl_clube.foto,
+    tbl_clube.sobre,
+    tbl_genero.nome as genero,
+    (
+        select count(*) 
+        from tbl_membros 
+        where tbl_membros.id_clube = tbl_clube.id_clube
+    ) as membros
+from tbl_clube
+
+    inner join tbl_genero
+    on tbl_clube.id_genero = tbl_genero.id_genero
+
+    inner join tbl_membros
+        on tbl_clube.id_clube = tbl_membros.id_clube
+	where tbl_membros.id_usuario = ${idUsuario}
+	and tbl_membros.administrador = 0
             `; 
 
         let result = await db.raw(sql);
@@ -103,15 +137,28 @@ const getSelectClubsThatUserParticipateByIdUser = async function (idUsuario) {
 }
 
 //RETORNA OS CLUBES QUE O USUARIO ADMINISTRA
-const getSelectClubesAdminByUser = async function (idUsuario) {
+const getSelectClubsAdminByUser = async function (idUsuario) {
     try {
         let sql = `
             select 
                 tbl_clube.id_clube, 
                 tbl_clube.nome, 
                 tbl_clube.foto,
-                tbl_membros.administrador 
+                tbl_clube.sobre,
+                tbl_genero.nome as genero,
+                tbl_membros.administrador,
+
+                (
+        select count(*) 
+        from tbl_membros 
+        where tbl_membros.id_clube = tbl_clube.id_clube
+    ) as membros 
+
             from tbl_clube
+
+                inner join tbl_genero
+                    on tbl_clube.id_genero = tbl_genero.id_genero
+
                 inner join tbl_membros
                     on tbl_clube.id_clube = tbl_membros.id_clube
             where tbl_membros.id_usuario = ${idUsuario} 
@@ -213,7 +260,8 @@ const setDeleteMembersByClubeId = async function (id) {
 module.exports = {
     getSelectAllMembersClubs,
     getSelectByIdMember,
-    getSelectClubesAdminByUser,
+    getSelectMemberByUserAndClub,
+    getSelectClubsAdminByUser,
     getSelectClubsThatUserParticipateByIdUser,
     getSelectUsersByIdClub,
     setInsertMembers,

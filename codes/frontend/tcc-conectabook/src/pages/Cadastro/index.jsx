@@ -113,7 +113,6 @@ function Cadastro() {
 
             const dataUsuario = await responseUsuario.json()
 
-            console.log(dataUsuario)
 
             if (!responseUsuario.ok) {
                 throw new Error("Erro ao cadastrar usuário");
@@ -121,12 +120,6 @@ function Cadastro() {
 
             const idUsuario = dataUsuario.usuario_criado.id
 
-            console.log({
-                id_usuario: idUsuario,
-                generos: form.generosFavorito
-            })
-
-            console.log(dataUsuario)
 
 
             const responseGenero = await fetch(API_GENERO_USUARIO, {

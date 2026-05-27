@@ -1,12 +1,10 @@
 
 .input-group {
-    margin: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   
   .input-group label {
     display: block;
-    margin-bottom: 8px;
     font-weight: 500;
     color: #333;
   }

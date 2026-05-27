@@ -1,57 +1,19 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPeopleGroup, faStar, faShieldHalved } from "@fortawesome/free-solid-svg-icons"
+import { faPeopleGroup, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import Footer from "../../components/footer"
 import fotoClube1 from "../../assets/fotoClube1.jpg"
 import Button from "../../components/button"
 import Input from "../../components/input"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Await, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 import "./style.css"
 import Header from "../../components/header"
 
-const CLUBES_DATA = [
-    {
-        id: 1,
-        nome: "Clube Semideuses",
-        genero: "Aventura",
-        quantiaMembros: 760,
-        sobre: "Um clube de leitura para fãs de mitologia e aventura, explorando histórias épicas e debatendo teorias sobre heróis e deuses.",
-        foto: fotoClube1
-    },
-    {
-        id: 2,
-        nome: "Páginas & Café",
-        genero: "Romance",
-        quantiaMembros: 540,
-        sobre: "Para quem ama histórias emocionantes acompanhadas de um bom café. Leituras leves, românticas e cheias de sentimento.",
-        foto: fotoClube1
-    },
-    {
-        id: 3,
-        nome: "Sombras & Mistérios",
-        genero: "Terror",
-        quantiaMembros: 620,
-        sobre: "Clube dedicado a histórias sombrias, suspense e terror psicológico. Ideal para quem gosta de sentir aquele frio na espinha.",
-        foto: fotoClube1
-    },
-    {
-        id: 4,
-        nome: "Universo Fantástico",
-        genero: "Fantasia",
-        quantiaMembros: 890,
-        sobre: "Dragões, magia e mundos incríveis. Aqui mergulhamos em universos fantásticos e debatemos teorias sobre sagas famosas.",
-        foto: fotoClube1
-    },
-    {
-        id: 5,
-        nome: "Leitores Críticos",
-        genero: "Clássicos",
-        quantiaMembros: 430,
-        sobre: "Focado em grandes obras da literatura mundial, com discussões profundas e análises críticas.",
-        foto: fotoClube1
-    }
-]
+import FotoClubeDefault from "../../assets/group.png"
+import RightClube from "../../components/RightClube"
+
 
 const CLUBE_MEMBRO = [
     {
@@ -72,30 +34,34 @@ const CLUBE_MEMBRO = [
     }
 ]
 
-const CLUBE_ADM = [
-    {
-        id: 4,
-        nome: "Universo Fantástico",
-        genero: "Fantasia",
-        quantiaMembros: 890,
-        sobre: "Dragões, magia e mundos incríveis. Aqui mergulhamos em universos fantásticos e debatemos teorias sobre sagas famosas.",
-        foto: fotoClube1
-    },
-    {
-        id: 5,
-        nome: "Leitores Críticos",
-        genero: "Clássicos",
-        quantiaMembros: 430,
-        sobre: "Focado em grandes obras da literatura mundial, com discussões profundas e análises críticas.",
-        foto: fotoClube1
-    }
-]
-
+const API_GENEROS = "http://localhost:8080/v1/conectaBook/generos"
 
 export default function Clube() {
 
     const [user, setUser] = useState(null)
     const navigate = useNavigate()
+    const [clubes, setClube] = useState([])
+    const [generos, setGenero] = useState([])
+    const [generoSelecionado, setGeneroSelecionado] = useState("")
+    const API_CLUBES = "http://localhost:8080/v1/conectaBook/clubes"
+    const [pesquisa, setPesquisa] = useState("")
+    const [clubeAdmin, setClubeAdmin] = useState([])
+    const [clubeMembro, setClubeMembro] = useState([])
+
+    const clubesFiltrados = clubes.filter((clube) => {
+
+        const generoValido =
+            generoSelecionado === "" ||
+            clube.genero ==
+            generos.find(
+                (genero) => genero.id_genero == generoSelecionado
+            )?.nome
+
+        const nomeValido =
+            clube.nome.toLowerCase().includes(pesquisa.toLowerCase())
+
+        return generoValido && nomeValido
+    })
 
     useEffect(() => {
         const userStorage = JSON.parse(localStorage.getItem("user"))
@@ -107,14 +73,110 @@ export default function Clube() {
         }
     }, [])
 
-    const clube_membro_selecionado = CLUBE_MEMBRO[0]
-    const clube_adm_selecionado = CLUBE_ADM[0]
+    useEffect(() => {
+        buscarClubes()
+        buscarGeneros()
+    }, [])
+
+    useEffect(() => {
+        const userStorage = JSON.parse(localStorage.getItem("user"))
+        const idUsuario = userStorage.user.id_usuario || userStorage.user.id
+
+        if (idUsuario) {
+            buscarClubesAdmin(idUsuario)
+            buscarClubesMembro(idUsuario)
+        }
+    }, [])
+
+    async function buscarClubes() {
+        try {
+            const response = await fetch(API_CLUBES)
+            const data = await response.json()
+
+            setClube(data.response)
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    }
+
+    async function buscarGeneros() {
+        try {
+            const response = await fetch(API_GENEROS)
+            const data = await response.json()
+
+            setGenero(data.response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function participarClube(idClube) {
+
+        const idUsuario = user.user.id_usuario || user.user.id
+        try {
+            const response = await fetch("http://localhost:8080/v1/conectaBook/membros", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id_usuario: idUsuario,
+                    id_clube: idClube,
+                    administrador: 0
+                })
+            })
+
+            if (!response.ok) {
+                throw new Error("Erro ao entrar no clube");
+
+            }
+
+            alert("Você entrou no clube com sucesso")
+        } catch (error) {
+            console.log(error)
+            alert("Não foi possível entrar no clube")
+        }
+    }
+
+    const meuClubeAdmin = clubeAdmin?.[clubeAdmin.length - 1] || null
+    const meuClubeMembro = clubeMembro?.[0] || null
+
+    async function buscarClubesAdmin(idUsuario) {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}/admin/`
+            )
+
+            const data = await response.json()
+
+            setClubeAdmin(data.response)
+
+        } catch (error) {
+            console.log("Erro ao buscar clubes admin", error)
+        }
+    }
+
+    async function buscarClubesMembro(idUsuario) {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}`
+            )
+
+            const data = await response.json()
+
+            setClubeMembro(data.response)
+
+        } catch (error) {
+            console.log("Erro ao buscar clubes membro", error)
+        }
+    }
 
     return (
-        <div>
-
+        <div className="body-feedClube">
             <Header
-                fotoUser={user?.foto} />
+                fotoUser={user?.user?.foto_perfil} />
 
             <main className="main-clube">
                 <div className="left-clube">
@@ -124,14 +186,30 @@ export default function Clube() {
                             <h2>Clubes faço parte</h2>
                         </div>
                         <div className="clube-acess">
-                            <img src={clube_membro_selecionado.foto} alt="Foto do Clube" />
-                            <div className="clube-acess-text">
-                                <h3>{clube_membro_selecionado.nome}</h3>
-                                <p>{clube_membro_selecionado.quantiaMembros} membros</p>
-                            </div>
+                            {meuClubeMembro ? (
+                                <Link className="clubePage">
+                                    <img
+                                        src={
+                                            meuClubeMembro.foto
+                                                ? `http://localhost:8080/uploads/${meuClubeMembro.foto}`
+                                                : FotoClubeDefault
+                                        }
+                                    />
+                                    <div className="clube-acess-text">
+                                        <h3>{meuClubeMembro.nome}</h3>
+                                        <p>{meuClubeMembro.quantiaMembros} membros</p>
+                                    </div>
+                                </Link>
+                            ) : (
+                                <div className="empty-state">
+                                    <p>Você ainda não participa de nenhum clube</p>
+                                    <Button text="Descobrir clubes" onClick={() => navigate("/clubes")} />
+                                </div>
+                            )}
                         </div>
                         <Button
                             text={"Ver Todos os clubes"}
+                            onClick={() => navigate("/meusClubes")}
                         />
                     </div>
 
@@ -141,11 +219,26 @@ export default function Clube() {
                             <h2>Clubes Administro</h2>
                         </div>
                         <div className="clube-acess">
-                            <img src={clube_adm_selecionado.foto} alt="Foto do Clube" />
-                            <div className="clube-acess-text">
-                                <h3>{clube_adm_selecionado.nome}</h3>
-                                <p>{clube_adm_selecionado.quantiaMembros} membros</p>
-                            </div>
+                            {meuClubeAdmin ? (
+                                <Link className="clubePage">
+                                    <img
+                                        src={
+                                            meuClubeAdmin.foto
+                                                ? `http://localhost:8080/uploads/${meuClubeAdmin.foto}`
+                                                : FotoClubeDefault
+                                        }
+                                    />
+                                    <div className="clube-acess-text">
+                                        <h3>{meuClubeAdmin.nome}</h3>
+                                        <p>{meuClubeAdmin.quantiaMembros} membros</p>
+                                    </div>
+                                </Link>
+                            ) : (
+                                <div className="empty-state">
+                                    <p>Você ainda não administra nenhum clube</p>
+                                    <Button text="Criar clube" onClick={() => navigate("/criarClube")} />
+                                </div>
+                            )}
                         </div>
                         <Button
                             text={"Ver Todos os clubes"}
@@ -154,64 +247,20 @@ export default function Clube() {
 
                 </div>
 
-                <div className="right-clube">
-                    <div className="pesquisa">
-                        <Input
-                            placeholder={"Procure por um grupo..."} />
-                        <Button
-                            onClick={ () => navigate("/criarClube")}
-                            text={"Criar Clube"} />
-                    </div>
-
-                    <div className="titulo-filtros">
-                        <div className="titulos">
-                            <h2>Descubra clubes de leitura</h2>
-                            <p>Encontre seu próximo clube e faça parte de histórias incríveis.</p>
-                        </div>
-                        <select name="genero" id="genero">
-                            <option value="">Selecione um genero</option>
-                            <option value="acao">Ação</option>
-                            <option value="romance">aba</option>
-                            <option value="mama">aba</option>
-                        </select>
-                    </div>
-                    <div className="clubes">
-                        {CLUBES_DATA.map((clube) => {
-                            return (
-                                <div className="clube-detalhe">
-                                    <div className="info-left">
-                                        <img src={clube.foto} alt="" />
-                                        <div className="info-clube">
-                                            <h3>{clube.nome}</h3>
-                                            <div className="p-clube">
-                                                <p>{clube.genero}</p>
-                                                <p>{clube.quantiaMembros} membros</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="sobre-clube">
-                                        <div className="sobre-clube-text">
-                                            <h4>Sobre o clube</h4>
-                                            <p className="sobre-text">{clube.sobre}</p>
-                                        </div>
-                                        <div className="button-sobre">
-                                            <Button text={"Participar do Clube"} />
-                                        </div>
-
-                                    </div>
-                                </div>
-                            )
-
-                        })}
-                    </div>
-
-                </div>
+                <RightClube
+                    pesquisa={pesquisa}
+                    setPesquisa={setPesquisa}
+                    navigate={navigate}
+                    generoSelecionado={generoSelecionado}
+                    setGeneroSelecionado={setGeneroSelecionado}
+                    generos={generos}
+                    clubesFiltrados={clubesFiltrados}
+                    participarClube={participarClube}
+                    meusClubes={false}
+                />
             </main>
 
             <Footer />
-
-
         </div>
     )
 

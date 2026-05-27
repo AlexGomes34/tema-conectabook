@@ -13,6 +13,9 @@ const bodyParser = require('body-parser')
 const app = express()
 
 // Configuração global do CORS - Mais limpo e funcional
+
+app.use('/uploads', express.static('uploads'))
+
 app.use(cors())
 
 // Middleware para JSON
@@ -50,6 +53,15 @@ app.use('/v1/conectaBook/mensagem', mensagemRoutes)
 
 const conversaRoutes = require('./routes/conversaRoutes.js')
 app.use('/v1/conectaBook/conversa', conversaRoutes);
+
+const avaliacaoRoutes = require('./routes/avaliacaoRoutes.js')
+app.use('/v1/conectaBook/avaliacao', avaliacaoRoutes);
+
+const avaliacaoLivroRoutes = require('./routes/avaliacao_livroRoutes.js')
+app.use('/v1/conectaBook/avaliacao-livro', avaliacaoLivroRoutes);
+
+const avaliacaoCafeteriaRoutes = require('./routes/avaliacao_cafeteriaRoutes.js')
+app.use('/v1/conectaBook/avaliacao-cafeteria', avaliacaoCafeteriaRoutes);
 
 const PORT = process.env.PORT || 8080
 
