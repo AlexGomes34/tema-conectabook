@@ -1,12 +1,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faComment } from '@fortawesome/free-solid-svg-icons';
 
+import userDefault from "../../assets/userDefault.webp"
+
 export default function Postagem({ post }) {
 
     return (
         <div className="postagem">
 
-            <img src={post.foto_perfil} alt="" />
+            <img src={post.foto_perfil || userDefault} alt="" />
 
             <div className="postagem-text">
 

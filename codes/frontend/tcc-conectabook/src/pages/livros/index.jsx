@@ -112,8 +112,6 @@ const genres = [
   }
 ]
 
-
-
 export default function Livro() {
 
   const [books, setBooks] = useState([])
@@ -124,7 +122,8 @@ export default function Livro() {
   const [isSearching, setIsSearching] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
 
-  const handleSearch = async () => {
+  const handleSearch = async (e) => {
+    e.preventDefault()
     if (!searchTerm && !selectedGenre) return
 
     setIsSearching(true)
@@ -138,14 +137,18 @@ export default function Livro() {
     )
     const data = await res.json()
 
-    const mapped = data.docs.map(book => ({
-      key: book.key,
-      title: book.title,
-      author: book.author_name?.[0],
-      coverUrl: book.cover_i
-        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
-        : null
-    }))
+    const mapped = data.docs
+      .filter(book =>
+        book.cover_i &&
+        book.title &&
+        book.author_name?.[0]
+      )
+      .map(book => ({
+        key: book.key,
+        title: book.title,
+        author: book.author_name[0],
+        coverUrl: `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
+      }))
 
     setSearchResults(mapped)
     setIsSearching(false)
@@ -155,12 +158,17 @@ export default function Livro() {
     fetch('https://openlibrary.org/trending/daily.json?limit=5')
       .then(res => res.json())
       .then(data => {
-        const mapped = data.works.map(book => ({
-          key: book.key,
-          title: book.title,
-          author: book.author_name?.[0],
-          coverUrl: `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
-        }))
+        const mapped = data.works
+          .filter(book =>
+            book.cover_i &&
+            book.title
+          )
+          .map(book => ({
+            key: book.key,
+            title: book.title,
+            author: book.author_name?.[0] ?? "Autor desconhecido",
+            coverUrl: `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
+          }))
 
         setBooks(mapped)
       })
@@ -185,33 +193,39 @@ export default function Livro() {
 
   const navigate = useNavigate()
   return (
-    <div>
+    <div className={styles.container}>
       <Header fotoUser={user?.user?.foto_perfil} />
       <div className={styles.main}>
         <div className={styles.upMain}>
           <div className={styles.upMainLeft}>
             <h2>Descubra seu próximo livro</h2>
-            <p>Encontre histórias, conecte-se com leitores e transforme sua leitura em algo ainda mais especial.</p>
+            <p>
+              Encontre histórias, conecte-se com leitores e transforme sua leitura em algo ainda mais especial.
+            </p>
           </div>
-          <div className={styles.upMainRight}>
+
+          <form className={styles.upMainRight} onSubmit={handleSearch}>
             <Input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+
             <select
               value={selectedGenre}
               onChange={(e) => setSelectedGenre(e.target.value)}
-              name="" id="">
+            >
+              <option value="">Todos os gêneros</option>
 
-              <option value=""> Todos os gêneros </option>
               {genres.map((genero) => (
                 <option key={genero.id} value={genero.name}>
                   {genero.label}
                 </option>
               ))}
             </select>
-            <Button text={"Buscar"} onClick={handleSearch} />
-          </div>
+
+            <Button text={"Buscar"}
+              type="submit" />
+          </form>
         </div>
 
 

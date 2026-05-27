@@ -64,7 +64,7 @@ function Feed() {
                 fotoUser={user?.user?.foto_perfil}
             />
             <div className={styles.mainFeed}>
-                <LeftFeed posts={posts} />
+                <LeftFeed posts={posts} idConversa={1}/>
                 <div className={styles.feedPageRight}>
                     <div className={styles.divRight}>
                         <div className={styles.divRightTitulo}>
