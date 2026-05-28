@@ -24,12 +24,14 @@ router.use((request, response, next) => {
 
 // ENDPOINTS - AVALIAÇÃO LIVRO
 
+// http://localhost:8080/v1/conectaBook/avaliacao-livro
 // GET - Retorna uma lista de todos os relacionamentos avaliação_livro do BD
 router.get('/', cors(), async function (request, response) {
     let dados = await controllerAvalLivro.listarAvaliacoesLivros()
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-livro/:id
 // GET - Retorna um relacionamento pelo ID próprio dele
 router.get('/:id', cors(), async function(request, response){
     let id = request.params.id
@@ -37,6 +39,7 @@ router.get('/:id', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-livro/livro/:id
 // GET - Retorna todas as avaliações de um livro específico (Usando ID do Livro)
 router.get('/livro/:idLivro', cors(), async function(request, response){
     let idLivro = request.params.idLivro
@@ -44,6 +47,7 @@ router.get('/livro/:idLivro', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-livro/usuario/:id
 // GET - Retorna todas as avaliações que um usuário específico fez em livros (Usando ID do Usuário)
 router.get('/usuario/:idUsuario', cors(), async function(request, response){
     let idUsuario = request.params.idUsuario
@@ -51,6 +55,7 @@ router.get('/usuario/:idUsuario', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-livro/estatisticas/livro/:id
 // GET - Retorna estatísticas (total e média de estrelas) de um livro específico
 router.get('/estatisticas/livro/:idLivro', cors(), async function(request, response){
     let idLivro = request.params.idLivro
@@ -58,6 +63,7 @@ router.get('/estatisticas/livro/:idLivro', cors(), async function(request, respo
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-livro
 // POST - Vincula uma nova avaliação a um livro
 router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
@@ -67,6 +73,7 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-livro/:id
 // PUT - Atualiza os vínculos de uma avaliação_livro existente
 router.put('/:id', cors(), bodyParserJson, async function(request, response){
     let dadosBody = request.body
@@ -77,6 +84,7 @@ router.put('/:id', cors(), bodyParserJson, async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-livro/:id
 // DELETE - Desvincula/Deleta uma avaliação de um livro do BD
 router.delete('/:id', cors(), async function(request, response){
     let id = request.params.id

@@ -25,6 +25,7 @@ router.use((request, response, next) => {
 
 // ENDPOINTS LIVROS
 
+// URL: GET http://localhost:8080/v1/conectaBook/livros
 // GET - Retorna uma lista de todos os livros
 router.get('/', cors(), async function(request, response){
     // Chamada da função listarLivros da controller
@@ -34,6 +35,7 @@ router.get('/', cors(), async function(request, response){
     response.json(dadosLivros)
 })
 
+// URL: GET http://localhost:8080/v1/conectaBook/livros/:id
 // GET - Retorna um livro filtrando pelo ID
 router.get('/:id', cors(), async function(request, response){
     let idLivro = request.params.id
@@ -45,6 +47,7 @@ router.get('/:id', cors(), async function(request, response){
     response.json(dadosLivro)
 })
 
+// URL: POST http://localhost:8080/v1/conectaBook/livros
 // POST - Insere um novo livro dentro do Banco de Dados
 router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
@@ -57,6 +60,7 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
     response.json(result)
 })
 
+// URL: PUT http://localhost:8080/v1/conectaBook/livros/:id
 // PUT - Atualiza os dados de um livro buscando pelo ID
 router.put('/:id', cors(), bodyParserJson, async function(request, response){
     let dadosBody = request.body
@@ -70,6 +74,7 @@ router.put('/:id', cors(), bodyParserJson, async function(request, response){
     response.json(result)
 })
 
+// URL: DELETE http://localhost:8080/v1/conectaBook/livros/:id
 // DELETE - Deleta o registro de um livro filtrando pelo ID
 router.delete('/:id', cors(), async function(request, response){
     let idLivro = request.params.id

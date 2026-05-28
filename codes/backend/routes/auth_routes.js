@@ -13,6 +13,7 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const cors = require('cors')
 
+// http://localhost:8080/v1/conectaBook/auth/login
 // Rota para realizar o login
 router.post('/login', jsonParser, async function(request, response) {
     // Pegamos o Content-Type e o corpo da requisição
