@@ -1,9 +1,9 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pela realização das rotas de autenticação
  * Projeto: ConectaBook
- * Data: 07/05/2026
- * Autor: Alex Henrique Da Cruz Gomes
- * Versão: 1.0
+ * Data: 27/05/2026
+ * Autor: Alex Gomes
+ * Versão: 1.2
  *******************************************************************************************/
 
 const express = require('express')
@@ -11,6 +11,7 @@ const router = express.Router()
 const authController = require('../controller/auth/auth_controller.js')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
+const cors = require('cors')
 
 // Rota para realizar o login
 router.post('/login', jsonParser, async function(request, response) {
@@ -33,21 +34,31 @@ router.post('/login', jsonParser, async function(request, response) {
     }
 })
 
+// URL: POST http://localhost:8080/v1/conectaBook/auth/recuperar-senha
+router.post('/recuperar-senha', cors(), jsonParser, async function(request, response) {
+    let dadosBody = request.body
+    let contentType = request.headers['content-type']
+
+    let dados = await authController.solicitarRecuperacaoSenha(dadosBody, contentType)
+    response.status(dados.status_code).json(dados)
+})
+
+// URL: POST http://localhost:8080/v1/conectaBook/auth/validar-codigo
+router.post('/validar-codigo', cors(), jsonParser, async function(request, response) {
+    let dadosBody = request.body
+    let contentType = request.headers['content-type']
+
+    let dados = await authController.validarCodigoRecuperacao(dadosBody, contentType)
+    response.status(dados.status_code).json(dados)
+})
+
+// URL: POST http://localhost:8080/v1/conectaBook/auth/redefinir-senha
+router.post('/redefinir-senha', cors(), jsonParser, async function(request, response) {
+    let dadosBody = request.body
+    let contentType = request.headers['content-type']
+
+    let dados = await authController.redefinirSenha(dadosBody, contentType)
+    response.status(dados.status_code).json(dados)
+})
+
 module.exports = router;
-
-
-
-
-/*
-const jwtService = require('../../jwt/jwt_service.js'); // Importe seu serviço de JWT
-
-// Rota que exige estar logado (ex: ver perfil)
-router.get('/perfil', jwtService.verificarToken, async function(request, response) {
-    // Se chegou aqui, o 'verificarToken' já validou o usuário!
-    // O ID do usuário logado está em: request.user.id
-    response.status(200).json({
-        message: "Acesso autorizado!",
-        usuario_logado: request.user
-    });
-});
-*/
