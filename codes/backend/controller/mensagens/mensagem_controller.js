@@ -75,27 +75,43 @@ const listarMensagensPorClube = async function (idClube) {
 }
 
 // GET - Listar respostas (threads) de um comentário/post pai
-const listarRespostasDeMensagem = async function (idMensagemPai) {
-    if (idMensagemPai == '' || idMensagemPai == undefined || isNaN(idMensagemPai)) {
-        return messages.ERROR_REQUIRED_FIELDS;
+const listarRespostasDeMensagem = async function(idMensagemPai) {
+    // 1. Validação do ID
+    if (idMensagemPai == undefined || idMensagemPai == '' || isNaN(idMensagemPai)) {
+        return {
+            status_code: 400,
+            message: "O ID da mensagem pai enviado é inválido ou não foi fornecido."
+        };
     }
 
     try {
-        let result = await mensagemDAO.getRepliesByMessageId(idMensagemPai);
+        // 2. Executa a busca no Banco de Dados
+        let dadosRespostas = await mensagemDAO.getRepliesByMessageId(idMensagemPai); // Verifique se o nome do seu DAO/função está correto aqui
 
-        if (result) {
-            let responseData = Object.assign({}, messages.HEADER);
-            responseData.status = messages.SUCCESS_REQUEST.status;
-            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-            responseData.response = result;
-            return responseData;
+        // 3. Validação segura: se for um array válido e tiver itens, retorna os itens.
+        // Se vier false, null, undefined ou array vazio, retorna o array vazio com status 200.
+        if (dadosRespostas && Array.isArray(dadosRespostas) && dadosRespostas.length > 0) {
+            return {
+                status_code: 200,
+                respostas: dadosRespostas
+            };
         } else {
-            return messages.ERROR_NOT_FOUND;
+            return {
+                status_code: 200,
+                respostas: [] // Retorna vazio sem estourar 404 ou 500 no front
+            };
         }
+
     } catch (error) {
-        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+        // Exibe no terminal do VS Code o erro exato que fez o código travar
+        console.log("Erro na Controller de Mensagens:", error);
+        
+        return {
+            status_code: 500,
+            message: "Erro interno no servidor ao buscar as respostas."
+        };
     }
-}
+};
 
 // GET - Listar apenas os posts principais de um clube específico (Feed Limpo do Clube)
 const listarMensagensPrincipaisPorClube = async function (idClube) {
