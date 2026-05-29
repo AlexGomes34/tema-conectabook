@@ -15,6 +15,94 @@ export default function Postagem({ post }) {
     const [comentarios, setComentarios] = useState([])
     const [comentarioRespondendo, setComentarioRespondendo] = useState(null)
     const [textoResposta, setTextoResposta] = useState("")
+    const [respostaRespondendo, setRespostaRespondendo] = useState(null)
+    const [textoSubResposta, setTextoSubResposta] = useState("")
+
+    async function responderResposta(idRespostaPai, idComentarioPai) {
+
+        if (!textoSubResposta.trim()) return
+
+        try {
+
+            const user = JSON.parse(localStorage.getItem("user"))
+
+            const body = {
+                comentario: textoSubResposta,
+                id_usuario: user.user.id,
+                id_conversa: 2,
+                id_mensagem_pai: idRespostaPai
+            }
+
+            const response = await fetch(
+                "http://localhost:8080/v1/conectaBook/mensagem",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }
+            )
+
+            const data = await response.json()
+
+            if (data.response) {
+
+                setComentarios((prev) =>
+                    prev.map((comentario) => {
+
+                        if (comentario.id_mensagem === idComentarioPai) {
+
+                            return {
+
+                                ...comentario,
+
+                                respostas: comentario.respostas.map((resposta) => {
+
+                                    if (resposta.id_mensagem === idRespostaPai) {
+
+                                        return {
+
+                                            ...resposta,
+
+                                            respostas: [
+                                                ...(resposta.respostas || []),
+
+                                                {
+                                                    ...data.response,
+                                                    nome_usuario: user.user.nome,
+                                                    foto_perfil: user.user.foto_perfil
+                                                }
+                                            ]
+                                        }
+
+                                    }
+
+                                    return resposta
+
+                                })
+
+                            }
+
+                        }
+
+                        return comentario
+
+                    })
+                )
+
+            }
+
+            setTextoSubResposta("")
+            setRespostaRespondendo(null)
+
+        } catch (error) {
+
+            console.log(error)
+
+        }
+
+    }
 
     async function responderComentario(idComentarioPai) {
 
@@ -233,100 +321,236 @@ export default function Postagem({ post }) {
                 </div>
 
                 {
-                    comentarios.map((item) => (
-                        <div key={item.id_mensagem}>
+                    abrirComentario && (
 
-                            <div className="comentario">
+                        <div className="area-comentarios">
 
-                                <img
-                                    src={item.foto_perfil || userDefault}
-                                    alt=""
+                            <div className="criar-comentario">
+
+                                <Input
+                                    type="text"
+                                    placeholder="Comente algo..."
+                                    value={comentario}
+                                    onChange={(e) => setComentario(e.target.value)}
+                                    onKeyDown={(e) => {
+
+                                        if (e.key === "Enter") {
+                                            criarComentario()
+                                        }
+
+                                    }}
                                 />
 
-                                <div>
-
-                                    <h3>{item.nome_usuario}</h3>
-
-                                    <p>{item.comentario}</p>
-
-                                    <button
-                                        onClick={() => {
-
-                                            if (comentarioRespondendo === item.id_mensagem) {
-                                                setComentarioRespondendo(null)
-                                            } else {
-                                                setComentarioRespondendo(item.id_mensagem)
-                                            }
-
-                                        }}
-                                    >
-                                        Responder
-                                    </button>
-
-                                </div>
+                                <button onClick={criarComentario}>
+                                    Comentar
+                                </button>
 
                             </div>
 
                             {
-                                comentarioRespondendo === item.id_mensagem && (
-                                    <div style={{ marginLeft: "40px" }}>
+                                comentarios.map((item) => (
+                                    <div key={item.id_mensagem}>
 
-                                        <Input
-                                            type="text"
-                                            placeholder="Responder comentário..."
-                                            value={textoResposta}
-                                            onChange={(e) =>
-                                                setTextoResposta(e.target.value)
-                                            }
-                                            onKeyDown={(e) => {
-                                                if (e.key === "Enter") {
-                                                    responderComentario(item.id_mensagem)
-                                                }
-                                            }}
-                                        />
-
-                                        <button
-                                            onClick={() =>
-                                                responderComentario(item.id_mensagem)
-                                            }
-                                        >
-                                            Responder
-                                        </button>
-
-                                    </div>
-                                )
-                            }
-
-                            <div style={{ marginLeft: "40px" }}>
-
-                                {
-                                    item.respostas?.map((resposta) => (
-                                        <div
-                                            key={resposta.id_mensagem}
-                                            className="comentario"
-                                        >
+                                        <div className="comentario">
 
                                             <img
-                                                src={
-                                                    resposta.foto_perfil ||
-                                                    userDefault
-                                                }
+                                                src={item.foto_perfil || userDefault}
                                                 alt=""
                                             />
 
                                             <div>
-                                                <h3>{resposta.nome_usuario}</h3>
-                                                <p>{resposta.comentario}</p>
+
+                                                <h3>{item.nome_usuario}</h3>
+
+                                                <p>{item.comentario}</p>
+
+                                                <button
+                                                    onClick={() => {
+
+                                                        if (comentarioRespondendo === item.id_mensagem) {
+                                                            setComentarioRespondendo(null)
+                                                        } else {
+                                                            setComentarioRespondendo(item.id_mensagem)
+                                                        }
+
+                                                    }}
+                                                >
+                                                    Responder
+                                                </button>
+
                                             </div>
 
                                         </div>
-                                    ))
-                                }
 
-                            </div>
+                                        {
+                                            comentarioRespondendo === item.id_mensagem && (
+                                                <div style={{ marginLeft: "40px" }}>
+
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Responder comentário..."
+                                                        value={textoResposta}
+                                                        onChange={(e) =>
+                                                            setTextoResposta(e.target.value)
+                                                        }
+                                                        onKeyDown={(e) => {
+
+                                                            if (e.key === "Enter") {
+                                                                responderComentario(item.id_mensagem)
+                                                            }
+
+                                                        }}
+                                                    />
+
+                                                    <button
+                                                        onClick={() =>
+                                                            responderComentario(item.id_mensagem)
+                                                        }
+                                                    >
+                                                        Responder
+                                                    </button>
+
+                                                </div>
+                                            )
+                                        }
+
+                                        <div style={{ marginLeft: "40px" }}>
+
+                                            {
+                                                item.respostas?.map((resposta) => (
+
+                                                    <div
+                                                        key={resposta.id_mensagem}
+                                                        className="comentario"
+                                                    >
+
+                                                        <img
+                                                            src={
+                                                                resposta.foto_perfil ||
+                                                                userDefault
+                                                            }
+                                                            alt=""
+                                                        />
+
+                                                        <div>
+
+                                                            <h3>{resposta.nome_usuario}</h3>
+
+                                                            <p>{resposta.comentario}</p>
+
+                                                            <div className="reacoes">
+
+                                                                <button
+                                                                    onClick={() => {
+
+                                                                        if (respostaRespondendo === resposta.id_mensagem) {
+
+                                                                            setRespostaRespondendo(null)
+
+                                                                        } else {
+
+                                                                            setRespostaRespondendo(resposta.id_mensagem)
+
+                                                                        }
+
+                                                                    }}
+                                                                >
+                                                                    Responder
+                                                                </button>
+
+                                                            </div>
+
+                                                            {
+                                                                respostaRespondendo === resposta.id_mensagem && (
+
+                                                                    <div>
+
+                                                                        <Input
+                                                                            type="text"
+                                                                            placeholder="Responder resposta..."
+                                                                            value={textoSubResposta}
+                                                                            onChange={(e) =>
+                                                                                setTextoSubResposta(e.target.value)
+                                                                            }
+                                                                            onKeyDown={(e) => {
+
+                                                                                if (e.key === "Enter") {
+
+                                                                                    responderResposta(
+                                                                                        resposta.id_mensagem,
+                                                                                        item.id_mensagem
+                                                                                    )
+
+                                                                                }
+
+                                                                            }}
+                                                                        />
+
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                responderResposta(
+                                                                                    resposta.id_mensagem,
+                                                                                    item.id_mensagem
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            Responder
+                                                                        </button>
+
+                                                                    </div>
+
+                                                                )
+                                                            }
+
+                                                            <div style={{ marginLeft: "40px" }}>
+
+                                                                {
+                                                                    resposta.respostas?.map((subResposta) => (
+
+                                                                        <div
+                                                                            key={subResposta.id_mensagem}
+                                                                            className="comentario"
+                                                                        >
+
+                                                                            <img
+                                                                                src={
+                                                                                    subResposta.foto_perfil ||
+                                                                                    userDefault
+                                                                                }
+                                                                                alt=""
+                                                                            />
+
+                                                                            <div>
+
+                                                                                <h3>{subResposta.nome_usuario}</h3>
+
+                                                                                <p>{subResposta.comentario}</p>
+
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    ))
+                                                                }
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                ))
+                                            }
+
+                                        </div>
+
+                                    </div>
+                                ))
+                            }
 
                         </div>
-                    ))
+
+                    )
                 }
 
             </div>
