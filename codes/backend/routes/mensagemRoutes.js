@@ -7,10 +7,12 @@
  *******************************************************************************************/
 
 const express = require('express');
+const cors = require('cors')
 const router = express.Router();
 const bodyParser = require('body-parser');
 
 const mensagemController = require('../controller/mensagens/mensagem_controller.js');
+const curtidasController = require('../controller/curtida/curtida_controller.js')
 const jsonParser = bodyParser.json();
 
 // O prefixo base no app.js já é: /v1/conectaBook/mensagem
@@ -62,6 +64,17 @@ router.get('/:id', async function(request, response) {
 router.get('/:id/respostas', async function(request, response) {
     let idMensagemPai = request.params.id;
     let dados = await mensagemController.listarRespostasDeMensagem(idMensagemPai);
+    response.status(dados.status_code).json(dados);
+});
+
+// URL: GET http://localhost:8080/v1/conectaBook/mensagem/:id/curtidas
+// GET - Retorna todas as curtidas de um post específico pelo ID da mensagem
+router.get('/:id/curtidas', cors(), async function(request, response) {
+    let idMensagem = request.params.id;
+
+    // Chama a função da controller que acabámos de criar
+    let dados = await curtidasController.listarCurtidasPorMensagem(idMensagem);
+
     response.status(dados.status_code).json(dados);
 });
 
