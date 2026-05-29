@@ -86,19 +86,12 @@ const inserirCurtida = async function (curtida, contentType) {
             return messages.ERROR_CONTENT_TYPE
         }
 
-        // Validação: id_clube é opcional (pode ser null se for do feed principal geral)
-        // id_usuario também é opcional
-        if (curtida.id_clube !== undefined && curtida.id_clube !== null && curtida.id_clube !== '') {
-            if (isNaN(curtida.id_clube)) return messages.ERROR_REQUIRED_FIELDS;
-        }
-
         let resultId = await curtidaDAO.setInsertLike(curtida)
 
         if (resultId) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_CREATED_ITEM.status;
             responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
-            // Injeta o ID criado na resposta para que o Front ou outra rota usem imediatamente
             responseData.response = {
                 message: messages.SUCCESS_CREATED_ITEM.message,
                 insert_id: resultId

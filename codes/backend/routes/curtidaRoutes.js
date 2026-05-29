@@ -27,10 +27,46 @@ router.use((request, response, next) => {
 
 // GET - Retorna uma lista de curtidas do BD
 router.get('/', cors(), async function(request, response){
-    // Chamada da função listarCafeterias da controller
+    // Chamada da função listarCurtidas da controller
     let dadosCurtidas = await controllerCurtida.listarTodasCurtidas()
 
     console.log(dadosCurtidas)
     response.status(dadosCurtidas.status_code)
     response.json(dadosCurtidas)
 })
+
+// GET - Retorna uma curtida do BD filtrando pelo o ID
+router.get('/:id', cors(), async function (request, response) {
+    //chamada da funão listarCurtidas da controller
+    let dadosCurtidas = await controllerCurtida.buscarCurtidaPorId
+
+    response.status(dadosCurtidas.status_code)
+    response.json(dadosCurtidas)
+    
+})
+
+// POST - Insere uma nova curtida no BD
+router.post('/', cors(), bodyParserJson, async function(request, response) {
+    let dadosBody = request.body
+    let contentType = request.headers['content-type']
+
+    let dadosCurtidas = await controllerCurtida.inserirCurtida(dadosBody, contentType)
+
+    response.status(dadosCurtidas.status_code)
+    response.json(dadosCurtidas)
+    
+})
+
+
+//DELETE - Deleta uma curtida do BD
+router.delete('/:id', cors(), async function(request, response){
+    let idCurtida = request.params.id
+
+    let dadosCurtidas = await controllerCurtida.excluirCurtida(idCurtida)
+
+    response.status(dadosCurtidas.status_code)
+    response.json(dadosCurtidas)
+
+})
+
+module.exports = router
