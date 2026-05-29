@@ -12,7 +12,7 @@ const db = require('../../database/connection')
 //RETORNA TODAS AS CURTIDAS DO BANCO
 const getSelectAllLikes = async function () {
     try {
-        let sql = `select * from tbl_curtida by id_curtida asc`
+        let sql = `select * from tbl_curtida order by id_curtida asc`
 
         let result = await db.raw(sql)
 
@@ -73,6 +73,36 @@ const getSelectLikeByIdUser = async function (idUsuario) {
          return false;
      }
  }
+
+// RETORNA CURTIDAS PELO ID DA MENSAGEM (POST)
+const getSelectLikeByIdMensagem = async function (idMensagem) {
+    try {
+        let sql = `
+            select
+                tbl_curtida.id_curtida,
+                tbl_curtida.id_usuario,
+                tbl_curtida.id_mensagem,
+                tbl_usuario.nome as nome_usuario
+            from tbl_curtida
+                inner join tbl_usuario
+                    on tbl_usuario.id_usuario = tbl_curtida.id_usuario
+            where tbl_curtida.id_mensagem = ?
+        `
+        let result = await db.raw(sql, [idMensagem]);
+
+        // Dependendo de como o Knex/banco está configurado no seu projeto, 
+        // o resultado pode vir direto em 'result' ou em 'result[0]'. 
+        // Mantive o padrão do seu código anterior:
+        if (result && result[0].length > 0)
+            return result[0];
+        else
+            return false;
+
+    } catch (error) {
+        console.log("Erro ao buscar curtidas do post", error);
+        return false;
+    }
+}
  
 
 //INSERE UMA CURTIDA

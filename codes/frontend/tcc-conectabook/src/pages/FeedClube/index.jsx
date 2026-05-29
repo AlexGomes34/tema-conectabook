@@ -99,8 +99,17 @@ export default function FeedClube() {
                     <Button onClick={() => navigate("/editarClube")} text="Editar" />
                 </div>
                 <div className="main-feedClube">
-                    
-                    <LeftFeed posts={POSTS_DATA}/>
+
+                    <div>
+                        <div className="titulo-left-main">
+                            <h2>Amantes de Percy Jackson</h2>
+                            <p>320 membros</p>
+                        </div>
+
+                        <LeftFeed posts={POSTS_DATA} />
+                    </div>
+
+
 
                     <div className="right-main">
                         <div className="sobre">

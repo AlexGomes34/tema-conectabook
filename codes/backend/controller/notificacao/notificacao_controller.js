@@ -52,6 +52,28 @@ const listarNotificacaoId = async function (id) {
     }
 }
 
+const listarNotificacoesIdUsuario = async function (id) {
+    if (id == '' || id == undefined || isNaN(id)) {
+        return messages.ERROR_REQUIRED_FIELDS;
+    }
+
+    try {
+        let result = await notificacaoDAO.getSelectNotificationsByIdUser(id)
+
+        if (result) {
+            let responseData = Object.assign({}, messages.HEADER);
+            responseData.status = messages.SUCCESS_REQUEST.status;
+            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+            responseData.response = result[0];
+            return responseData;
+        } else {
+            return messages.ERROR_NOT_FOUND;
+        }
+    } catch (error) {
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+    }
+}
+    
 
 
 // POST - Criar notificacao
@@ -161,6 +183,7 @@ const excluirNotificacao = async function (id) {
 module.exports = {
     listarNotificacoes,
     listarNotificacaoId,
+    listarNotificacoesIdUsuario,
     criarNotificacao,
     atualizarNotificacao,
     excluirNotificacao

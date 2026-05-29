@@ -1,5 +1,4 @@
 .app {
-    max-width: 900px;
     margin: 0 auto;
     padding: 1rem;
     font-family: sans-serif;
@@ -19,6 +18,15 @@
     border-radius: 6px;
 }
 
+.cafeteriaDiv{
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 2rem;
+}
+
+.tagCafeteria{
+    color: black;
+}
 
 .status {
     margin: 8px 0;

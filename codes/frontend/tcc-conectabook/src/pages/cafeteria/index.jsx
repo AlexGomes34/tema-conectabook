@@ -31,14 +31,16 @@ export default function App() {
                 {!loading && cafes.length > 0 && (
                     <p className="status">{cafes.length} cafeterias encontradas</p>
                 )}
+                <div className='cafeteriaDiv'>
+                    <Map coords={coords} cafes={cafes} />
 
-                <Map coords={coords} cafes={cafes} />
-
-                <div className="lista">
-                    {cafes.map(cafe => (
-                        <CafeCard key={cafe.id} cafe={cafe} />
-                    ))}
+                    <div className="lista">
+                        {cafes.map(cafe => (
+                            <CafeCard key={cafe.id} cafe={cafe} />
+                        ))}
+                    </div>
                 </div>
+
 
             </div>
             <Footer />

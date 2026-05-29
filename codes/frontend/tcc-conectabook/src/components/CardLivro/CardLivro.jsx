@@ -14,7 +14,13 @@ export default function CardLivro({
 
     return (
         <div className={styles.livro}>
-            <img src={imagem} alt={titulo} />
+            <img
+                src={imagem}
+                alt={titulo}
+                onError={(e) => {
+                    e.target.src = "/sem-capa.png"
+                }}
+            />
 
             <h4>{titulo}</h4>
 

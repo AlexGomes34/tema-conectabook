@@ -59,6 +59,7 @@ app.use('/v1/conectaBook/conversa', conversaRoutes);
 
 const curtidasRoutes = require('./routes/curtidaRoutes.js')
 app.use('/v1/conectaBook/curtida', curtidasRoutes)
+
 const avaliacaoRoutes = require('./routes/avaliacaoRoutes.js')
 app.use('/v1/conectaBook/avaliacao', avaliacaoRoutes);
 
@@ -67,6 +68,9 @@ app.use('/v1/conectaBook/avaliacao-livro', avaliacaoLivroRoutes);
 
 const avaliacaoCafeteriaRoutes = require('./routes/avaliacao_cafeteriaRoutes.js')
 app.use('/v1/conectaBook/avaliacao-cafeteria', avaliacaoCafeteriaRoutes);
+
+const notificacaoRoutes = require('./routes/notificacaoRoutes.js')
+app.use('/v1/conectaBook/notificacao', notificacaoRoutes)
 
 const PORT = process.env.PORT || 8080
 

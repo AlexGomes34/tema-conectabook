@@ -10,12 +10,19 @@
     width: 20vw;
 }
 
+.container{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .main{
     padding: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100vw;
+    flex-grow: 1;
 }
 
 .divMain{
@@ -28,10 +35,11 @@
 
 .listLivros{
     display: flex;
-    justify-content: space-around;
-    gap: 8px;
+    justify-content: center;
+    gap: 10rem;
     padding-bottom: 1rem;
     margin: 1rem 0px;
+    flex-wrap: wrap;
 }
 
 .button{
