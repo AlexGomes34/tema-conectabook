@@ -39,6 +39,9 @@ app.use('/v1/conectaBook/auth', authRoutes)
 const clubeRoutes = require('./routes/clubeRoutes.js')
 app.use('/v1/conectaBook/clubes', clubeRoutes)
 
+const cafeteriaRoutes = require('./routes/cafeteriaRoutes.js')
+app.use('/v1/conectaBook/cafeterias', cafeteriaRoutes)
+
 const membrosRoutes = require('./routes/membrosRoutes.js')
 app.use('/v1/conectaBook/membros', membrosRoutes)
 

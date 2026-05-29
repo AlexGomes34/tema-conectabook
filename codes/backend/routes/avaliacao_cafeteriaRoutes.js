@@ -24,12 +24,14 @@ router.use((request, response, next) => {
 
 // ENDPOINTS - AVALIAÇÃO CAFETERIA
 
-// GET - Retorna uma lista de todos os relacionamentos avaliação_cafeteria do BD
+// http://localhost:8080/v1/conectaBook/avaliacao-cafeteria
+// GET - Retorna uma lista de todos os relacionamentos avaliação_cafeteria do BD 
 router.get('/', cors(), async function (request, response) {
     let dados = await controllerAvalCafeteria.listarAvaliacoesCafeterias()
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-cafeteria/:id
 // GET - Retorna um relacionamento pelo ID próprio dele
 router.get('/:id', cors(), async function(request, response){
     let id = request.params.id
@@ -37,6 +39,7 @@ router.get('/:id', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-cafeteria/cafeteria/:id
 // GET - Retorna todas as avaliações de uma cafeteria específica (Usando ID da Cafeteria)
 router.get('/cafeteria/:idCafeteria', cors(), async function(request, response){
     let idCafeteria = request.params.idCafeteria
@@ -44,6 +47,7 @@ router.get('/cafeteria/:idCafeteria', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-livro/usuario/:id
 // GET - Retorna todas as avaliações que um usuário específico fez em cafeterias (Usando ID do Usuário)
 router.get('/usuario/:idUsuario', cors(), async function(request, response){
     let idUsuario = request.params.idUsuario
@@ -51,6 +55,7 @@ router.get('/usuario/:idUsuario', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-cafeteria/estatisticas/cafeteria/:id
 // GET - Retorna estatísticas (total e média de estrelas) de uma cafeteria específica
 router.get('/estatisticas/cafeteria/:idCafeteria', cors(), async function(request, response){
     let idCafeteria = request.params.idCafeteria
@@ -58,6 +63,7 @@ router.get('/estatisticas/cafeteria/:idCafeteria', cors(), async function(reques
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-cafeteria
 // POST - Vincula uma nova avaliação a uma cafeteria
 router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
@@ -67,6 +73,7 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-cafeteria/1
 // PUT - Atualiza os vínculos de uma avaliação_cafeteria existente
 router.put('/:id', cors(), bodyParserJson, async function(request, response){
     let dadosBody = request.body
@@ -77,6 +84,7 @@ router.put('/:id', cors(), bodyParserJson, async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao-cafeteria/:id
 // DELETE - Desvincula/Deleta uma avaliação de uma cafeteria do BD
 router.delete('/:id', cors(), async function(request, response){
     let id = request.params.id

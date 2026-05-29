@@ -24,6 +24,7 @@ router.use((request, response, next) => {
 
 // ENDPOINTS GENEROS
 
+// URL: GET http://localhost:8080/v1/conectaBook/generos
 // GET - Retorna uma lista de generos do BD
 router.get('/', cors(), async function(request, response){
     // Chamada da função listarGeneros da controller
@@ -34,6 +35,7 @@ router.get('/', cors(), async function(request, response){
     response.json(dadosGeneros)
 })
 
+// URL: GET http://localhost:8080/v1/conectaBook/generos/:id
 // GET - Retorna um generos do BD filtrando pelo ID
 router.get('/:id', cors(), async function(request, response){
     let idGenero = request.params.id
@@ -45,6 +47,7 @@ router.get('/:id', cors(), async function(request, response){
     response.json(dadosGeneros)
 })
 
+// URL: POST http://localhost:8080/v1/conectaBook/generos
 // POST - Insere um novo genero dentro do BD
 router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
@@ -57,6 +60,7 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
     response.json(dadosGeneros)
 })
 
+// URL: PUT http://localhost:8080/v1/conectaBook/generos/:id
 // PUT - Atualiza um genero dentro do BD
 router.put('/:id', cors(), bodyParserJson, async function(request, response){
     let dadosBody = request.body
@@ -70,6 +74,7 @@ router.put('/:id', cors(), bodyParserJson, async function(request, response){
     response.json(dadosGeneros)
 })
 
+// URL: DELETE http://localhost:8080/v1/conectaBook/generos/:id
 // DELETE - Deleta um registro de um genero do BD
 router.delete('/:id', cors(), async function(request, response){
     let idGenero = request.params.id

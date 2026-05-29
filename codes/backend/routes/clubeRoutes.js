@@ -36,6 +36,7 @@ router.use((request, response, next) => {
     next()
 })
 
+// URL: GET http://localhost:8080/v1/conectaBook/clubes
 //GET - Retorna uma lista de clubes do BD
 router.get('/', cors(), async function (request, response) {
     // Chamada da função listarCLubes da controller
@@ -46,8 +47,7 @@ router.get('/', cors(), async function (request, response) {
 
 })
 
-
-
+// URL: GET http://localhost:8080/v1/conectaBook/clubes/:id
 // GET - Retorna um clube do BD filtrando pelo id
 router.get('/:id', cors(), async function (request, response) {
     let idClube = request.params.id
@@ -59,7 +59,8 @@ router.get('/:id', cors(), async function (request, response) {
     response.json(dadosClube)
 })
 
-// Exemplo no seu arquivo de rotas
+// URL: GET http://localhost:8080/v1/conectaBook/clubes/:id
+// Exemplo no seu arquivo de rotas (Atenção: rota idêntica à de cima, verifique se o caminho correto não seria /genero/:id)
 router.get('/:id', cors(), async function (request, response) {
     // Pega o ID da URL
     let idGenero = request.params.id;
@@ -71,6 +72,7 @@ router.get('/:id', cors(), async function (request, response) {
     response.json(result);
 });
 
+// URL: POST http://localhost:8080/v1/conectaBook/clubes
 // POST - Insere um novo clube dentro do BD
 router.post('/', cors(), upload.single('foto'), async function (request, response) {
     let dadosBody = request.body
@@ -89,7 +91,7 @@ router.post('/', cors(), upload.single('foto'), async function (request, respons
 
 })
 
-
+// URL: PUT http://localhost:8080/v1/conectaBook/clubes/:id
 // PUT - Atualiza um clube dentro do BD
 router.put('/:id', cors(), bodyParserJson, async function (request, response) {
     let dadosBody = request.body
@@ -103,7 +105,7 @@ router.put('/:id', cors(), bodyParserJson, async function (request, response) {
     response.json(dadosClube)
 })
 
-
+// URL: DELETE http://localhost:8080/v1/conectaBook/clubes/:id
 // DELETE - Deleta um registro de um clube no BD
 router.delete('/:id', cors(), async function (request, response) {
     let idClube = request.params.id

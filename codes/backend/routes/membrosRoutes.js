@@ -25,12 +25,14 @@ router.use((request, response, next) => {
 
 // --- ENDPOINTS DE CONSULTA (GET) ---
 
+// URL: GET http://localhost:8080/v1/conectaBook/membros
 // GET - Lista todos os vínculos de membros do banco
 router.get('/', cors(), async function(request, response){
     let dados = await controllerMembros.listarMembros()
     response.status(dados.status_code).json(dados)
 })
 
+// URL: GET http://localhost:8080/v1/conectaBook/membros/:id
 // GET - Retorna os detalhes de um vínculo específico pelo ID da tabela tbl_membros
 router.get('/:id', cors(), async function(request, response){
     let id = request.params.id
@@ -38,6 +40,7 @@ router.get('/:id', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// URL: GET http://localhost:8080/v1/conectaBook/membros/clube/:id
 // GET - Retorna todos os usuários que pertencem a um clube específico
 router.get('/clube/:id', cors(), async function(request, response){
     let idClube = request.params.id
@@ -45,6 +48,7 @@ router.get('/clube/:id', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// URL: GET http://localhost:8080/v1/conectaBook/membros/usuario/:id
 // GET - Retorna todos os clubes que um usuário participa
 router.get('/usuario/:id', cors(), async function(request, response){
     let idUsuario = request.params.id
@@ -52,6 +56,7 @@ router.get('/usuario/:id', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// URL: GET http://localhost:8080/v1/conectaBook/membros/usuario/:id/admin
 // GET - Retorna os clubes onde o usuário é administrador
 router.get('/usuario/:id/admin', cors(), async function(request, response){
     let idUsuario = request.params.id
@@ -61,6 +66,7 @@ router.get('/usuario/:id/admin', cors(), async function(request, response){
 
 // --- ENDPOINTS DE MANIPULAÇÃO (POST, PUT, DELETE) ---
 
+// URL: POST http://localhost:8080/v1/conectaBook/membros
 // POST - Adiciona um usuário a um clube (vínculo de membro)
 router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
@@ -73,6 +79,7 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
     response.status(dados.status_code).json(dados)
 })
 
+// URL: PUT http://localhost:8080/v1/conectaBook/membros/:id
 // PUT - Atualiza o status de um membro (ex: torná-lo administrador)
 router.put('/:id', cors(), bodyParserJson, async function(request, response){
     let idMembro = request.params.id
@@ -85,6 +92,7 @@ router.put('/:id', cors(), bodyParserJson, async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// URL: DELETE http://localhost:8080/v1/conectaBook/membros/:id
 // DELETE - Remove um usuário de um clube pelo ID do vínculo
 router.delete('/:id', cors(), async function(request, response){
     let idMembro = request.params.id
@@ -92,6 +100,7 @@ router.delete('/:id', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
+// URL: DELETE http://localhost:8080/v1/conectaBook/membros/clube/:id
 // DELETE - Remove todos os membros de um clube (Útil ao excluir um clube)
 router.delete('/clube/:id', cors(), async function(request, response){
     let idClube = request.params.id
@@ -99,4 +108,4 @@ router.delete('/clube/:id', cors(), async function(request, response){
     response.status(dados.status_code).json(dados)
 })
 
-module.exports = router
+module.exports = router;

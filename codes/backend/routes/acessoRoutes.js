@@ -24,6 +24,7 @@ router.use((request, response, next) => {
 
 // ENDPOINTS ACESSOS
 
+// http://localhost:8080/v1/conectaBook/livro-acesso
 // GET - Retorna o histórico de acessos geral do sistema
 router.get('/', cors(), async function(request, response){
     let dados = await controllerAcesso.listarAcessos()
@@ -31,6 +32,7 @@ router.get('/', cors(), async function(request, response){
     response.json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/livro-acesso/:id
 // GET - Retorna os dados de um acesso único pelo ID
 router.get('/:id', cors(), async function(request, response){
     let idAcesso = request.params.id
@@ -39,6 +41,7 @@ router.get('/:id', cors(), async function(request, response){
     response.json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/livro-acesso/usuario/:id
 // GET - Retorna todo o histórico de um usuário específico (Passando id_usuario na rota)
 router.get('/usuario/:id', cors(), async function(request, response){
     let idUsuario = request.params.id
@@ -47,6 +50,7 @@ router.get('/usuario/:id', cors(), async function(request, response){
     response.json(dados)
 })
 
+// http://localhost:8080/v1/conectaBook/livro-acesso
 // POST - Registra um novo acesso quando o usuário entra na tela do livro
 router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
@@ -57,6 +61,7 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
     response.json(result)
 })
 
+// http://localhost:8080/v1/conectaBook/livro-acesso/:id
 // DELETE - Remove um registro do histórico pelo ID único da tabela intermediária
 router.delete('/:id', cors(), async function(request, response){
     let idAcesso = request.params.id
