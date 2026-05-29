@@ -65,6 +65,7 @@ app.use('/v1/conectaBook/conversa', conversaRoutes);
 
 const curtidasRoutes = require('./routes/curtidaRoutes.js')
 app.use('/v1/conectaBook/curtida', curtidasRoutes)
+
 const avaliacaoRoutes = require('./routes/avaliacaoRoutes.js')
 app.use('/v1/conectaBook/avaliacao', avaliacaoRoutes);
 
