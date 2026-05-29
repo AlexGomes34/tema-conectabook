@@ -107,3 +107,5 @@ router.delete('/clube/:id', cors(), async function(request, response){
     let dados = await controllerMembros.excluirMembrosPorIdClube(idClube)
     response.status(dados.status_code).json(dados)
 })
+
+module.exports = router;
