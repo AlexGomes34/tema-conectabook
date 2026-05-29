@@ -1,5 +1,5 @@
 /*******************************************************************************************
- * Objetivo: Arquivo responsável pela realização das rotas de generos_usuarios
+ * Objetivo: Arquivo responsável pela realização das rotas de generos_livros
  * Projeto: ConectaBook
  * Data: 06/05/2026
  * Autor: Alex Henrique Da Cruz Gomes
@@ -13,12 +13,14 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
+// URL: GET http://localhost:8080/v1/conectaBook/genero-livro
 // Listar todos os relacionamentos
 router.get('/', cors(), async function(request, response) {
     let dados = await controllerGeneroLivro.listarTodosGenerosLivros();
     response.status(dados.status_code).json(dados);
 });
 
+// URL: GET http://localhost:8080/v1/conectaBook/genero-livro/:id
 // Rota para buscar um relacionamento específico pelo ID
 router.get('/:id', cors(), async function(request, response) {
     let id = request.params.id;
@@ -28,6 +30,7 @@ router.get('/:id', cors(), async function(request, response) {
     response.json(dados);
 });
 
+// URL: GET http://localhost:8080/v1/conectaBook/genero-livro/livro/:id
 // Listar gêneros de um LIVRO específico
 router.get('/livro/:id', cors(), async function(request, response) {
     let idUsuario = request.params.id;
@@ -35,6 +38,7 @@ router.get('/livro/:id', cors(), async function(request, response) {
     response.status(dados.status_code).json(dados);
 });
 
+// URL: GET http://localhost:8080/v1/conectaBook/genero-livro/genero/:id
 // Listar livros de um GÊNERO específico
 router.get('/genero/:id', cors(), async function(request, response) {
     let idGenero = request.params.id;
@@ -42,6 +46,7 @@ router.get('/genero/:id', cors(), async function(request, response) {
     response.status(dados.status_code).json(dados);
 });
 
+// URL: POST http://localhost:8080/v1/conectaBook/genero-livro
 // Inserir novo RELACIONAMENTO
 router.post('/', cors(), jsonParser, async function(request, response) {
     let contentType = request.headers['content-type'];
@@ -50,7 +55,8 @@ router.post('/', cors(), jsonParser, async function(request, response) {
     response.status(result.status_code).json(result);
 });
 
-//Insere varios RELACIONAMENTOS
+// URL: POST http://localhost:8080/v1/conectaBook/genero-livro/multiplos
+// Insere varios RELACIONAMENTOS
 router.post('/multiplos', cors(), jsonParser, async function(request, response) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
@@ -60,6 +66,7 @@ router.post('/multiplos', cors(), jsonParser, async function(request, response) 
     response.status(result.status_code).json(result);
 });
 
+// URL: PUT http://localhost:8080/v1/conectaBook/genero-livro/:id
 // Rota para atualizar um relacionamento existente
 router.put('/:id', cors(), jsonParser, async function(request, response) {
     let contentType = request.headers['content-type'];
@@ -71,6 +78,7 @@ router.put('/:id', cors(), jsonParser, async function(request, response) {
     response.json(result);
 });
 
+// URL: DELETE http://localhost:8080/v1/conectaBook/genero-livro/:id
 // Deletar um interesse
 router.delete('/:id', cors(), async function(request, response) {
     let id = request.params.id;
@@ -78,6 +86,7 @@ router.delete('/:id', cors(), async function(request, response) {
     response.status(result.status_code).json(result);
 });
 
+// URL: DELETE http://localhost:8080/v1/conectaBook/genero-livro/livros/:id
 // Rota para deletar todos os gêneros de um livro específico
 router.delete('/livros/:id', async function(request, response) {
     let idLivro = request.params.id;

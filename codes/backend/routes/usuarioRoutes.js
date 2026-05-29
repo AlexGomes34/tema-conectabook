@@ -38,6 +38,7 @@ router.use((request, response, next) => {
 
 // ENDPOINTS USUARIOS
 
+// URL: GET http://localhost:8080/v1/conectaBook/usuarios
 // GET - Retorna uma lista de usuarios do BD
 router.get('/', cors(), async function(request, response){
     // Chamada da função listarUsuarios da controller
@@ -47,6 +48,7 @@ router.get('/', cors(), async function(request, response){
     response.json(dadosUsuarios)
 })
 
+// URL: GET http://localhost:8080/v1/conectaBook/usuarios/:id
 // GET - Retorna um usuario do BD filtrando pelo ID
 router.get('/:id', cors(), async function(request, response){
     let idUsuario = request.params.id
@@ -58,6 +60,7 @@ router.get('/:id', cors(), async function(request, response){
     response.json(dadosUsuario)
 })
 
+// URL: POST http://localhost:8080/v1/conectaBook/usuarios
 // POST - Insere um novo usuário dentro do BD
 router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
@@ -70,6 +73,7 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
     response.json(result)
 })
 
+// URL: PUT http://localhost:8080/v1/conectaBook/usuarios/:id
 // PUT - Atualiza um usuário dentro do BD
 router.put('/:id', cors(), upload.single('foto'), async function(request, response){
     let dadosBody = request.body
@@ -85,6 +89,7 @@ router.put('/:id', cors(), upload.single('foto'), async function(request, respon
     response.json(result)
 })
 
+// URL: DELETE http://localhost:8080/v1/conectaBook/usuarios/:id
 // DELETE - Deleta um registro de um usuário do BD
 router.delete('/:id', cors(), async function(request, response){
     let idUsuario = request.params.id
