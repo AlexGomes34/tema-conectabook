@@ -8,6 +8,7 @@
 
 const mensagemDAO = require('../../model/DAO/mensagem.js'); // Ajuste o caminho se necessário
 const messages = require('../modulo/config_messages.js'); 
+const {getIo} = require('../../socket/socketServer.js')
 
 // GET - Listar absolutamente todas as mensagens (Histórico bruto do Banco)
 const listarTodasMensagens = async function () {

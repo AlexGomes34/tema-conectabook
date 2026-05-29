@@ -12,14 +12,20 @@ const bodyParser = require('body-parser')
 
 const app = express()
 
-// Configuração global do CORS - Mais limpo e funcional
+const http = require('http')
+const { setupSocket } = require('./socket/socketHandler')
+
+// Configuração global do CORS 
 
 app.use('/uploads', express.static('uploads'))
+
+setupSocket(server);
 
 app.use(cors())
 
 // Middleware para JSON
 app.use(bodyParser.json()) 
+
 
 const usuarioRoutes = require('./routes/usuarioRoutes.js')
 app.use('/v1/conectaBook/usuarios', usuarioRoutes)
@@ -70,6 +76,9 @@ app.use('/v1/conectaBook/avaliacao-cafeteria', avaliacaoCafeteriaRoutes);
 
 const notificacaoRoutes = require('./routes/notificacaoRoutes.js')
 app.use('/v1/conectaBook/notificacao', notificacaoRoutes)
+
+const statusLivroRoutes = require('./routes/status_livroRoutes.js')
+app.use('/v1/conectaBook/statusLivro', statusLivroRoutes)
 
 const PORT = process.env.PORT || 8080
 
