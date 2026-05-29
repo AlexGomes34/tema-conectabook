@@ -1,0 +1,17 @@
+.livro{
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.livro img{
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.button{
+    margin-top: .5rem;
+}

@@ -9,6 +9,13 @@
     align-items: flex-start;
 }
 
+.input-clube{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-right:2rem;
+}
+
 /* ===== SIDEBAR ===== */
 
 .left-clube{
@@ -20,7 +27,7 @@
     display: flex;
     flex-direction: column;
     gap: 3rem;
-
+    margin: 1.5rem;
     padding: 2rem;
 
     background-color: #e8f1ff;
@@ -70,6 +77,20 @@
     transform: translateY(-2px);
 
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.clubePage{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.clubePage h3{
+    color: black;
+}
+
+.clubePage p{
+    color: black;
 }
 
 /* ===== IMAGEM ===== */
@@ -159,25 +180,8 @@ select{
     outline: none;
 
     cursor: pointer;
-
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-
-    background-image: url("data:image/svg+xml,%3Csvg fill='gray' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7l5 5 5-5H5z'/%3E%3C/svg%3E");
-
-    background-repeat: no-repeat;
-
-    background-position: right 12px center;
-
-    background-size: 16px;
 }
 
-select:focus{
-    border-color: #6c63ff;
-
-    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
-}
 
 /* ===== CARD DETALHE ===== */
 
@@ -231,8 +235,9 @@ select:focus{
 
 .info-clube{
     display: flex;
-
-    flex-direction: column;
+    width: 800px;
+    justify-content: space-between;
+    align-items: center;
 
     gap: 1rem;
 }
@@ -240,7 +245,8 @@ select:focus{
 /* ===== SOBRE ===== */
 
 .sobre-clube{
-    width: 100%;
+    width: 550px;
+    height: 100%;
 
     max-width: 40rem;
 
@@ -257,10 +263,16 @@ select:focus{
     line-height: 1.6;
 }
 
+.left-sobre{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+}
+
 /* ===== BOTÃO ===== */
 
 .button-sobre{
     display: flex;
-
-    justify-content: flex-end;
+    align-self: flex-end;
 }

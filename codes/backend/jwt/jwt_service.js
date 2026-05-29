@@ -14,6 +14,10 @@ const getToken = (usuario) => {
     return jwt.sign(usuario, process.env.JWT_SECRET, { expiresIn: '24h' })
 }
 
+const getRecoveryToken = (usuario) => {
+    return jwt.sign(usuario, process.env.JWT_SECRET, { expiresIn: '15m'})
+}
+
 // decodifica o conteúdo 
 const getDecodedToken = (token) => {
     return jwt.decode(token)
@@ -53,5 +57,6 @@ const verificarToken = function(request, response, next) {
 module.exports = {
     getToken,
     getDecodedToken,
+    getRecoveryToken,
     verificarToken
 }

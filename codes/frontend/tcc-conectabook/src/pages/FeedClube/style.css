@@ -1,0 +1,193 @@
+.feedClube-container{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #fcfcfd;
+}
+
+.main-container{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-feedClube{
+    flex: 1;
+}
+
+.up-main{
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-main{
+    width: 70vw;
+}
+
+.right-main{
+    width: 30vw;
+    padding: 3rem;
+}
+
+.main-feedClube{
+    flex: 1;
+    display: flex;
+}
+
+.reacoes{
+    display: flex;
+    padding-top: 1rem;
+    gap: 10rem;
+}
+
+.titulo-left-main{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.input-postagem{
+    background: #fcfcfd;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef2f7;
+}
+
+.inputComArquivo{
+    display: flex;
+    justify-content: space-between;
+}
+
+.input-postagem{
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.inputComFoto{
+    display: flex;
+    align-items: center;
+    padding-inline: 1rem;
+}
+
+.inputComFoto input{
+    width: 53vw;
+}
+
+.inputComFoto img{
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.inputComArquivo{
+    padding-left: 4vw;
+    padding-right: 2.5vw;
+}
+
+.postagem img{
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.postagem{
+    display: flex;
+    margin-top: 2rem;
+    background: #fcfcfd;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef2f7;
+    margin-bottom: 1rem;
+}
+
+.postagem-text{
+    width: 100%;
+    height: auto;
+    padding-inline: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.postagem-text span{
+    color: #2d7ff9;
+}
+
+.reacao{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.right-main{
+    padding-top: 1.5rem;
+    margin: 1rem;
+    height:50rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+
+.administradores{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background: #fcfcfd;
+    height: auto;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef2f7;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.adm{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.adm img{
+    height: 35px;
+    width: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.titulo-clube-diverso{
+    display: flex;
+    gap: 1rem;
+}
+
+.clubesMesmoGenero{
+    background: #fcfcfd;
+    height: auto;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef2f7;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.sobre{
+    background: #fcfcfd;
+    height: auto;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef2f7;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
