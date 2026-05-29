@@ -2,7 +2,7 @@
  * Objetivo: Arquivo responsável pelas requisições da API
  * Projeto: ConectaBook
  * Data: 06/05/2026
- * Autor: Alex Henrique Da Cruz Gomes
+ * Autor: Alex Henrique Da Cruz Gomes / Geovanna Silva
  * Versão: 1.2
  *******************************************************************************************/
 
@@ -57,6 +57,8 @@ app.use('/v1/conectaBook/mensagem', mensagemRoutes)
 const conversaRoutes = require('./routes/conversaRoutes.js')
 app.use('/v1/conectaBook/conversa', conversaRoutes);
 
+const curtidasRoutes = require('./routes/curtidaRoutes.js')
+app.use('/v1/conectaBook/curtida', curtidasRoutes)
 const avaliacaoRoutes = require('./routes/avaliacaoRoutes.js')
 app.use('/v1/conectaBook/avaliacao', avaliacaoRoutes);
 
