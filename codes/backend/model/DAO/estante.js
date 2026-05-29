@@ -82,6 +82,42 @@ const getSelectBookcaseByIdUser = async function (idUsuario) {
     }
 }
 
+// RETORNA OS LIVROS DA ESTANTE DE UM USUÁRIO FILTRADO POR UM STATUS ESPECÍFICO
+const getSelectBookcaseByStatus = async function (idUsuario, nomeStatus) {
+    try {
+        let sql = `
+            select
+                tbl_estante.id_estante,
+                tbl_estante.id_usuario,
+                tbl_estante.data_adicao,
+                tbl_livro.id_livro,
+                tbl_livro.isbn,
+                tbl_livro.titulo,
+                tbl_livro.autor,
+                tbl_livro.descricao,
+                tbl_status_livro.nome_status as status_leitura
+            from tbl_estante
+                inner join tbl_livro
+                    on tbl_livro.id_livro = tbl_estante.id_livro
+                inner join tbl_status_livro
+                    on tbl_status_livro.id_status_livro = tbl_estante.id_status_livro
+            where tbl_estante.id_usuario = ? 
+              and tbl_status_livro.nome_status = ?
+        `
+
+        let result = await db.raw(sql, [idUsuario, nomeStatus])
+
+        if (result && result[0].length > 0) {
+            return result[0]
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.error(`Erro ao buscar livros com status ${nomeStatus}:`, error)
+        return false
+    }
+}
+
 // INSERE UMA NOVA ESTANTE
 const setInsertBookcase = async function (estante) {
     try{
@@ -172,6 +208,7 @@ module.exports = {
     getSelectAllBookcase,
     getSelectByIdBookcase,
     getSelectBookcaseByIdUser,
+    getSelectBookcaseByStatus,
     setInsertBookcase,
     setUpdateBookcase,
     setDeleteBookcase,

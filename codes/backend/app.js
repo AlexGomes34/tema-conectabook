@@ -42,6 +42,8 @@ app.use('/v1/conectaBook/genero-livro', generoLivroRoutes)
 const authRoutes = require('./routes/auth_routes.js')
 app.use('/v1/conectaBook/auth', authRoutes)
 
+const estanteRoutes = require('./routes/estanteRoutes.js')
+app.use('/v1/conectaBook/estante', estanteRoutes)
 const clubeRoutes = require('./routes/clubeRoutes.js')
 app.use('/v1/conectaBook/clubes', clubeRoutes)
 
