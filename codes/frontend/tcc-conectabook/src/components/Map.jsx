@@ -61,5 +61,5 @@ export function Map({ coords, cafes }) {
     })
   }, [cafes])
 
-  return <div ref={containerRef} style={{ width: '100%', height: '500px' }} />
+  return <div ref={containerRef} style={{ width: '100%', height: '700px', margin: "2rem" }} />
 }

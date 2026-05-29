@@ -1,7 +1,9 @@
 .livro{
     width: 200px;
+    height: auto;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: .5rem;
 }
 
