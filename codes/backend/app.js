@@ -65,6 +65,9 @@ app.use('/v1/conectaBook/avaliacao-livro', avaliacaoLivroRoutes);
 const avaliacaoCafeteriaRoutes = require('./routes/avaliacao_cafeteriaRoutes.js')
 app.use('/v1/conectaBook/avaliacao-cafeteria', avaliacaoCafeteriaRoutes);
 
+const notificacaoRoutes = require('./routes/notificacaoRoutes.js')
+app.use('/v1/conectaBook/notificacao', notificacaoRoutes)
+
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, function(){

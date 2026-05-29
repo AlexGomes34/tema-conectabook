@@ -35,6 +35,49 @@ router.get('/', cors(), async function (request, response) {
 
 //GET - retorna uma notificacao filtrando pelo id
 router.get('/:id', cors(), async function (request, response) {
-    let id
+    let idNotificacao = request.params.id
+
+    let dadosNotificacoes = await controllerNotificacao.listarNotificacaoId(idNotificacao)
+
+    response.status(dadosNotificacoes.status_code)
+    response.json(dadosNotificacoes)
     
 })
+
+// GET - Retorna uma notificação pelo id do usuário
+router.get('/:id', cors(), async function (request, response) {
+    let idUsuario = request.params.id
+
+    let dadosNotificacoes = await controllerNotificacao.listarNotificacoesIdUsuario(idUsuario)
+
+    response.status(dadosNotificacoes.status_code)
+    response.json(dadosNotificacoes)
+    
+})
+
+// PUT -  Atualiza uma notificação no BD
+router.put('/:id', cors(), bodyParserJson, async function (request, response) {
+    let dadosBody = request.body
+    let idNotificacao = request.params.id
+    let contentType = request.headers['content-type']
+
+    let dadosNotificacoes = await controllerNotificacao.atualizarNotificacao(idNotificacao)
+
+    response.status(dadosNotificacoes.status_code)
+    response.json(dadosNotificacoes)
+})
+
+
+//DELETE - Delta um registro de uma notificação no BD
+router.delete('/:id', cors(), async function (request, response) {
+
+    let idNotificacao = await controllerNotificacao.excluirNotificacao(idNotificacao)
+
+    let dadosNotificacoes = await controllerNotificacao.excluirNotificacao(idNotificacao)
+
+     response.status(dadosNotificacoes.status_code)
+    response.json(dadosNotificacoes)
+    
+})
+
+module.exports = router
