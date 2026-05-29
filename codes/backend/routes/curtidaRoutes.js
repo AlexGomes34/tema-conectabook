@@ -37,13 +37,16 @@ router.get('/', cors(), async function(request, response){
 
 // GET - Retorna uma curtida do BD filtrando pelo o ID
 router.get('/:id', cors(), async function (request, response) {
-    //chamada da funão listarCurtidas da controller
-    let dadosCurtidas = await controllerCurtida.buscarCurtidaPorId
+    // 1. Pega o ID enviado pela URL
+    let idCurtida = request.params.id;
 
-    response.status(dadosCurtidas.status_code)
-    response.json(dadosCurtidas)
-    
-})
+    // CORRIGIDO: Agora chamando a função corretamente e passando o ID por parâmetro ()
+    let dadosCurtidas = await controllerCurtida.buscarCurtidaPorId(idCurtida);
+
+    // 2. Envia a resposta com o status correto
+    response.status(dadosCurtidas.status_code);
+    response.json(dadosCurtidas);
+});
 
 // POST - Insere uma nova curtida no BD
 router.post('/', cors(), bodyParserJson, async function(request, response) {
