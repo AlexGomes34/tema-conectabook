@@ -24,6 +24,7 @@ router.use((request, response, next) => {
 
 // ENDPOINTS CAFETERIAS
 
+// URL: GET http://localhost:8080/v1/conectaBook/cafeterias
 // GET - Retorna uma lista de cafeterias do BD
 router.get('/', cors(), async function(request, response){
     // Chamada da função listarCafeterias da controller
@@ -34,6 +35,7 @@ router.get('/', cors(), async function(request, response){
     response.json(dadosCafeterias)
 })
 
+// URL: GET http://localhost:8080/v1/conectaBook/cafeterias/:id
 // GET - Retorna cafeterias do BD filtrando pelo ID
 router.get('/:id', cors(), async function (request, response) {
     let idCafeteria = request.params.id
@@ -44,6 +46,7 @@ router.get('/:id', cors(), async function (request, response) {
     response.json(dadosCafeterias)
 })
 
+// URL: POST http://localhost:8080/v1/conectaBook/cafeterias
 // POST - Insere uma nova cafeteria no BD
 router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
@@ -56,22 +59,22 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
     response.json(dadosCafeterias)
 })
 
-
-//PUT - Atualiza uma cafeteria no BD
+// URL: PUT http://localhost:8080/v1/conectaBook/cafeterias/:id
+// PUT - Atualiza uma cafeteria no BD
 router.put('/:id', cors(), bodyParserJson, async function(request, response){
     let dadosBody = request.body
     let idCafeteria = request.params.id
     let contentType = request.headers['content-type']
 
     // Chama a função atualizarCafeteria da controller
-    let dadosCafeterias = await controllerCafeteria.atualizarCafeteria(dadosBody, contentType, idGenero)
+    let dadosCafeterias = await controllerCafeteria.atualizarCafeteria(dadosBody, contentType, idCafeteria)
 
     response.status(dadosCafeterias.status_code)
     response.json(dadosCafeterias)
 })
 
-
-//DELETE - Deleta um registro de uma cafeteria no BD
+// URL: DELETE http://localhost:8080/v1/conectaBook/cafeterias/:id
+// DELETE - Deleta um registro de uma cafeteria no BD
 router.delete('/:id', cors(), async function (request, response) {
     let idCafeteria = request.params.id
 

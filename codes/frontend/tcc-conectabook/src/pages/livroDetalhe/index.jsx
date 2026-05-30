@@ -18,129 +18,129 @@ export default function LivroDetalhe() {
     const [livro, setLivro] = useState(null);
 
     const [user, setUser] = useState(null)
-    
-        useEffect(() => {
-    
-            const userStorage = JSON.parse(
-                localStorage.getItem("user")
-            )
-    
-            if (userStorage) {
-                setUser(userStorage)
-            }
-    
-        }, [])
 
-        useEffect(() => {
+    useEffect(() => {
 
-            async function fetchLivro() {
-        
-                try {
-        
-                    const res = await fetch(
-                        `https://openlibrary.org/works/${id}.json`
+        const userStorage = JSON.parse(
+            localStorage.getItem("user")
+        )
+
+        if (userStorage) {
+            setUser(userStorage)
+        }
+
+    }, [])
+
+    useEffect(() => {
+
+        async function fetchLivro() {
+
+            try {
+
+                const res = await fetch(
+                    `https://openlibrary.org/works/${id}.json`
+                )
+
+                const data = await res.json()
+
+                console.log(data)
+
+                // =========================
+                // AUTOR
+                // =========================
+
+                let authorName = "Autor desconhecido"
+
+                if (data.authors?.length > 0) {
+
+                    const authorKey = data.authors[0].author.key
+
+                    const authorRes = await fetch(
+                        `https://openlibrary.org${authorKey}.json`
                     )
-        
-                    const data = await res.json()
-        
-                    console.log(data)
-        
-                    // =========================
-                    // AUTOR
-                    // =========================
-        
-                    let authorName = "Autor desconhecido"
-        
-                    if (data.authors?.length > 0) {
-        
-                        const authorKey = data.authors[0].author.key
-        
-                        const authorRes = await fetch(
-                            `https://openlibrary.org${authorKey}.json`
-                        )
-        
-                        const authorData = await authorRes.json()
-        
-                        authorName = authorData.name
-                    }
-        
-                    // =========================
-                    // GÊNERO
-                    // =========================
-        
-                    const genero =
-                        data.subjects?.[0] ??
-                        "Gênero não informado"
-        
-                    // =========================
-                    // EDIÇÕES
-                    // =========================
-        
-                    let paginas = "Não informado"
-                    let anoPublicacao = "Não informado"
-        
-                    const editionsRes = await fetch(
-                        `https://openlibrary.org/works/${id}/editions.json?limit=1`
-                    )
-        
-                    const editionsData = await editionsRes.json()
-        
-                    const edition = editionsData.entries?.[0]
-        
-                    if (edition) {
-        
-                        paginas =
-                            edition.number_of_pages ??
-                            "Não informado"
-        
-                        anoPublicacao =
-                            edition.publish_date ??
-                            "Não informado"
-                    }
-        
-                    // =========================
-                    // LIVRO FINAL
-                    // =========================
-        
-                    setLivro({
-                        title: data.title,
-        
-                        author: authorName,
-        
-                        description:
-                            data.description?.value ??
-                            data.description ??
-                            "Sem descrição.",
-        
-                        genero,
-        
-                        paginas,
-        
-                        anoPublicacao,
-        
-                        coverUrl: data.covers?.[0]
-                            ? `https://covers.openlibrary.org/b/id/${data.covers[0]}-L.jpg`
-                            : fotoLivro1
-                    })
-        
-                } catch (error) {
-        
-                    console.log(error)
-        
+
+                    const authorData = await authorRes.json()
+
+                    authorName = authorData.name
                 }
-        
+
+                // =========================
+                // GÊNERO
+                // =========================
+
+                const genero =
+                    data.subjects?.[0] ??
+                    "Gênero não informado"
+
+                // =========================
+                // EDIÇÕES
+                // =========================
+
+                let paginas = "Não informado"
+                let anoPublicacao = "Não informado"
+
+                const editionsRes = await fetch(
+                    `https://openlibrary.org/works/${id}/editions.json?limit=1`
+                )
+
+                const editionsData = await editionsRes.json()
+
+                const edition = editionsData.entries?.[0]
+
+                if (edition) {
+
+                    paginas =
+                        edition.number_of_pages ??
+                        "Não informado"
+
+                    anoPublicacao =
+                        edition.publish_date ??
+                        "Não informado"
+                }
+
+                // =========================
+                // LIVRO FINAL
+                // =========================
+
+                setLivro({
+                    title: data.title,
+
+                    author: authorName,
+
+                    description:
+                        data.description?.value ??
+                        data.description ??
+                        "Sem descrição.",
+
+                    genero,
+
+                    paginas,
+
+                    anoPublicacao,
+
+                    coverUrl: data.covers?.[0]
+                        ? `https://covers.openlibrary.org/b/id/${data.covers[0]}-L.jpg`
+                        : fotoLivro1
+                })
+
+            } catch (error) {
+
+                console.log(error)
+
             }
-        
-            fetchLivro()
-        
-        }, [id])
+
+        }
+
+        fetchLivro()
+
+    }, [id])
 
     const navigate = useNavigate()
 
-    if(!livro) return <p>Carregando...</p>
+    if (!livro) return <p>Carregando...</p>
     return (
         <div>
-            <Header fotoUser={user?.user?.foto_perfil}/>
+            <Header fotoUser={user?.user?.foto_perfil} />
             <main>
                 <div className={styles.mainUp}>
                     <div>
@@ -167,16 +167,19 @@ export default function LivroDetalhe() {
                         <div className={styles.buttons}>
                             <div className={styles.avaliacaoButtons}>
                                 <Button text={"Favoritar"} />
-                                <Button text={"Avaliacoes"} onClick={() => navigate('/livroAvaliacoes')} />
+                                <Button
+                                    text={"Avaliacoes"}
+                                    onClick={() => navigate('/livroAvaliacoes', { state: { livro } })}
+                                />
                             </div>
-                            <Button text={"Adicionar a estante"} 
-                            className={styles.adicionarEstante}/>
+                            <Button text={"Adicionar a estante"}
+                                className={styles.adicionarEstante} />
                         </div>
                     </div>
                 </div>
             </main>
-            
-                <LivroTitulosSemelhantes livroAtual={{ titulo: livro.title, autor: livro.author }}/>
+
+            <LivroTitulosSemelhantes livroAtual={{ titulo: livro.title, autor: livro.author }} />
             <Footer />
         </div>
     )

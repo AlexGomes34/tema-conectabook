@@ -24,6 +24,7 @@ router.use((request, response, next) => {
 
 //ENDPOINTS AVALIAÇÕES
 
+// http://localhost:8080/v1/conectaBook/avaliacao
 //GET - Retorna uma lista de avaliações do BD
 router.get('/', cors(), async function (request, response) {
     //Chamada da função listarAvaliacos da controller
@@ -33,6 +34,7 @@ router.get('/', cors(), async function (request, response) {
     response.json(dadosAval)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao/:id
 //GET - Retorna uma avaliação do BD filtrando pelo ID
 router.get('/:id', cors(), async function(request, response){
     let idAval = request.params.id
@@ -44,6 +46,7 @@ router.get('/:id', cors(), async function(request, response){
     response.json(dadosAval)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao
 // POST - Insere uma nova avaliação dentro do BD
 router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
@@ -56,6 +59,7 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
     response.json(dadosAval)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao/:id
 // PUT - Atualiza uma avaliacao dentro do BD
 router.put('/:id', cors(), bodyParserJson, async function(request, response){
     let dadosBody = request.body
@@ -69,6 +73,7 @@ router.put('/:id', cors(), bodyParserJson, async function(request, response){
     response.json(dadosAval)
 })
 
+// http://localhost:8080/v1/conectaBook/avaliacao/:id
 // DELETE - Deleta um registro de uma avaliação do BD
 router.delete('/:id', cors(), async function(request, response){
     let idAval = request.params.id

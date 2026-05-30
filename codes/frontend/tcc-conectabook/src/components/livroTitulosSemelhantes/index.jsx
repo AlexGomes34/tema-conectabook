@@ -9,16 +9,16 @@ export default function LivroTitulosSemelhantes({ livroAtual }) {
     const [erro, setErro] = useState(null)
 
     useEffect(() => {
-        if (!livroAtual?.titulo) return
-        buscarLivrosSemelhantes(livroAtual.titulo, livroAtual.autor)
-    }, [livroAtual])
+    if (!livroAtual?.titulo) return
+    buscarLivrosSemelhantes(livroAtual.titulo, livroAtual.autor)
+}, [livroAtual?.titulo, livroAtual?.autor]) // ← só os valores, não o objeto
 
     async function buscarLivrosSemelhantes(titulo, autor) {
         setLoading(true)
         setErro(null)
 
         try {
-            // 1️⃣ Busca o livro atual para pegar seus subjects
+            //  Busca o livro atual para pegar seus subjects
             const buscaAtual = await fetch(
                 `https://openlibrary.org/search.json?title=${encodeURIComponent(titulo)}&author=${encodeURIComponent(autor)}&limit=1&fields=subject,key`
             )
@@ -28,7 +28,7 @@ export default function LivroTitulosSemelhantes({ livroAtual }) {
             let url = ""
 
             if (livroEncontrado?.subject?.length > 0) {
-                // 2️⃣ Pega o primeiro subject relevante e busca livros semelhantes
+                //  Pega o primeiro subject relevante e busca livros semelhantes
                 const subject = livroEncontrado.subject[0]
                 url = `https://openlibrary.org/search.json?subject=${encodeURIComponent(subject)}&limit=12&fields=key,title,author_name,cover_i,ratings_average`
             } else {
@@ -39,7 +39,7 @@ export default function LivroTitulosSemelhantes({ livroAtual }) {
             const buscaSemelhantes = await fetch(url)
             const dataSemelhantes = await buscaSemelhantes.json()
 
-            // 3️⃣ Filtra o próprio livro dos resultados e formata os dados
+            //  Filtra o próprio livro dos resultados e formata os dados
             const semelhantes = dataSemelhantes.docs
                 ?.filter(l => !l.title?.toLowerCase().includes(titulo.toLowerCase()))
                 .slice(0, 6)
