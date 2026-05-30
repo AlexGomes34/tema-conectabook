@@ -64,9 +64,17 @@
     white-space: pre-line;
 }
 
+.tituloSemelhante{
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .tituloSemelhante img{
     width: auto;
     height: 13vw;
+    object-fit: cover;
 }
 
 h2{

@@ -176,7 +176,7 @@ export default function LivroDetalhe() {
                 </div>
             </main>
             
-                <LivroTitulosSemelhantes/>
+                <LivroTitulosSemelhantes livroAtual={{ titulo: livro.title, autor: livro.author }}/>
             <Footer />
         </div>
     )
