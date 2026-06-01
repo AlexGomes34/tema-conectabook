@@ -130,7 +130,7 @@ const getMainMessagesByClubId = async function (idClube) {
     }
 }
 
-// RETORNA AS MENSAGENS PRINCIPAIS DO FEED GERAL (COM OU SEM CLUBE VINCULADO)
+// RETORNA AS MENSAGENS PRINCIPAIS DO FEED GERAL (SEM CLUBE VINCULADO)
 const getAllMainMessagesFeed = async function () {
     try {
         let sql = `select 
@@ -144,8 +144,9 @@ const getAllMainMessagesFeed = async function () {
                    from tbl_mensagem
                         inner join tbl_conversa on tbl_mensagem.id_conversa = tbl_conversa.id_conversa
                         inner join tbl_usuario on tbl_mensagem.id_usuario = tbl_usuario.id_usuario
-                        left join tbl_clube on tbl_conversa.id_clube = tbl_clube.id_clube -- LEFT JOIN aceita NULL se for post geral
-                   where tbl_mensagem.id_mensagem_pai is null
+                        left join tbl_clube on tbl_conversa.id_clube = tbl_clube.id_clube
+                   where tbl_mensagem.id_mensagem_pai is null 
+                     and tbl_conversa.id_clube is null -- CORRIGIDO: Filtra apenas posts sem clube vinculado
                    order by tbl_mensagem.data_postagem desc`
         
         let result = await db.raw(sql)
