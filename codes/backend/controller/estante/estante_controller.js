@@ -1,21 +1,23 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pela regra de negócios e controle das rotas da Estante
  * Projeto: ConectaBook
- * Data: 29/05/2026
+ * Data: 01/06/2026
  * Autor: Alex Henrique Da Cruz Gomes 
- * Versão: 1.0
+ * Versão: 1.1
  *******************************************************************************************/
 
 const estanteDAO = require('../../model/DAO/estante.js'); // Ajuste o caminho se necessário
 
 // Lista os livros que o usuário já LEU
 const listarLivrosLidos = async function (idUsuario) {
-    if (idUsuario == undefined || idUsuario == '' || isNaN(idUsuario)) {
+    // REMOVIDO isNaN para suportar IDs textuais/UUIDs se necessário
+    if (idUsuario == undefined || idUsuario == '') {
         return { status_code: 400, message: "O ID do usuário enviado é inválido ou não foi fornecido." };
     }
 
     try {
-        let dados = await estanteDAO.getSelectBookcaseByStatus(idUsuario, 'Lidos');
+        // CORRIGIDO: Alterado de 'Lidos' para 'Lido' para bater exatamente com o banco de dados
+        let dados = await estanteDAO.getSelectBookcaseByStatus(idUsuario, 'Lido');
         return { 
             status_code: 200, 
             livros: dados && dados.length > 0 ? dados : [] 
@@ -28,11 +30,12 @@ const listarLivrosLidos = async function (idUsuario) {
 
 // Lista os livros que o usuário está LENDO atualmente
 const listarLivrosLendo = async function (idUsuario) {
-    if (idUsuario == undefined || idUsuario == '' || isNaN(idUsuario)) {
+    if (idUsuario == undefined || idUsuario == '') {
         return { status_code: 400, message: "O ID do usuário enviado é inválido ou não foi fornecido." };
     }
 
     try {
+        // 'Lendo' bate perfeitamente com o banco
         let dados = await estanteDAO.getSelectBookcaseByStatus(idUsuario, 'Lendo');
         return { 
             status_code: 200, 
@@ -46,11 +49,12 @@ const listarLivrosLendo = async function (idUsuario) {
 
 // Lista os livros que o usuário QUER LER
 const listarLivrosQueroLer = async function (idUsuario) {
-    if (idUsuario == undefined || idUsuario == '' || isNaN(idUsuario)) {
+    if (idUsuario == undefined || idUsuario == '') {
         return { status_code: 400, message: "O ID do usuário enviado é inválido ou não foi fornecido." };
     }
 
     try {
+        // 'Quero Ler' bate perfeitamente com o banco
         let dados = await estanteDAO.getSelectBookcaseByStatus(idUsuario, 'Quero Ler');
         return { 
             status_code: 200, 
@@ -83,7 +87,7 @@ const listarTodasEstantes = async function () {
 
 // Busca um item da estante por ID único da tabela
 const buscarEstantePorId = async function (id) {
-    if (id == undefined || id == '' || isNaN(id)) {
+    if (id == undefined || id == '') {
         return { status_code: 400, message: "O ID enviado é inválido ou vazio." };
     }
 
@@ -101,7 +105,7 @@ const buscarEstantePorId = async function (id) {
 
 // Retorna toda a estante de um usuário específico (sem filtrar status)
 const listarEstantePorUsuario = async function (idUsuario) {
-    if (idUsuario == undefined || idUsuario == '' || isNaN(idUsuario)) {
+    if (idUsuario == undefined || idUsuario == '') {
         return { status_code: 400, message: "O ID do usuário enviado é inválido ou vazio." };
     }
 
@@ -122,7 +126,7 @@ const criarItemEstante = async function (dadosCorpo, contentType) {
         return { status_code: 415, message: "Tipo de mídia não suportado. Use application/json" };
     }
 
-    // Validação básica de campos obrigatórios
+    // Validação de campos obrigatórios
     if (!dadosCorpo.id_usuario || !dadosCorpo.id_status_livro || !dadosCorpo.id_livro) {
         return { status_code: 400, message: "Campos obrigatórios ausentes (id_usuario, id_status_livro, id_livro)." };
     }
@@ -139,23 +143,22 @@ const criarItemEstante = async function (dadosCorpo, contentType) {
     }
 };
 
-// Atualiza o status ou dados de um item da estante
+// text/JSON ou ID String compatível
 const atualizarItemEstante = async function (dadosCorpo, contentType, idEstante) {
     if (String(contentType).toLowerCase() !== 'application/json') {
         return { status_code: 415, message: "Tipo de mídia não suportado. Use application/json" };
     }
 
-    if (idEstante == undefined || idEstante == '' || isNaN(idEstante)) {
+    if (idEstante == undefined || idEstante == '') {
         return { status_code: 400, message: "O ID para atualização é inválido ou vazio." };
     }
 
-    // Injeta o ID da estante dentro do objeto antes de enviar pro DAO
     dadosCorpo.id_estante = idEstante;
 
     try {
         let result = await estanteDAO.setUpdateBookcase(dadosCorpo);
         if (result) {
-            return { status_code: 200, message: "Estante atualizada com sucesso!" };
+            return { status_code: 200, message: "Estante updated com sucesso!" };
         } else {
             return { status_code: 404, message: "Não foi possível atualizar. Registro não encontrado." };
         }
@@ -166,7 +169,7 @@ const atualizarItemEstante = async function (dadosCorpo, contentType, idEstante)
 
 // Exclui um livro da estante pelo ID do registro
 const excluirItemEstante = async function (id) {
-    if (id == undefined || id == '' || isNaN(id)) {
+    if (id == undefined || id == '') {
         return { status_code: 400, message: "O ID enviado para exclusão é inválido." };
     }
 
@@ -182,9 +185,9 @@ const excluirItemEstante = async function (id) {
     }
 };
 
-// Limpa toda a estante de um usuário (Ex: Se o usuário deletar a conta)
+// Limpa toda a estante de um usuário
 const excluirEstantePorUsuario = async function (idUsuario) {
-    if (idUsuario == undefined || idUsuario == '' || isNaN(idUsuario)) {
+    if (idUsuario == undefined || idUsuario == '') {
         return { status_code: 400, message: "O ID do usuário para exclusão é inválido." };
     }
 
