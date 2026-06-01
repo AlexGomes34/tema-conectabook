@@ -1,9 +1,9 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pelo CRUD de acessos de livros no Banco de Dados (Histórico)
  * Projeto: ConectaBook
- * Data: 15/05/2026
+ * Data: 01/06/2026
  * Autor: Alex Henrique Da Cruz Gomes
- * Versão: 1.0
+ * Versão: 1.1
  *******************************************************************************************/
 
 const db = require('../../database/connection');
@@ -76,6 +76,7 @@ const setInsertBookAccess = async function (dadosAcesso) {
                         NOW()
                     )`
 
+        // O driver lida nativamente com o tipo String inserido no array de parâmetros para o id_livro
         let result = await db.raw(sql, [dadosAcesso.id_livro, dadosAcesso.id_usuario])
 
         if (result && result[0].affectedRows > 0)

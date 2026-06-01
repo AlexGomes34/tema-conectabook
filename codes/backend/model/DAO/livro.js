@@ -1,9 +1,9 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pela realização do CRUD de livros no Banco de Dados MySQL
  * Projeto: ConectaBook
- * Data: 06/05/2026
- * Autor: Geovanna Silva
- * Versão: 1.1 
+ * Data: 01/06/2026
+ * Autor: Geovanna Silva / Alex Henrique
+ * Versão: 1.2 
  *******************************************************************************************/
 
 // CONEXÃO COM O BANCO DE DADOS
@@ -15,24 +15,6 @@ const getSelectAllBooks = async function () {
         let sql = `select * from tbl_livro order by id_livro asc`
         let result = await db.raw(sql)
 
-        //Retorna apenas a lista de dados (índice 0)
-        if (result && result[0].length  > 0)
-            return result[0]
-        else
-            return false
-    } catch (error) {
-        return false
-    }
-}
-
-
-// RETORNA LIVRO PELO ID
-const getSelectByIdBook = async function (id) {
-    try {
-        let sql = `select * from tbl_livro where id_livro = ${id}`
-        let result = await db.raw(sql)
-
-        //Retorna o primeiro registro do índice 0
         if (result && result[0].length > 0)
             return result[0]
         else
@@ -40,30 +22,44 @@ const getSelectByIdBook = async function (id) {
     } catch (error) {
         return false
     }
-    
 }
 
+// RETORNA LIVRO PELO ID (CORRIGIDO: Agora usa placeholder '?' protegendo a String)
+const getSelectByIdBook = async function (id) {
+    try {
+        let sql = `select * from tbl_livro where id_livro = ?`
+        let result = await db.raw(sql, [id])
 
-// INSERE UM LIVRO NO BANCO
+        if (result && result[0].length > 0)
+            return result[0]
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
+// INSERE UM LIVRO NO BANCO (CORRIGIDO: Agora usa placeholders '?' no lugar de interpolação direta)
 const setInsertBook = async function (livro) {
     try {
         let sql = `insert into tbl_livro (
+                        id_livro,
                         isbn,
                         titulo, 
                         autor, 
                         descricao,
                         capa
-                    ) values (
-                        '${livro.isbn}',
-                        '${livro.titulo}',
-                        '${livro.autor}', 
-                        '${livro.descricao}',
-                        '${livro.capa}'
-                  )`
+                    ) values (?, ?, ?, ?, ?, ?)`
 
-        let result = await db.raw(sql)
+        let result = await db.raw(sql, [
+            livro.id_livro || livro.id, // Garante o recebimento do ID textual vindo do client/API externa
+            livro.isbn,
+            livro.titulo,
+            livro.autor, 
+            livro.descricao,
+            livro.capa
+        ])
 
-        // Verifica se a linha foi afetada no índice 0
         if (result && result[0].affectedRows > 0)
             return true
         else
@@ -73,18 +69,25 @@ const setInsertBook = async function (livro) {
     }
 }
 
-// ATUALIZA UM LIVRO NO BANCO 
+// ATUALIZA UM LIVRO NO BANCO (CORRIGIDO: Agora usa placeholders '?' protegendo a String do ID)
 const setUpdateBook = async function (livro) {
     try {
         let sql = `update tbl_livro set 
-                        isbn = '${livro.isbn}',
-                        titulo = '${livro.titulo}',
-                        autor = '${livro.autor}', 
-                        descricao = '${livro.descricao}',
-                        capa = '${livro.capa}'
-                    where id_livro = ${livro.id}`
+                        isbn = ?,
+                        titulo = ?,
+                        autor = ?, 
+                        descricao = ?,
+                        capa = ?
+                    where id_livro = ?`
 
-        let result = await db.raw(sql)
+        let result = await db.raw(sql, [
+            livro.isbn,
+            livro.titulo,
+            livro.autor, 
+            livro.descricao,
+            livro.capa,
+            livro.id
+        ])
         
         if (result && result[0]) {
             const header = result[0];
@@ -100,11 +103,11 @@ const setUpdateBook = async function (livro) {
     }
 }
 
-
+// DELETA UM LIVRO (CORRIGIDO: Agora usa placeholder '?' protegendo a String)
 const setDeleteBook = async function (id) {
     try {
-        let sql = `delete from tbl_livro where id_livro = ${id}`
-        let result = await db.raw(sql)
+        let sql = `delete from tbl_livro where id_livro = ?`
+        let result = await db.raw(sql, [id])
 
         if (result && result[0].affectedRows > 0)
             return true
@@ -114,7 +117,6 @@ const setDeleteBook = async function (id) {
         return false
     }
 }
-
 
 module.exports =  {
     getSelectAllBooks,

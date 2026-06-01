@@ -129,7 +129,7 @@ const setInsertBookcase = async function (estante) {
                     ) values (
                         ${estante.id_usuario},
                         ${estante.id_status_livro},
-                        ${estante.id_livro},
+                        '${estante.id_livro}',
                         ${estante.data_adicao}
                     )`
 
@@ -153,7 +153,7 @@ const setUpdateBookcase = async function (estante) {
         let sql = `update tbl_estante set
                             id_usuario = ${estante.id_usuario},
                             id_status_livro = ${estante.id_status_livro},
-                            id_livro = ${estante.id_livro},
+                            id_livro = '${estante.id_livro}',
                             data_adicao = ${estante.data_adicao}
                     where id_estante = ${estante.id_estante}`
 

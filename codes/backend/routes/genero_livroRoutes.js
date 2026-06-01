@@ -1,7 +1,7 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pela realização das rotas de generos_livros
  * Projeto: ConectaBook
- * Data: 06/05/2026
+ * Data: 01/06/2026
  * Autor: Alex Henrique Da Cruz Gomes
  * Versão: 1.1
  *******************************************************************************************/

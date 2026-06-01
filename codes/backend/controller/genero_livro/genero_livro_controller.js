@@ -1,13 +1,13 @@
 /*******************************************************************************************
  * Objetivo: Controller responsável pela regra de negócio do relacionamento entre Livros e Gêneros
  * Projeto: ConectaBook
- * Data: 15/05/2026
+ * Data: 01/06/2026
  * Autor: Alex Henrique / Geovanna Silva
- * Versão: 1.0
+ * Versão: 1.1
  *******************************************************************************************/
 
-const generoLivroDAO = require('../../model/DAO/genero_livro.js'); // Ajuste o caminho se necessário
-const messages = require('../modulo/config_messages.js'); // Ajuste o caminho do seu arquivo de mensagens
+const generoLivroDAO = require('../../model/DAO/genero_livro.js'); 
+const messages = require('../modulo/config_messages.js'); 
 
 // GET - Listar todos os relacionamentos
 const listarTodosGenerosLivros = async function () {
@@ -28,7 +28,7 @@ const listarTodosGenerosLivros = async function () {
     }
 }
 
-// GET - Buscar pelo ID da tabela intermediária
+// GET - Buscar pelo ID da tabela intermediária (Numérico)
 const buscarGeneroLivroPorId = async function (id) {
     if (id == '' || id == undefined || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS;
@@ -41,7 +41,7 @@ const buscarGeneroLivroPorId = async function (id) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_REQUEST.status;
             responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-            responseData.response = result[0]; // Retorna apenas o objeto encontrado
+            responseData.response = result[0]; 
             return responseData;
         } else {
             return messages.ERROR_NOT_FOUND;
@@ -51,9 +51,9 @@ const buscarGeneroLivroPorId = async function (id) {
     }
 }
 
-// GET - Listar gêneros de um livro específico
+// GET - Listar gêneros de um livro específico (AJUSTADO: Removido isNaN para idLivro String)
 const listarGenerosDeUmLivro = async function (idLivro) {
-    if (idLivro == '' || idLivro == undefined || isNaN(idLivro)) {
+    if (idLivro == '' || idLivro == undefined) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
 
@@ -74,7 +74,7 @@ const listarGenerosDeUmLivro = async function (idLivro) {
     }
 }
 
-// GET - Listar livros de um gênero específico
+// GET - Listar livros de um gênero específico (Numérico)
 const listarLivrosDeUmGenero = async function (idGenero) {
     if (idGenero == '' || idGenero == undefined || isNaN(idGenero)) {
         return messages.ERROR_REQUIRED_FIELDS;
@@ -97,7 +97,7 @@ const listarLivrosDeUmGenero = async function (idGenero) {
     }
 }
 
-// POST - Inserir um único relacionamento
+// POST - Inserir um único relacionamento (AJUSTADO: Removido isNaN para dados.id_livro)
 const inserirGeneroLivro = async function (dados, contentType) {
     try {
         if (String(contentType).toLowerCase() !== 'application/json') {
@@ -105,7 +105,7 @@ const inserirGeneroLivro = async function (dados, contentType) {
         }
 
         if (dados.id_genero == '' || dados.id_genero == undefined || isNaN(dados.id_genero) ||
-            dados.id_livro == '' || dados.id_livro == undefined || isNaN(dados.id_livro)) {
+            dados.id_livro == '' || dados.id_livro == undefined) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
@@ -125,14 +125,14 @@ const inserirGeneroLivro = async function (dados, contentType) {
     }
 }
 
-// POST - Inserir múltiplos gêneros para um livro (Ideal para quando cadastra o livro)
+// POST - Inserir múltiplos gêneros para um livro (AJUSTADO: Removido isNaN para dados.id_livro)
 const inserirMultiplosGenerosLivro = async function (dados, contentType) {
     try {
         if (String(contentType).toLowerCase() !== 'application/json') {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        if (dados.id_livro == '' || dados.id_livro == undefined || isNaN(dados.id_livro) ||
+        if (dados.id_livro == '' || dados.id_livro == undefined ||
             !dados.generos || !Array.isArray(dados.generos) || dados.generos.length === 0) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
@@ -153,7 +153,7 @@ const inserirMultiplosGenerosLivro = async function (dados, contentType) {
     }
 }
 
-// PUT - Atualizar relacionamento existente
+// PUT - Atualizar relacionamento existente (AJUSTADO: Removido isNaN para dados.id_livro)
 const atualizarGeneroLivro = async function (dados, contentType, id) {
     try {
         if (id == '' || id == undefined || isNaN(id)) {
@@ -165,14 +165,14 @@ const atualizarGeneroLivro = async function (dados, contentType, id) {
         }
 
         if (dados.id_genero == '' || dados.id_genero == undefined || isNaN(dados.id_genero) ||
-            dados.id_livro == '' || dados.id_livro == undefined || isNaN(dados.id_livro)) {
+            dados.id_livro == '' || dados.id_livro == undefined) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
         let buscarId = await generoLivroDAO.getSelectByIdGenresBooks(id);
 
         if (buscarId) {
-            dados.id_genero_livro = id; // Injeta o ID da URL no objeto de dados
+            dados.id_genero_livro = id; 
             let result = await generoLivroDAO.setUpdateGenresBooks(dados);
 
             if (result) {
@@ -192,7 +192,7 @@ const atualizarGeneroLivro = async function (dados, contentType, id) {
     }
 }
 
-// DELETE - Excluir um relacionamento único pelo ID da tabela intermediária
+// DELETE - Excluir um relacionamento único pelo ID numérico da tabela intermediária
 const excluirGeneroLivro = async function (id) {
     if (id == '' || id == undefined || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS;
@@ -202,7 +202,7 @@ const excluirGeneroLivro = async function (id) {
         let buscarId = await generoLivroDAO.getSelectByIdGenresBooks(id);
 
         if (buscarId) {
-            let result = await generoLivroDAO.setDeleteGenresBooks(id); // Passando ID direto
+            let result = await generoLivroDAO.setDeleteGenresBooks(id); 
 
             if (result) {
                 let responseData = Object.assign({}, messages.HEADER);
@@ -221,16 +221,15 @@ const excluirGeneroLivro = async function (id) {
     }
 }
 
-
-const excluirGenerosPorLivro = async function (idGenero) {
-    // Validação do ID do usuário
-    if (idGenero == '' || idGenero == undefined || isNaN(idGenero)) {
+// DELETE - Excluir gêneros vinculados a um livro específico (AJUSTADO: Corrigida a validação tirando o isNaN e consertado o comentário de "usuário" para "livro")
+const excluirGenerosPorLivro = async function (idLivro) {
+    // Validação do ID do Livro (String)
+    if (idLivro == '' || idLivro == undefined) {
         return messages.ERROR_INVALID_ID; 
     }
 
     try {
-        // Chamada para o DAO (usando a função setDeleteGenresByIdUser que você criou)
-        let result = await generoLivroDAO.setDeleteGenresByIdBook(idGenero);
+        let result = await generoLivroDAO.setDeleteGenresByIdBook(idLivro);
 
         if (result) {
             let responseData = Object.assign({}, messages.HEADER);
@@ -239,7 +238,6 @@ const excluirGenerosPorLivro = async function (idGenero) {
             responseData.response = messages.SUCCESS_DELETE_ITEM.message;
             return responseData;
         } else {
-            // Se retornar false, pode ser que o usuário não tivesse gêneros ou o ID não existe
             return messages.ERROR_NOT_FOUND; 
         }
     } catch (error) {
