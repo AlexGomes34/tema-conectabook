@@ -1,9 +1,9 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pela manipulação da camada model de Livros (Controller)
  * Projeto: ConectaBook
- * Data: 07/05/2026
- * Autor: Geovanna Silva
- * Versão: 1.1
+ * Data: 01/06/2026
+ * Autor: Geovanna Silva / Alex Henrique
+ * Versão: 1.2
  *******************************************************************************************/
 
 const livroDAO = require("../../model/DAO/livro.js");
@@ -12,7 +12,6 @@ const messages = require("../modulo/config_messages.js");
 // GET - Listar todos os livros
 const listarLivros = async function () {
     try {
-
         let result = await livroDAO.getSelectAllBooks();
 
         if (result) {
@@ -24,17 +23,14 @@ const listarLivros = async function () {
         } else {
             return messages.ERROR_NOT_FOUND;
         }
-
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-
 }
 
-
-//GET ID - Listar livros pelo ID
+// GET ID - Listar livros pelo ID (AJUSTADO: Removido isNaN para aceitar String)
 const listarLivrosID = async function (id) {
-    if (id == '' || id == undefined || isNaN(id)) {
+    if (id == '' || id == undefined) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
 
@@ -45,7 +41,6 @@ const listarLivrosID = async function (id) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_REQUEST.status;
             responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-            // O DAO já retorna o array de dados filtrado, pela a primeira posição
             responseData.response = result[0];
             return responseData;
         } else {
@@ -54,24 +49,21 @@ const listarLivrosID = async function (id) {
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-
 }
-
 
 // POST - Criar novo livro 
 const criarLivro = async function (livro, contentType) {
     try {
-
         if (String(contentType).toLowerCase() !== 'application/json') {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
+        // AJUSTADO: Adicionada validação opcional/obrigatória para o livro.id ou id_livro caso venha do client textual
         if (
             livro.isbn == '' || livro.isbn == undefined ||
             livro.titulo == '' || livro.titulo == undefined ||
             livro.autor == '' || livro.autor == undefined ||
             livro.descricao == '' || livro.descricao == undefined
-
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
@@ -89,14 +81,12 @@ const criarLivro = async function (livro, contentType) {
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-
 }
 
-
-// PUT - Atualizar livros
+// PUT - Atualizar livros (AJUSTADO: Removido isNaN para aceitar ID String)
 const atualizarLivro = async function (livro, contentType, id) {
     try {
-        if (id == '' || id == undefined || isNaN(id)) {
+        if (id == '' || id == undefined) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
@@ -134,12 +124,11 @@ const atualizarLivro = async function (livro, contentType, id) {
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-
 }
 
-// DELETE -  Excluir livro
+// DELETE - Excluir livro (AJUSTADO: Removido isNaN para aceitar ID String)
 const excluirLivro = async function (id) {
-    if (id == '' || id == undefined || isNaN(id)) {
+    if (id == '' || id == undefined) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
 
@@ -164,7 +153,6 @@ const excluirLivro = async function (id) {
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-
 }
 
 module.exports = {

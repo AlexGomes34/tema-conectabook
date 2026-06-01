@@ -1,9 +1,9 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pela realização do CRUD de livros e gêneros (tabela de relação)
  * Projeto: ConectaBook
- * Data: 15/05/2026
+ * Data: 01/06/2026
  * Autor: Geovanna Silva / Alex Henrique
- * Versão: 1.2
+ * Versão: 1.3
  *******************************************************************************************/
 
 // CONEXÃO COM O BANCO DE DADOS
@@ -13,11 +13,8 @@ const db = require('../../database/connection');
 const getSelectAllGenresBooks = async function () {
     try {
         let sql = `select * from tbl_genero_livro order by id_genero_livro asc`
-        
-        // CORRIGIDO: de db.rank para db.raw
         let result = await db.raw(sql)
 
-        // CORRIGIDO: Retornava false no sucesso, agora retorna os dados corretos
         if (result && result[0].length > 0)
             return result[0]
         else
@@ -30,7 +27,6 @@ const getSelectAllGenresBooks = async function () {
 // RETORNA O RELACIONAMENTO PELO ID DA TABELA INTERMEDIÁRIA
 const getSelectByIdGenresBooks = async function (id) {
     try {
-        // CORRIGIDO: Segurança com parâmetro '?'
         let sql = `select * from tbl_genero_livro where id_genero_livro = ?`
         let result = await db.raw(sql, [id])
 
@@ -43,10 +39,9 @@ const getSelectByIdGenresBooks = async function (id) {
     }
 }
 
-// RETORNA OS GÊNEROS DE UM LIVRO ESPECÍFICO
+// RETORNA OS GÊNEROS DE UM LIVRO ESPECÍFICO (idLivro agora é String)
 const getSelectGenresByIdBooks = async function (idLivro) {
     try {
-        // CORRIGIDO: Trocado tbl_genero_usuario para tbl_genero_livro no JOIN e adicionado '?'
         let sql = `select
                     tbl_genero.id_genero,
                     tbl_genero.nome
@@ -69,7 +64,6 @@ const getSelectGenresByIdBooks = async function (idLivro) {
 // RETORNA OS LIVROS QUE POSSUEM UM GÊNERO ESPECÍFICO
 const getSelectBooksByIdGenres = async function (idGenero) {
     try {
-        // CORRIGIDO: Adicionado '?' por segurança
         let sql = `select
                     tbl_livro.id_livro,
                     tbl_livro.capa,
@@ -90,20 +84,13 @@ const getSelectBooksByIdGenres = async function (idGenero) {
     }
 }
 
-// INSERE UM NOVO RELACIONAMENTO
+// INSERE UM NOVO RELACIONAMENTO (CORRIGIDO: Agora usa placeholders '?' protegendo a String)
 const setInsertGenresBooks = async function (generoLivro) {
     try {
-        let sql = `insert into tbl_genero_livro(
-                        id_genero,
-                        id_livro
-                   ) values (
-                        ${generoLivro.id_genero},
-                        ${generoLivro.id_livro}
-                   )`
+        let sql = `insert into tbl_genero_livro(id_genero, id_livro) values (?, ?)`
 
-        let result = await db.raw(sql)
+        let result = await db.raw(sql, [generoLivro.id_genero, generoLivro.id_livro])
 
-        // CORRIGIDO: Para inserts/updates usamos affectedRows em vez de .length no MySQL
         if (result && result[0].affectedRows > 0)
             return true
         else
@@ -113,31 +100,35 @@ const setInsertGenresBooks = async function (generoLivro) {
     }
 }
 
-// INSERE VÁRIOS RELACIONAMENTOS DE UMA VEZ
+// INSERE VÁRIOS RELACIONAMENTOS DE UMA VEZ (Modificado para parametrizar de forma segura as Strings)
 const setInsertMultiplesGenresBooks = async function (dados) {
     try {
-        const valores = dados.generos.map(id_genero =>
-            `(${id_genero}, ${dados.id_livro})`
-        ).join(',')
+        // Cria um array de placeholders: [ (?, ?), (?, ?) ]
+        const placeholders = dados.generos.map(() => '(?, ?)').join(',')
+        let sql = `insert into tbl_genero_livro (id_genero, id_livro) values ${placeholders}`
 
-        let sql = `insert into tbl_genero_livro (id_genero, id_livro) values ${valores}`
+        // Achata os valores em uma lista única estruturada: [id_g1, id_livro, id_g2, id_livro...]
+        const valoresParametrizados = []
+        dados.generos.forEach(id_genero => {
+            valoresParametrizados.push(id_genero, dados.id_livro)
+        })
 
-        let result = await db.raw(sql)
+        let result = await db.raw(sql, valoresParametrizados)
         return !!(result && result[0].affectedRows > 0)
     } catch (error) {
         return false
     }
 }
 
-// ATUALIZA UM RELACIONAMENTO
+// ATUALIZA UM RELACIONAMENTO (CORRIGIDO: Agora usa placeholders '?' protegendo a String)
 const setUpdateGenresBooks = async function (generoLivro) {
     try {
         let sql = `update tbl_genero_livro set
-                        id_genero = ${generoLivro.id_genero},
-                        id_livro = ${generoLivro.id_livro}
-                    where id_genero_livro = ${generoLivro.id_genero_livro}`
+                        id_genero = ?,
+                        id_livro = ?
+                    where id_genero_livro = ?`
 
-        let result = await db.raw(sql)
+        let result = await db.raw(sql, [generoLivro.id_genero, generoLivro.id_livro, generoLivro.id_genero_livro])
 
         if (result && result[0].affectedRows > 0)
             return true
@@ -154,24 +145,19 @@ const setDeleteGenresBooks = async function (id) {
         let sql = `delete from tbl_genero_livro where id_genero_livro = ?`
         let result = await db.raw(sql, [id])
 
-        // Trata o array extraindo o cabeçalho do resultado do MySQL
         if (result && result[0]) {
             const header = result[0];
-            
-            // Verifica se a propriedade affectedRows existe e é maior que 0
             if (header.affectedRows > 0) {
                 return true;
             }
         }
-        
         return false;
-
     } catch(error) {
         return false;
     }
 }
 
-// DELETA OS RELACIONAMENTOS DE UM LIVRO
+// DELETA OS RELACIONAMENTOS DE UM LIVRO (id recebido agora é uma String)
 const setDeleteGenresByIdBook = async function (id) {
     try {
         let sql = `delete from tbl_genero_livro where id_livro = ?`

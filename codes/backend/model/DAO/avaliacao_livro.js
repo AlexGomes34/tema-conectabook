@@ -1,9 +1,9 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pela realização do CRUD da relação Avaliação-Livro no Banco
  * Projeto: ConectaBook
- * Data: 26/05/2026
+ * Data: 01/06/2026
  * Autor: Alex Gomes
- * Versão: 1.0 
+ * Versão: 1.1 
  *******************************************************************************************/
 
 const db = require('../../database/connection')
@@ -37,9 +37,11 @@ const getSelectByIdAvaliacaoLivro = async function (id) {
         return false
     }
 }
+
 // RETORNA AS AVALIAÇÕES FILTRADAS PELO ID DO LIVRO (COM DADOS DO USUÁRIO)
 const getSelectAvaliacoesByLivro = async function (idLivro) {
     try {
+        // AJUSTADO: '${idLivro}' adicionado aspas simples por ser String/VARCHAR
         let sql = `select 
                         al.id_avaliacao_livro,
                         al.id_livro,
@@ -55,7 +57,7 @@ const getSelectAvaliacoesByLivro = async function (idLivro) {
                             on al.id_avaliacao = a.id_avaliacao
                         inner join tbl_usuario as u
                             on a.id_usuario = u.id_usuario
-                    where al.id_livro = ${idLivro}
+                    where al.id_livro = '${idLivro}'
                     order by a.data_avaliacao desc`;
 
         let result = await db.raw(sql);
@@ -106,6 +108,7 @@ const getSelectAvaliacoesByUsuario = async function (idUsuario) {
 // RETORNA O TOTAL DE AVALIAÇÕES E A MÉDIA DE ESTRELAS DE UM LIVRO
 const getEstatisticasAvaliacaoByLivro = async function (idLivro) {
     try {
+        // AJUSTADO: '${idLivro}' adicionado aspas simples por ser String/VARCHAR
         let sql = `select 
                         al.id_livro,
                         COUNT(a.id_avaliacao) as total_avaliacoes,
@@ -113,7 +116,7 @@ const getEstatisticasAvaliacaoByLivro = async function (idLivro) {
                     from tbl_avaliacao_livro as al
                         inner join tbl_avaliacao as a
                         on al.id_avaliacao = a.id_avaliacao
-                    where al.id_livro = ${idLivro}
+                    where al.id_livro = '${idLivro}'
                     group by al.id_livro`;
 
         let result = await db.raw(sql);
@@ -131,12 +134,13 @@ const getEstatisticasAvaliacaoByLivro = async function (idLivro) {
 // INSERE UMA NOVA RELAÇÃO AVALIAÇÃO-LIVRO
 const setInsertAvaliacaoLivro = async function (avaliacaoLivro) {
     try {
+        // AJUSTADO: '${avaliacaoLivro.id_livro}' adicionado aspas simples por ser String/VARCHAR
         let sql = `insert into tbl_avaliacao_livro (
                     id_avaliacao,
                     id_livro
                     ) values (
                      ${avaliacaoLivro.id_avaliacao},
-                     ${avaliacaoLivro.id_livro}        
+                     '${avaliacaoLivro.id_livro}'       
                     )`
 
         let result = await db.raw(sql);
@@ -155,14 +159,14 @@ const setInsertAvaliacaoLivro = async function (avaliacaoLivro) {
 // ATUALIZA UMA RELAÇÃO AVALIAÇÃO-LIVRO
 const setUpdateAvaliacaoLivro = async function (avaliacaoLivro) {
     try {
+        // AJUSTADO: '${avaliacaoLivro.id_livro}' adicionado aspas simples por ser String/VARCHAR
         let sql = `update tbl_avaliacao_livro set
                        id_avaliacao = ${avaliacaoLivro.id_avaliacao},
-                       id_livro = ${avaliacaoLivro.id_livro}
-                  where id_avaliacao_livro = ${avaliacaoLivro.id}`
+                       id_livro = '${avaliacaoLivro.id_livro}'
+                   where id_avaliacao_livro = ${avaliacaoLivro.id}`
 
         let result = await db.raw(sql)
 
-        // Usamos warningStatus >= 0 para evitar falsos erros caso os dados sejam iguais
         if (result && result[0].warningStatus >= 0)
             return true
         else
