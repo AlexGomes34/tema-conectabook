@@ -50,21 +50,21 @@ const getSelectBookcaseByIdUser = async function (idUsuario) {
     try {
         let sql = `
             select
-                tbl_estante.id_estante,
-                tbl_estante.id_usuario,
-                tbl_estante.data_adicao,
-                tbl_livro.id_livro,
-                tbl_livro.isbn,
-                tbl_livro.titulo,
-                tbl_livro.autor,
-                tbl_livro.descricao,
-                tbl_status_livro as status_leitura
-            from tbl_estante
-                inner join tbl_livro
-                    on tbl_livro.id_livro = tbl_estante.id_livro
-                inner join tbl_status_livro
-                    on tbl_status_livro.id_status_livro = tbl_estante.id_status_livro
-            where tbl_estante.id_usuario = ?
+    tbl_estante.id_estante,
+    tbl_estante.id_usuario,
+    tbl_estante.data_adicao,
+    tbl_livro.id_livro,
+    tbl_livro.isbn,
+    tbl_livro.titulo,
+    tbl_livro.autor,
+    tbl_livro.descricao,
+    tbl_status_livro.nome_status as status_leitura 
+from tbl_estante
+    inner join tbl_livro
+        on tbl_livro.id_livro = tbl_estante.id_livro
+    inner join tbl_status_livro
+        on tbl_status_livro.id_status_livro = tbl_estante.id_status_livro
+where tbl_estante.id_usuario = ?
         `
 
 

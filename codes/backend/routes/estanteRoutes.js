@@ -1,9 +1,9 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pelas rotas da Estante (Gerenciamento de livros do usuário)
  * Projeto: ConectaBook
- * Data: 29/05/2026
+ * Data: 01/06/2026
  * Autor: Alex Gomes
- * Versão: 1.0
+ * Versão: 1.1
  *******************************************************************************************/
 
 const express = require('express')
@@ -24,13 +24,13 @@ router.use((request, response, next) => {
 })
 
 // =========================================================================
-// NOVOS ENDPOINTS: FILTROS DE STATUS DE LEITURA (GET)
-// Base global sugerida no app.js: /v1/conectaBook/estante
+// ENDPOINTS: FILTROS DE STATUS DE LEITURA (GET)
+// Base global configurada no app.js: /v1/conectaBook/estante
 // =========================================================================
 
-// URL: GET http://localhost:8080/v1/conectaBook/estante/usuario/:id/lidos
+// URL: GET http://localhost:8080/v1/conectaBook/estante/usuario/:id/lido
 // GET - Retorna os livros que o usuário já LEU
-router.get('/usuario/:id/lidos', cors(), async function (request, response) {
+router.get('/usuario/:id/lido', cors(), async function (request, response) {
     let idUsuario = request.params.id
     let dados = await controllerEstante.listarLivrosLidos(idUsuario)
     response.status(dados.status_code).json(dados)
@@ -91,7 +91,7 @@ router.post('/', cors(), bodyParserJson, async function (request, response) {
 })
 
 // URL: PUT http://localhost:8080/v1/conectaBook/estante/:id
-// PUT - Atualiza as informações (como trocar o status_livro) de um item da estante
+// PUT - Atualiza as informações (como trocar o id_status_livro) de um item da estante
 router.put('/:id', cors(), bodyParserJson, async function (request, response) {
     let idEstante = request.params.id
     let dadosBody = request.body

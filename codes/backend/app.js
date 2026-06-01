@@ -13,13 +13,13 @@ const bodyParser = require('body-parser')
 const app = express()
 
 const http = require('http')
-const { setupSocket } = require('./socket/socketHandler')
+// const { setupSocket } = require('./socket/socketHandler')
 
 // Configuração global do CORS 
 
 app.use('/uploads', express.static('uploads'))
 
-setupSocket(server);
+// setupSocket(server);
 
 app.use(cors())
 
@@ -61,9 +61,6 @@ app.use('/v1/conectaBook/livro-acesso', acessoLivroRoutes)
 
 const mensagemRoutes = require('./routes/mensagemRoutes.js')
 app.use('/v1/conectaBook/mensagem', mensagemRoutes)
-
-const conversaRoutes = require('./routes/conversaRoutes.js')
-app.use('/v1/conectaBook/conversa', conversaRoutes);
 
 const curtidasRoutes = require('./routes/curtidaRoutes.js')
 app.use('/v1/conectaBook/curtida', curtidasRoutes)
