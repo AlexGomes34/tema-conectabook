@@ -113,25 +113,19 @@ CREATE TABLE tbl_estante (
     FOREIGN KEY (id_livro) REFERENCES tbl_livro (id_livro)
 );
 
--- AJUSTADO: tbl_conversa agora pertence a um clube
-CREATE TABLE tbl_conversa (
-    id_conversa INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    id_clube INT NULL,
-    FOREIGN KEY (id_clube) REFERENCES tbl_clube (id_clube)
-);
-
--- AJUSTADO: tbl_mensagem com os campos e relacionamentos corretos do novo modelo
+-- AJUSTADO: tbl_mensagem com relacionamento direto com tbl_clube (sem tbl_conversa)
 CREATE TABLE tbl_mensagem (
     id_mensagem INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    comentario TEXT NOT NULL,                 -- Conforme o diagrama (antigo 'mensagem')
-    arquivo TEXT NULL,                        -- Conforme o diagrama (antigo 'arquivo_externo')
-    data_postagem TIMESTAMP DEFAULT NULL,     -- Conforme o diagrama (pode aceitar NULL)
+    comentario TEXT NOT NULL,                  
+    arquivo TEXT NULL,                         
+    data_postagem TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_usuario INT NOT NULL,
-    id_mensagem_pai INT NULL,                 -- Auto-relacionamento (resposta)
-    id_conversa INT NOT NULL,
-    FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario),
-    FOREIGN KEY (id_conversa) REFERENCES tbl_conversa (id_conversa),
-    FOREIGN KEY (id_mensagem_pai) REFERENCES tbl_mensagem (id_mensagem)
+    id_clube INT NULL,                         
+    id_mensagem_pai INT NULL,                  
+
+    FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_clube) REFERENCES tbl_clube (id_clube) ON DELETE CASCADE,
+    FOREIGN KEY (id_mensagem_pai) REFERENCES tbl_mensagem (id_mensagem) ON DELETE CASCADE
 );
 
 -- AJUSTADO: tbl_curtida agora aponta para mensagens, não para conversas
