@@ -14,10 +14,11 @@ INSERT INTO tbl_genero (nome) VALUES
 ('Distopia'), ('HQ'), ('Manga'), ('Autoajuda'), ('Religioso'),
 ('Técnico'), ('Educação'), ('Filosofia'), ('Psicologia'), ('Policial');
 
+-- CORRIGIDO: Datas alteradas para o formato aceito pelo MySQL (AAAA-MM-DD)
 INSERT INTO tbl_usuario (nome, nome_usuario, email, senha, data_nascimento, foto_perfil) VALUES
-('Alex Henrique', 'alex_henrique', 'alex@email.com', 'senha123', '15/10/2004', null), -- ID 1
-('Geovanna Silva', 'geovanna_silva', 'geovanna@email.com', 'senha456', '22/03/2005', null), -- ID 2
-('Carlos Eduardo', 'cadu_leitor', 'carlos@email.com', 'senha789', '05/07/2001', null); -- ID 3
+('Alex Henrique', 'alex_henrique', 'alex@email.com', 'senha123', '2004-10-15', null), -- ID 1
+('Geovanna Silva', 'geovanna_silva', 'geovanna@email.com', 'senha456', '2005-03-22', null), -- ID 2
+('Carlos Eduardo', 'cadu_leitor', 'carlos@email.com', 'senha789', '2001-07-05', null); -- ID 3
 
 INSERT INTO tbl_evento (nome, data_evento, local_evento, endereco, funcionamento) VALUES
 ('Feira Literária de São Paulo', '25 a 30 de Julho de 2026', 'Expo Center Norte', 'Rua José Bernardo Pinto, 333', 'Das 10h às 22h'),
@@ -73,16 +74,16 @@ INSERT INTO tbl_estante (id_usuario, id_status_livro, id_livro) VALUES
 (1, 2, 'iK50DwAAQBAJ'), -- Alex marcou O Iluminado como "Lendo" (2)
 (2, 1, '4_A_DwAAQBAJ'); -- Geovanna marcou Orgulho e Preconceito como "Quero Ler" (1)
 
--- Criando as salas de bate-papo vinculadas aos clubes criados
-INSERT INTO tbl_conversa (id_clube) VALUES
-(1), -- ID 1: Conversa/Chat do clube Viajantes de Arrakis
-(2); -- ID 2: Conversa/Chat do clube Leitores da Madrugada
 
--- Postando mensagens no chat (tbl_mensagem)
-INSERT INTO tbl_mensagem (comentario, arquivo, data_postagem, id_usuario, id_mensagem_pai, id_conversa) VALUES
-('E aí pessoal, o que estão achando do primeiro capítulo de Duna?', NULL, NOW(), 1, NULL, 1), -- ID 1 (Alex no chat 1)
-('Eu achei o começo um pouco lento, mas o universo é incrível!', NULL, NOW(), 2, 1, 1),    -- ID 2 (Geovanna respondendo a msg 1)
-('Alguém já terminou o livro do mês?', NULL, NOW(), 3, NULL, 2);                           -- ID 3 (Carlos no chat 2)
+-- 🚨 REMOVIDO: INSERT na antiga tbl_conversa
+
+
+-- CORRIGIDO: Modificado o campo id_conversa para o novo id_clube
+-- Observe que no terceiro insert o id_clube vira NULL, indicando que o post vai direto para o FEED PRINCIPAL
+INSERT INTO tbl_mensagem (comentario, arquivo, data_postagem, id_usuario, id_mensagem_pai, id_clube) VALUES
+('E aí pessoal, o que estão achando do primeiro capítulo de Duna?', NULL, NOW(), 1, NULL, 1), -- ID 1 (Alex no clube 1)
+('Eu achei o começo um pouco lento, mas o universo é incrível!', NULL, NOW(), 2, 1, 1),    -- ID 2 (Geovanna respondendo a msg 1 no clube 1)
+('Alguém já leu harry potter?', NULL, NOW(), 3, NULL, NULL);                         -- ID 3 (Carlos postando no FEED GERAL)
 
 -- Curtindo mensagens específicas
 INSERT INTO tbl_curtida (id_usuario, id_mensagem) VALUES
