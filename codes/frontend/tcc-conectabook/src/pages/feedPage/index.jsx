@@ -155,7 +155,7 @@ function Feed() {
                 fotoUser={user?.user?.foto_perfil}
             />
             <div className={styles.mainFeed}>
-                <LeftFeed posts={posts} idConversa={1} />
+                <LeftFeed feedUrl={"http://localhost:8080/v1/conectaBook/mensagem/feed/principal"} idConversa={1} />
                 <div className={styles.feedPageRight}>
                     <div className={styles.divRight}>
                         <div className={styles.divRightTitulo}>
@@ -169,48 +169,52 @@ function Feed() {
                                     key={index}
                                     className={styles.titulos}
                                 >
-                                    <img
-                                        src={livro.capa}
-                                        alt={livro.titulo}
-                                        onError={(e) => {
-                                            e.target.src = fotoLivro1
-                                        }}
-                                    />
 
-                                    <div>
-                                        <h4>{livro.titulo}</h4>
-
-                                        <p>{livro.autor}</p>
+                                    <div className={styles.livro}>
+                                        <img
+                                            src={livro.capa}
+                                            alt={livro.titulo}
+                                            onError={(e) => {
+                                                e.target.src = fotoLivro1
+                                            }}
+                                        />
 
                                         <div>
-                                            <div className={styles.avaliacao}>
-                                                <div>
-                                                    <FontAwesomeIcon
-                                                        icon={faStar}
-                                                        style={{ color: "rgb(255, 212, 59)" }}
-                                                    />
-                                                    <FontAwesomeIcon
-                                                        icon={faStar}
-                                                        style={{ color: "rgb(255, 212, 59)" }}
-                                                    />
-                                                    <FontAwesomeIcon
-                                                        icon={faStar}
-                                                        style={{ color: "rgb(255, 212, 59)" }}
-                                                    />
-                                                    <FontAwesomeIcon
-                                                        icon={faStar}
-                                                        style={{ color: "rgb(255, 212, 59)" }}
-                                                    />
-                                                    <FontAwesomeIcon
-                                                        icon={faStarRegular}
-                                                        style={{ color: "rgb(255, 212, 59)" }}
-                                                    />
-                                                </div>
+                                            <h4>{livro.titulo}</h4>
 
-                                                <p>Sugestão</p>
+                                            <p>{livro.autor}</p>
+
+                                            <div>
+                                                <div className={styles.avaliacao}>
+                                                    <div>
+                                                        <FontAwesomeIcon
+                                                            icon={faStar}
+                                                            style={{ color: "rgb(255, 212, 59)" }}
+                                                        />
+                                                        <FontAwesomeIcon
+                                                            icon={faStar}
+                                                            style={{ color: "rgb(255, 212, 59)" }}
+                                                        />
+                                                        <FontAwesomeIcon
+                                                            icon={faStar}
+                                                            style={{ color: "rgb(255, 212, 59)" }}
+                                                        />
+                                                        <FontAwesomeIcon
+                                                            icon={faStar}
+                                                            style={{ color: "rgb(255, 212, 59)" }}
+                                                        />
+                                                        <FontAwesomeIcon
+                                                            icon={faStarRegular}
+                                                            style={{ color: "rgb(255, 212, 59)" }}
+                                                        />
+                                                    </div>
+
+                                                    <p>Sugestão</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             ))
                         }
