@@ -121,13 +121,13 @@ export default function LivroAvaliacao() {
 
         try {
             // ── Etapa A: cria a avaliação ──────────────────────────────────────
-            const resAvaliacao = await fetch(`${API_URL}/avaliacoes`, {
+            const resAvaliacao = await fetch(`${API_URL}/avaliacao`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     estrelas: estrelas,
                     id_usuario: user?.user?.id,
-                    texto: novaAvaliacao,
+                    mensagem: novaAvaliacao,
                 }),
             });
 
@@ -142,7 +142,7 @@ export default function LivroAvaliacao() {
             // ── Etapa B: vincula avaliação ao livro ────────────────────────────
             const idAvaliacao = avaliacaoData.id ?? avaliacaoData.response?.id;
 
-            const resVinculo = await fetch(`${API_URL}/avaliacoes-livro`, {
+            const resVinculo = await fetch(`${API_URL}/avaliacao-livro`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -294,7 +294,7 @@ export default function LivroAvaliacao() {
                                 )}
 
                                 <div>
-                                    <p>{avaliacao.texto}</p>
+                                    <p>{avaliacao.mensagem}</p>
                                 </div>
                             </div>
                         ))}

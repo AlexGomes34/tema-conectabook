@@ -95,7 +95,7 @@ const setInsertRating = async function (avaliacao) {
         let result = await db.raw(sql);
 
         if (result && result[0].affectedRows > 0)
-            return true;
+            return result[0];
         else
             return false;
 
