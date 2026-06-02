@@ -11,10 +11,10 @@
 const db = require('../../database/connection')
 
 //retorna todas as notificações 
-const getSelectAllNotifications =  async function () {
-    try{
-    let sql = `select * from tbl_notificacao order by id_notificacao asc`
-    let result = await db.raw(sql)
+const getSelectAllNotifications = async function () {
+    try {
+        let sql = `select * from tbl_notificacao order by id_notificacao asc`
+        let result = await db.raw(sql)
 
         // Retorna apenas a lista de dados (índice 0)
         if (result && result[0].length > 0)
@@ -29,24 +29,24 @@ const getSelectAllNotifications =  async function () {
 
 //RETORNA NOTIFICAÇÃO PELO ID
 const getSelectByIdNotification = async function (id) {
-        try{
-            let sql = `select * from tbl_notificacao where id_notificacao = ${id}`
-            let result = await db.raw(sql)
+    try {
+        let sql = `select * from tbl_notificacao where id_notificacao = ${id}`
+        let result = await db.raw(sql)
 
-            if(result && result[0].length > 0)
-                return result
-            else
-                return false
-        } catch(error) {
+        if (result && result[0].length > 0)
+            return result
+        else
             return false
-        }
-    
+    } catch (error) {
+        return false
+    }
+
 }
 
 
 //RETORNA NOTIFICAÇÃO PELO ID DO USUÁRIO
 const getSelectNotificationsByIdUser = async function (idUsuario) {
-    try{
+    try {
         let sql = `select * from tbl_notificacao where id_usuario = ${idUsuario}`
         let result = await db.raw(sql)
 
@@ -68,16 +68,14 @@ const setInsertNotification = async function (notificacao) {
                         titulo,
                         mensagem,
                         data_envio,
-                        data_acesso,
                         id_usuario
         ) values (
             '${notificacao.titulo}',
             '${notificacao.mensagem}',
             '${notificacao.data_envio}',
-            '${notificacao.data_acesso}',
             '${notificacao.id_usuario}'
         )`
-    let result = await db.raw(sql);
+        let result = await db.raw(sql);
 
         if (result && result[0].affectedRows > 0)
             return true;
@@ -91,36 +89,42 @@ const setInsertNotification = async function (notificacao) {
 
 
 
-// Atualiza uam notificacao no bd
+// Atualiza uma notificacao no bd 
 const setUpdateNotification = async function (notificacao) {
-    try{
+    try {
         let sql = `update tbl_notificacao set
-                         titulo = '${notificacao.titulo}',
-                         mensagem = '${notificacao.mensagem}',
-                         data_envio = '${notificacao.data_envio}',
-                         data_acesso = '${notificacao.data_acesso}',
-                         id_usuario = '${notificacao.id_usuario}'
-                         where id_notificacao = ${notificacao.id}`
+                         titulo = ?,
+                         mensagem = ?,
+                         data_envio = ?,
+                         id_usuario = ?
+                   where id_notificacao = ?`
 
-     let result = await db.raw(sql)
+        let result = await db.raw(sql, [
+            notificacao.titulo,
+            notificacao.mensagem,
+            notificacao.data_envio,
+            notificacao.id_usuario,
+            notificacao.id // ID usado no WHERE
+        ])
 
-        if (result && result[0].affectedRows > 0)
+        if (result && result[0] && (result[0].affectedRows > 0 || result[0].warningStatus === 0))
             return true
         else
             return false
 
     } catch (error) {
+        console.error("🚨 ERRO NO BANCO AO ATUALIZAR NOTIFICAÇÃO:", error.message);
         return false
     }
 }
 
 // DELETA UMA NOTIFICACAO NO BANCO
 const setDeleteNotification = async function (id) {
-    try{
+    try {
         let sql = `delete from tbl_notificacao where id_notificacao = ${id}`
         let result = await db.raw(sql)
 
-       if (result && result[0].affectedRows > 0)
+        if (result && result[0].affectedRows > 0)
             return true
         else
             return false

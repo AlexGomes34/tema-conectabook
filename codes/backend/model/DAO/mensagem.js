@@ -56,7 +56,7 @@ const getSelectMessagesByIdClub = async function (idClube) {
                         inner join tbl_usuario on tbl_mensagem.id_usuario = tbl_usuario.id_usuario
                    where tbl_mensagem.id_clube = ?
                    order by tbl_mensagem.data_postagem asc`
-        
+
         let result = await db.raw(sql, [idClube])
 
         if (result && result[0].length > 0)
@@ -85,7 +85,7 @@ const getRepliesByMessageId = async function (idMensagemPai) {
                         inner join tbl_usuario on tbl_mensagem.id_usuario = tbl_usuario.id_usuario
                    where tbl_mensagem.id_mensagem_pai = ?
                    order by tbl_mensagem.data_postagem asc`
-        
+
         let result = await db.raw(sql, [idMensagemPai])
 
         if (result && result[0].length > 0)
@@ -116,7 +116,7 @@ const getMainMessagesByClubId = async function (idClube) {
                    where tbl_mensagem.id_clube = ? 
                      and tbl_mensagem.id_mensagem_pai is null
                    order by tbl_mensagem.data_postagem desc`
-        
+
         let result = await db.raw(sql, [idClube])
 
         if (result && result[0].length > 0)
@@ -145,7 +145,7 @@ const getAllMainMessagesFeed = async function () {
                    where tbl_mensagem.id_mensagem_pai is null 
                      and tbl_mensagem.id_clube is null -- Filtra posts sem clube
                    order by tbl_mensagem.data_postagem desc`
-        
+
         let result = await db.raw(sql)
 
         if (result && result[0].length > 0)
@@ -196,7 +196,7 @@ const setInsertMessage = async function (mensagem) {
 // ATUALIZA UMA MENSAGEM
 const setUpdateMessages = async function (mensagem) {
     try {
-        const arquivo = message.arquivo && mensagem.arquivo !== '' ? mensagem.arquivo : null;
+        const arquivo = mensagem.arquivo && mensagem.arquivo !== '' ? mensagem.arquivo : null;
 
         let sql = `update tbl_mensagem set
                         comentario = ?,

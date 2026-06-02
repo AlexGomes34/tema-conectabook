@@ -58,7 +58,7 @@ const buscarCurtidaPorId = async function (id) {
         }
     } catch (error) {
         console.log("Erro na Controller de Curtidas:", error);
-        
+
         // Garante que o erro interno também possua o status_code: 500
         let erro500 = Object.assign({}, messages.ERROR_INTERNAL_SERVER_CONTROLLER);
         erro500.status_code = 500;
@@ -94,7 +94,7 @@ const buscarCurtidaPorIdUsuario = async function (idUsuario) {
 const mensagemDAO = require('../../model/DAO/curtida.js'); // Ajusta o caminho se necessário
 
 // Função para listar as curtidas de um post específico
-const listarCurtidasPorMensagem = async function(idMensagem) {
+const listarCurtidasPorMensagem = async function (idMensagem) {
     // 1. Validação do ID recebido por parâmetro
     if (idMensagem == undefined || idMensagem == '' || isNaN(idMensagem)) {
         return {
@@ -104,19 +104,18 @@ const listarCurtidasPorMensagem = async function(idMensagem) {
     }
 
     try {
-        // 2. Chama a função do DAO que criámos no passo anterior
-        let dadosCurtidas = await mensagemDAO.getSelectByIdLike(idMensagem);
+        // CORRIGIDO: Agora chamando o nome exato da função definida no seu DAO
+        let dadosCurtidas = await mensagemDAO.getSelectLikeByIdMessage(idMensagem);
 
         // 3. Validação segura do retorno do Banco de Dados
-        // Se existirem curtidas (retornou um array com itens), envia-as com status 200
         if (dadosCurtidas && Array.isArray(dadosCurtidas) && dadosCurtidas.length > 0) {
             return {
                 status_code: 200,
-                quantidade: dadosCurtidas.length, // Opcional: devolve a contagem direta para facilitar no front
+                quantidade: dadosCurtidas.length,
                 curtidas: dadosCurtidas
             };
         } else {
-            // Se o banco retornar false ou vazio, devolve um array vazio [] com status 200 (Evita o 404)
+            // Se o banco retornar false ou vazio, devolve um array vazio [] com status 200
             return {
                 status_code: 200,
                 quantidade: 0,
@@ -125,9 +124,9 @@ const listarCurtidasPorMensagem = async function(idMensagem) {
         }
 
     } catch (error) {
-        // Exibe o log do erro detalhado no terminal do VS Code para ti
-        console.log("Erro na Controller ao listar curtidas:", error);
-        
+        // Exibe o log do erro detalhado no terminal do VS Code
+        console.error("🚨 Erro na Controller ao listar curtidas:", error.message);
+
         return {
             status_code: 500,
             message: "Erro interno no servidor ao processar as curtidas do post."
@@ -142,21 +141,30 @@ const inserirCurtida = async function (curtida, contentType) {
             return messages.ERROR_CONTENT_TYPE
         }
 
-        let resultId = await curtidaDAO.setInsertLike(curtida)
+        // NOVO: Validação dos campos obrigatórios para evitar passar valores inválidos para o banco
+        if (
+            curtida.id_usuario === undefined || curtida.id_usuario === null || curtida.id_usuario === '' ||
+            curtida.id_mensagem === undefined || curtida.id_mensagem === null || curtida.id_mensagem === ''
+        ) {
+            return messages.ERROR_REQUIRED_FIELDS; // Retorna erro 400 se faltar dados
+        }
 
-        if (resultId) {
+        // Chama a DAO que agora retorna estritamente true ou false
+        let statusInsert = await curtidaDAO.setInsertLike(curtida)
+
+        if (statusInsert) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_CREATED_ITEM.status;
             responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
             responseData.response = {
-                message: messages.SUCCESS_CREATED_ITEM.message,
-                insert_id: resultId
+                message: "Curtida registrada com sucesso!"
             };
             return responseData;
         } else {
-            return messages.ERROR_INTERNAL_SERVER_MODEL;
+            return messages.ERROR_INTERNAL_SERVER_MODEL; // 500 se falhar no banco (FK inexistente, por exemplo)
         }
     } catch (error) {
+        console.error("🚨 Erro na Controller de Curtida:", error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
