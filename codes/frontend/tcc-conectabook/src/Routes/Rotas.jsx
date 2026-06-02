@@ -26,10 +26,10 @@ function Rotas() {
                 <Route path='/feed' element ={<FeedPage/>}/>
                 <Route path='/perfil' element ={<Perfil/>}/>
                 <Route path='/clube' element ={<Clube/>}/>
-                <Route path='/membros' element ={<Membros/>}/>
+                <Route path='/membros/:idClube' element ={<Membros/>}/>
                 <Route path='/criarClube' element ={<CriarClube/>}/>
                 <Route path='/editarClube' element ={<EditarClube/>}/>
-                <Route path='/feedClube' element ={<FeedClube/>}/>
+                <Route path='/feedClube/:idClube' element ={<FeedClube/>}/>
                 <Route path='/meusClubes' element ={<MeusClubes/>}/>
                 <Route path='/livros' element ={<Livro/>}/>
                 <Route path='/todosLivros' element ={<TodosLivros/>}/>

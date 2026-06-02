@@ -174,8 +174,6 @@ export default function Livro() {
       })
   }, [])
 
-  console.log(books)
-
   const [user, setUser] = useState(null)
 
   useEffect(() => {

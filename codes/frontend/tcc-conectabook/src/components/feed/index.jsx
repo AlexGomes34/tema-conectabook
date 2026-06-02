@@ -8,7 +8,7 @@ import userDefault from "../../assets/userDefault.webp"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function LeftFeed({ posts, idConversa }) {
+export default function LeftFeed({ posts, idConversa, feedUrl }) {
 
     const [user, setUser] = useState({})
     const [mensagem, setMensagem] = useState("")
@@ -36,10 +36,7 @@ export default function LeftFeed({ posts, idConversa }) {
     async function carregarPosts() {
 
         try {
-
-            const response = await fetch(
-                "http://localhost:8080/v1/conectaBook/mensagem/feed/principal"
-            )
+            const response = await fetch(feedUrl)
 
             const data = await response.json()
 

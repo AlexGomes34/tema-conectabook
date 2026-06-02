@@ -97,7 +97,7 @@ export default function RightClube({
                                         text={meusClubes ? "Entrar no Feed" : "Participar do Clube"}
                                         onClick={() => {
                                             if (meusClubes) {
-                                                navigate(`/feedClube`)
+                                                navigate(`/feedClube/${clube.id_clube}`)
                                             } else {
                                                 participarClube(clube.id_clube)
                                             }

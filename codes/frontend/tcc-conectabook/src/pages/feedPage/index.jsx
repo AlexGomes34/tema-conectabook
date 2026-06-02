@@ -8,7 +8,7 @@ import fotoPessoa1 from "../../assets/fotoPessoa1.jpg"
 import styles from "./style.module.css"
 
 import fotoLivro1 from "../../assets/fotoLivro1.jpg"
-import fotoClube1 from "../../assets/fotoClube1.jpg"
+import fotoClube1 from "../../assets/group.png"
 import Footer from "../../components/footer"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,9 +23,12 @@ function Feed() {
 
     const POSTS_API = "http://localhost:8080/v1/conectaBook/mensagem/feed/principal"
 
-
     const [posts, setPosts] = useState([])
     const [user, setUser] = useState(null)
+
+    const [clubesUsuario, setClubesUsuario] = useState([])
+
+    const [livrosSugeridos, setLivrosSugeridos] = useState([])
 
     const navigate = useNavigate()
 
@@ -36,6 +39,93 @@ function Feed() {
             navigate("/")
         } else {
             setUser(userStorage)
+        }
+
+        async function getClubesUsuario(idUsuario) {
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}`
+                )
+
+                const data = await response.json()
+
+                setClubesUsuario(data.response)
+
+                console.log(data.response)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        async function getLivrosFavoritos(idUsuario) {
+            try {
+                const responseGenero = await fetch(
+                    `http://localhost:8080/v1/conectaBook/genero-usuario/usuario/${idUsuario}`
+                )
+
+                const dataGenero = await responseGenero.json()
+
+                const mapaGeneros = {
+                    "Romance": "romance",
+                    "Fantasia": "fantasy",
+                    "Ficção Científica": "science_fiction",
+                    "Terror": "horror",
+                    "Suspense": "thriller",
+                    "Mistério": "mystery",
+                    "Aventura": "adventure",
+                    "Drama": "drama",
+                    "Comédia": "humor",
+                    "Ação": "action",
+                    "Biografia": "biography",
+                    "História": "history",
+                    "Poesia": "poetry",
+                    "Infantil": "children",
+                    "Juvenil": "young_adult",
+                    "Distopia": "dystopian",
+                    "HQ": "comics",
+                    "Mangá": "manga",
+                    "Autoajuda": "self_help",
+                    "Religioso": "religion",
+                    "Técnico": "technology",
+                    "Educação": "education",
+                    "Filosofia": "philosophy",
+                    "Psicologia": "psychology",
+                    "Policial": "crime"
+                }
+
+                const resultados = await Promise.all(
+                    dataGenero.response.map(async (genero) => {
+                        const assunto = mapaGeneros[genero.nome] || genero.nome
+
+                        const responseLivro = await fetch(`https://openlibrary.org/search.json?subject=${encodeURIComponent(assunto)}&limit=3`)
+
+                        const dataLivro = await responseLivro.json()
+
+                        return dataLivro.docs.map(livro => ({
+                            titulo: livro.title,
+                            autor: livro.author_name?.[0] || "Autor desconhecido",
+                            capa: livro.cover_i
+                                ? `https://covers.openlibrary.org/b/id/${livro.cover_i}-M.jpg`
+                                : fotoLivro1
+                        }))
+                    })
+                )
+
+                const livros = resultados.flat()
+
+                const livrosUnicos = livros.filter(
+                    (livro, index, self) =>
+                        index === self.findIndex(
+                            l => l.titulo === livro.titulo
+                        )
+                )
+
+                setLivrosSugeridos(livrosUnicos)
+
+                console.log(livrosUnicos)
+            } catch (error) {
+                console.log(error)
+            }
         }
 
         async function getPosts() {
@@ -54,8 +144,9 @@ function Feed() {
         }
 
         getPosts()
+        getLivrosFavoritos(userStorage.user.id)
+        getClubesUsuario(userStorage.user.id)
     }, [])
-
 
     return (
 
@@ -64,73 +155,69 @@ function Feed() {
                 fotoUser={user?.user?.foto_perfil}
             />
             <div className={styles.mainFeed}>
-                <LeftFeed posts={posts} idConversa={1}/>
+                <LeftFeed feedUrl={"http://localhost:8080/v1/conectaBook/mensagem/feed/principal"} idConversa={1} />
                 <div className={styles.feedPageRight}>
                     <div className={styles.divRight}>
                         <div className={styles.divRightTitulo}>
                             <h3>Titulos Sugeridos</h3>
                             <p>Ver Todos</p>
                         </div>
-                        <div className={styles.titulos}>
-                            <img src={fotoLivro1} alt="" />
-                            <div>
-                                <h4>Kallocaína</h4>
-                                <p>Karin Boye</p>
-                                <div>
-                                    <div className={styles.avaliacao}>
-                                        <div>
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
 
-                                        </div>
-                                        <p>4.6</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={styles.titulos}>
-                            <img src={fotoLivro1} alt="" />
-                            <div >
-                                <h4>Kallocaína</h4>
-                                <p>Karin Boye</p>
-                                <div>
-                                    <div className={styles.avaliacao}>
-                                        <div>
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                        {
+                            livrosSugeridos.slice(0, 5).map((livro, index) => (
+                                <div
+                                    key={index}
+                                    className={styles.titulos}
+                                >
 
-                                        </div>
-                                        <p>4.6</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={styles.titulos}>
-                            <img src={fotoLivro1} alt="" />
-                            <div>
-                                <h4>Kallocaína</h4>
-                                <p>Karin Boye</p>
-                                <div>
-                                    <div className={styles.avaliacao}>
-                                        <div>
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                                    <div className={styles.livro}>
+                                        <img
+                                            src={livro.capa}
+                                            alt={livro.titulo}
+                                            onError={(e) => {
+                                                e.target.src = fotoLivro1
+                                            }}
+                                        />
 
+                                        <div>
+                                            <h4>{livro.titulo}</h4>
+
+                                            <p>{livro.autor}</p>
+
+                                            <div>
+                                                <div className={styles.avaliacao}>
+                                                    <div>
+                                                        <FontAwesomeIcon
+                                                            icon={faStar}
+                                                            style={{ color: "rgb(255, 212, 59)" }}
+                                                        />
+                                                        <FontAwesomeIcon
+                                                            icon={faStar}
+                                                            style={{ color: "rgb(255, 212, 59)" }}
+                                                        />
+                                                        <FontAwesomeIcon
+                                                            icon={faStar}
+                                                            style={{ color: "rgb(255, 212, 59)" }}
+                                                        />
+                                                        <FontAwesomeIcon
+                                                            icon={faStar}
+                                                            style={{ color: "rgb(255, 212, 59)" }}
+                                                        />
+                                                        <FontAwesomeIcon
+                                                            icon={faStarRegular}
+                                                            style={{ color: "rgb(255, 212, 59)" }}
+                                                        />
+                                                    </div>
+
+                                                    <p>Sugestão</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <p>4.6</p>
                                     </div>
+
                                 </div>
-                            </div>
-                        </div>
+                            ))
+                        }
                     </div>
                     <div className={styles.divRight}>
                         <div className={styles.divRightTitulo}>
@@ -138,34 +225,34 @@ function Feed() {
                             <p>Ver todos</p>
                         </div>
                         <div className={styles.clubesFeed}>
-                            <div className={styles.clube}>
-                                <img className={styles.imagemClube} src={fotoClube1} alt="" />
-                                <div>
-                                    <h4>Clube de Livro</h4>
-                                    <p>1,2k membros</p>
-                                </div>
-                            </div>
-                            <div className={styles.clube}>
-                                <img className={styles.imagemClube} src={fotoClube1} alt="" />
-                                <div>
-                                    <h4>Clube de Livro</h4>
-                                    <p>1,2k membros</p>
-                                </div>
-                            </div>
-                            <div className={styles.clube}>
-                                <img className={styles.imagemClube} src={fotoClube1} alt="" />
-                                <div>
-                                    <h4>Clube de Livro</h4>
-                                    <p>1,2k membros</p>
-                                </div>
-                            </div>
-                            <div className={styles.clube}>
-                                <img className={styles.imagemClube} src={fotoClube1} alt="" />
-                                <div>
-                                    <h4>Clube de Livro</h4>
-                                    <p>1,2k membros</p>
-                                </div>
-                            </div>
+                            {clubesUsuario.length > 0 ? (
+                                clubesUsuario.map((clube) => (
+                                    <div
+                                        key={clube.id_clube}
+                                        className={styles.clube}
+                                    >
+                                        <img
+                                            className={styles.imagemClube}
+                                            src={clube.foto || fotoClube1}
+                                            alt={clube.nome}
+                                            onError={(e) => {
+                                                e.target.src = fotoClube1
+                                            }}
+                                        />
+
+                                        <div>
+                                            <h4>{clube.nome}</h4>
+
+                                            <p>
+                                                {clube.membros}{" "}
+                                                {clube.membros === 1 ? "membro" : "membros"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>Você ainda não participa de nenhum clube.</p>
+                            )}
                         </div>
 
                     </div>

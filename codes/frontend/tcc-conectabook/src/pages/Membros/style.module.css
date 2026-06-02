@@ -1,6 +1,8 @@
 .mainMembro{
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
+    justify-content: start;
 }
 
 .membro img{
@@ -31,3 +33,10 @@
     justify-content: space-between;
     width: 25vw;
 }
+
+.container{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
