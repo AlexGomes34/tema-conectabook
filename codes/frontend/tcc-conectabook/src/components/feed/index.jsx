@@ -108,7 +108,7 @@ export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
 
             </form>
 
-            {listaPosts ?? [].map((post) => (
+            {(listaPosts ?? []).map((post) => (
                 <Postagem
                     key={post.id_mensagem}
                     post={post}
