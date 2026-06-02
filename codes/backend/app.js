@@ -6,7 +6,7 @@
  * Versão: 1.2
  *******************************************************************************************/
 
-const express = require('express') 
+const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
@@ -24,7 +24,7 @@ app.use('/uploads', express.static('uploads'))
 app.use(cors())
 
 // Middleware para JSON
-app.use(bodyParser.json()) 
+app.use(bodyParser.json())
 
 
 const usuarioRoutes = require('./routes/usuarioRoutes.js')
@@ -82,6 +82,6 @@ app.use('/v1/conectaBook/statusLivro', statusLivroRoutes)
 
 const PORT = process.env.PORT || 8080
 
-app.listen(PORT, function(){
+app.listen(PORT, function () {
     console.log(`Servidor rodando na porta ${PORT}...`)
 })
