@@ -209,7 +209,7 @@ const setUpdateMessages = async function (mensagem) {
             mensagem.id_mensagem
         ])
 
-        if (result && result[0] && result[0].affectedRows > 0) {
+        if (result && result[0] && (result[0].affectedRows > 0 || result[0].warningStatus === 0)) {
             return true
         } else {
             return false

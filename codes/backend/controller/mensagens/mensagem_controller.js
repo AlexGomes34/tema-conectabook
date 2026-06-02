@@ -1,5 +1,5 @@
-const mensagemDAO = require('../../model/DAO/mensagem.js'); 
-const messages = require('../modulo/config_messages.js'); 
+const mensagemDAO = require('../../model/DAO/mensagem.js');
+const messages = require('../modulo/config_messages.js');
 
 const listarTodasMensagens = async function () {
     try {
@@ -28,7 +28,7 @@ const buscarMensagemPorId = async function (id) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_REQUEST.status;
             responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-            responseData.response = result[0]; 
+            responseData.response = result[0];
             return responseData;
         } else {
             return messages.ERROR_NOT_FOUND;
@@ -58,7 +58,7 @@ const listarMensagensPorClube = async function (idClube) {
     }
 }
 
-const listarRespostasDeMensagem = async function(idMensagemPai) {
+const listarRespostasDeMensagem = async function (idMensagemPai) {
     if (idMensagemPai == undefined || idMensagemPai == '' || isNaN(idMensagemPai)) {
         return { status_code: 400, message: "O ID da mensagem pai enviado é inválido ou não foi fornecido." };
     }
@@ -113,11 +113,12 @@ const listarFeedPrincipalGeral = async function () {
 
 const inserirMensagem = async function (dadosMensagem, contentType) {
     try {
-        if (String(contentType).toLowerCase() !== 'application/json') {
+        // 1. CORRIGIDO: Agora aceita multipart/form-data em vez de travar apenas em application/json
+        if (String(contentType).toLowerCase().includes('multipart/form-data') === false) {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        // VALIDAÇÃO: Substituído id_conversa por validação opcional de id_clube
+        // VALIDAÇÃO: Campos estritamente obrigatórios
         if (
             dadosMensagem.comentario == '' || dadosMensagem.comentario == undefined || dadosMensagem.comentario.length > 65535 ||
             dadosMensagem.id_usuario == '' || dadosMensagem.id_usuario == undefined || isNaN(dadosMensagem.id_usuario)
@@ -125,12 +126,16 @@ const inserirMensagem = async function (dadosMensagem, contentType) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
+        // 2. CORRIGIDO: Limpa chaves vazias vindas do form-data para não quebrar no isNaN()
+        if (dadosMensagem.id_clube === '' || dadosMensagem.id_clube === 'null') dadosMensagem.id_clube = undefined;
+        if (dadosMensagem.id_mensagem_pai === '' || dadosMensagem.id_mensagem_pai === 'null') dadosMensagem.id_mensagem_pai = undefined;
+
         // Valida se o id_clube enviado (caso exista) é numérico
-        if (dadosMensagem.id_clube !== undefined && dadosMensagem.id_clube !== null && dadosMensagem.id_clube !== '') {
+        if (dadosMensagem.id_clube !== undefined && dadosMensagem.id_clube !== null) {
             if (isNaN(dadosMensagem.id_clube)) return messages.ERROR_REQUIRED_FIELDS;
         }
 
-        if (dadosMensagem.id_mensagem_pai !== undefined && dadosMensagem.id_mensagem_pai !== null && dadosMensagem.id_mensagem_pai !== '') {
+        if (dadosMensagem.id_mensagem_pai !== undefined && dadosMensagem.id_mensagem_pai !== null) {
             if (isNaN(dadosMensagem.id_mensagem_pai)) return messages.ERROR_REQUIRED_FIELDS;
         }
 
@@ -146,25 +151,41 @@ const inserirMensagem = async function (dadosMensagem, contentType) {
             return messages.ERROR_INTERNAL_SERVER_MODEL;
         }
     } catch (error) {
+        console.error("🚨 Erro na Controller de Mensagem:", error); // Adicionado log para te ajudar no terminal
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
 
 const atualizarMensagem = async function (dadosMensagem, contentType, idMensagem) {
     try {
+        // 1. Validação do ID da URL
         if (idMensagem == '' || idMensagem == undefined || isNaN(idMensagem)) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
-        if (String(contentType).toLowerCase() !== 'application/json') {
+
+        // 2. CORRIGIDO: Agora aceita multipart/form-data para permitir arquivos
+        if (String(contentType).toLowerCase().includes('multipart/form-data') === false) {
             return messages.ERROR_CONTENT_TYPE;
         }
+
+        // 3. Validação dos campos obrigatórios de texto
         if (dadosMensagem.comentario == '' || dadosMensagem.comentario == undefined) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
+        // 4. Verifica se a mensagem de fato existe no banco antes de atualizar
         let buscarMensagem = await mensagemDAO.getSelectByIdMessage(idMensagem);
+
         if (buscarMensagem) {
             dadosMensagem.id_mensagem = idMensagem;
+
+            // Tratamento estratégico para o arquivo:
+            // Se dadosMensagem.arquivo for undefined, significa que o usuário NÃO mandou um novo arquivo no Postman.
+            // Para não apagar o arquivo antigo que já estava no banco, recuperamos o nome dele:
+            if (dadosMensagem.arquivo === undefined && buscarMensagem[0] && buscarMensagem[0].arquivo) {
+                dadosMensagem.arquivo = buscarMensagem[0].arquivo;
+            }
+
             let result = await mensagemDAO.setUpdateMessages(dadosMensagem);
 
             if (result) {
@@ -180,6 +201,7 @@ const atualizarMensagem = async function (dadosMensagem, contentType, idMensagem
             return messages.ERROR_NOT_FOUND;
         }
     } catch (error) {
+        console.error("🚨 Erro na Controller de Mensagem (PUT):", error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
