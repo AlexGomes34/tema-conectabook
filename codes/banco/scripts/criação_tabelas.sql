@@ -37,7 +37,7 @@ CREATE TABLE tbl_livro (
     titulo VARCHAR(50) NOT NULL,
     isbn VARCHAR(20) NOT NULL,
     autor VARCHAR(50) NOT NULL,
-    descricao VARCHAR(300) NOT NULL,
+    descricao TEXT NOT NULL,
     capa TEXT NOT NULL
 );
 
