@@ -10,10 +10,10 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
-const router = express.Router() 
+const router = express.Router()
 const bodyParserJson = bodyParser.json()
 
-const controllerCurtida  = require('../controller/curtida/curtida_controller')
+const controllerCurtida = require('../controller/curtida/curtida_controller')
 
 
 // Configuração do CORS local para as rotas
@@ -26,7 +26,7 @@ router.use((request, response, next) => {
 // ENDPOINTS Curtidas
 
 // GET - Retorna uma lista de curtidas do BD
-router.get('/', cors(), async function(request, response){
+router.get('/', cors(), async function (request, response) {
     // Chamada da função listarCurtidas da controller
     let dadosCurtidas = await controllerCurtida.listarTodasCurtidas()
 
@@ -48,8 +48,21 @@ router.get('/:id', cors(), async function (request, response) {
     response.json(dadosCurtidas);
 });
 
+// GET - Retorna uma curtida do BD filtrando pela mensagem
+router.get('/mensagem/:id', cors(), async function (request, response) {
+    // 1. Pega o ID enviado pela URL
+    let idMensagem = request.params.id;
+
+    // CORRIGIDO: Agora chamando a função corretamente e passando o ID por parâmetro ()
+    let dadosCurtidas = await controllerCurtida.listarCurtidasPorMensagem(idMensagem);
+
+    // 2. Envia a resposta com o status correto
+    response.status(dadosCurtidas.status_code);
+    response.json(dadosCurtidas);
+});
+
 // POST - Insere uma nova curtida no BD
-router.post('/', cors(), bodyParserJson, async function(request, response) {
+router.post('/', cors(), bodyParserJson, async function (request, response) {
     let dadosBody = request.body
     let contentType = request.headers['content-type']
 
@@ -57,12 +70,12 @@ router.post('/', cors(), bodyParserJson, async function(request, response) {
 
     response.status(dadosCurtidas.status_code)
     response.json(dadosCurtidas)
-    
+
 })
 
 
 //DELETE - Deleta uma curtida do BD
-router.delete('/:id', cors(), async function(request, response){
+router.delete('/:id', cors(), async function (request, response) {
     let idCurtida = request.params.id
 
     let dadosCurtidas = await controllerCurtida.excluirCurtida(idCurtida)

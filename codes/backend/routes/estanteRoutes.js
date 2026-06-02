@@ -10,7 +10,7 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
-const router = express.Router() 
+const router = express.Router()
 const bodyParserJson = bodyParser.json()
 
 // Importação da Controller da Estante
@@ -106,14 +106,6 @@ router.put('/:id', cors(), bodyParserJson, async function (request, response) {
 router.delete('/:id', cors(), async function (request, response) {
     let idEstante = request.params.id
     let dados = await controllerEstante.excluirItemEstante(idEstante)
-    response.status(dados.status_code).json(dados)
-})
-
-// URL: DELETE http://localhost:8080/v1/conectaBook/estante/usuario/:id
-// DELETE - Limpa e remove absolutamente todos os livros da estante de um usuário
-router.delete('/usuario/:id', cors(), async function (request, response) {
-    let idUsuario = request.params.id
-    let dados = await controllerEstante.excluirEstantePorUsuario(idUsuario)
     response.status(dados.status_code).json(dados)
 })
 
