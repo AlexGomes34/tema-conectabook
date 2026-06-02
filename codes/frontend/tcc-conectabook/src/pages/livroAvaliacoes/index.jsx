@@ -4,7 +4,7 @@ import Header from "../../components/header";
 import LivroTitulosSemelhantes from "../../components/livroTitulosSemelhantes";
 
 import fotoLivro1 from "../../assets/fotoLivro1.jpg";
-import fotoPessoa1 from "../../assets/fotoPessoa1.jpg";
+import fotoPessoa1 from "../../assets/userDefault.webp";
 
 import styles from "./style.module.css";
 
@@ -39,17 +39,19 @@ export default function LivroAvaliacao() {
     }, []);
 
     // ─── 2. Garante que o livro existe no banco ao entrar na página ───────────
-    //        Se já existir, o backend deve retornar 409 — ignoramos silenciosamente.
     useEffect(() => {
         if (!livro) return;
 
         async function garantirLivroNoBanco() {
             const payload = {
-                isbn: livro.isbn ?? livro.id,
+                id_livro: livro.id,
+                isbn: livro.isbn,         // usa isbn se disponível, senão o id da OpenLibrary
                 titulo: livro.title ?? livro.titulo,
                 autor: livro.author ?? livro.autor,
                 descricao: livro.descricao ?? livro.description ?? "Sem descrição",
+                capa: livro.coverUrl
             }
+            console.log(payload)
             try {
                 await fetch(`${API_URL}/livros`, {
                     method: "POST",
@@ -88,7 +90,8 @@ export default function LivroAvaliacao() {
                 const mediaData = await mediaRes.json();
 
                 // A rota retorna { response: [...] } conforme o controller
-                setAvaliacoes(avaliacoesData.response ?? avaliacoesData);
+                const raw = avaliacoesData.response ?? avaliacoesData
+                setAvaliacoes(Array.isArray(raw) ? raw : [])
                 setMedia(mediaData.response ?? mediaData);
             } catch (error) {
                 console.error("Erro ao buscar avaliações:", error);
@@ -121,13 +124,13 @@ export default function LivroAvaliacao() {
 
         try {
             // ── Etapa A: cria a avaliação ──────────────────────────────────────
-            const resAvaliacao = await fetch(`${API_URL}/avaliacoes`, {
+            const resAvaliacao = await fetch(`${API_URL}/avaliacao`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     estrelas: estrelas,
                     id_usuario: user?.user?.id,
-                    texto: novaAvaliacao,
+                    mensagem: novaAvaliacao,
                 }),
             });
 
@@ -142,7 +145,9 @@ export default function LivroAvaliacao() {
             // ── Etapa B: vincula avaliação ao livro ────────────────────────────
             const idAvaliacao = avaliacaoData.id ?? avaliacaoData.response?.id;
 
-            const resVinculo = await fetch(`${API_URL}/avaliacoes-livro`, {
+            console.log(avaliacaoData)
+
+            const resVinculo = await fetch(`${API_URL}/avaliacao-livro`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -161,12 +166,12 @@ export default function LivroAvaliacao() {
             const novaAvaliacaoObj = {
                 id: idAvaliacao,
                 estrelas: estrelas,
-                texto: novaAvaliacao,
+                mensagem: novaAvaliacao,
                 nome_usuario: user?.user?.nome ?? "Você",
                 foto_perfil: user?.user?.foto_perfil ?? null,
             };
 
-            setAvaliacoes((prev) => [novaAvaliacaoObj, ...prev]);
+            setAvaliacoes((prev) => [novaAvaliacaoObj, ...(Array.isArray(prev) ? prev : [])]);
             setNovaAvaliacao("");
             setEstrelas(0);
             setSucesso(true);
@@ -197,7 +202,7 @@ export default function LivroAvaliacao() {
                             <FontAwesomeIcon className={styles.icone} icon={faStar} size="lg" />
                             <div>
                                 <p>Média</p>
-                                <p>{media?.media ?? "—"}</p>
+                                <p>{media?.media_estrelas ?? "—"}</p>
                             </div>
                         </div>
                         <div className={styles.infoLivro}>
@@ -211,7 +216,7 @@ export default function LivroAvaliacao() {
                             <FontAwesomeIcon className={styles.icone} icon={faPeopleGroup} size="lg" />
                             <div>
                                 <p>Avaliações</p>
-                                <p>{media?.total ?? "—"}</p>
+                                <p>{media?.total_avaliacoes ?? "—"}</p>
                             </div>
                         </div>
                     </div>
@@ -294,7 +299,7 @@ export default function LivroAvaliacao() {
                                 )}
 
                                 <div>
-                                    <p>{avaliacao.texto}</p>
+                                    <p>{avaliacao.mensagem}</p>
                                 </div>
                             </div>
                         ))}

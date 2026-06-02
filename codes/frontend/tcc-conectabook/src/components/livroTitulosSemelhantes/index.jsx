@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import styles from "./style.module.css"
+import { useNavigate } from "react-router-dom"
 
 // Recebe o livro atual como prop para buscar semelhantes
 // Ex: <LivroTitulosSemelhantes livroAtual={{ titulo: "O Pequeno Príncipe", autor: "Antoine de Saint-Exupéry" }} />
@@ -7,11 +8,12 @@ export default function LivroTitulosSemelhantes({ livroAtual }) {
     const [livros, setLivros] = useState([])
     const [loading, setLoading] = useState(true)
     const [erro, setErro] = useState(null)
+    const navigate = useNavigate()
 
     useEffect(() => {
-    if (!livroAtual?.titulo) return
-    buscarLivrosSemelhantes(livroAtual.titulo, livroAtual.autor)
-}, [livroAtual?.titulo, livroAtual?.autor]) // ← só os valores, não o objeto
+        if (!livroAtual?.titulo) return
+        buscarLivrosSemelhantes(livroAtual.titulo, livroAtual.autor)
+    }, [livroAtual?.titulo, livroAtual?.autor]) // ← só os valores, não o objeto
 
     async function buscarLivrosSemelhantes(titulo, autor) {
         setLoading(true)
@@ -54,6 +56,7 @@ export default function LivroTitulosSemelhantes({ livroAtual }) {
                 }))
 
             setLivros(semelhantes || [])
+            console.log(livros)
         } catch (err) {
             console.error(err)
             setErro("Não foi possível carregar títulos semelhantes.")
@@ -78,7 +81,8 @@ export default function LivroTitulosSemelhantes({ livroAtual }) {
                         <p className={styles.mensagem}>Nenhum título semelhante encontrado.</p>
                     ) : (
                         livros.map((livro) => (
-                            <div className={styles.tituloSemelhante} key={livro.id}>
+                            <div className={styles.tituloSemelhante} key={livro.id} onClick={() => navigate(`/livroDetalhe/${livro.id.split("/").pop()}`)}
+                                style={{ cursor: "pointer" }}>
                                 {livro.imagem ? (
                                     <img src={livro.imagem} alt={livro.nome} />
                                 ) : (
