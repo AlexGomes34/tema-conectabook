@@ -1,13 +1,13 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pela manipulação das regras de negócio de acessos a livros
  * Projeto: ConectaBook
- * Data: 15/05/2026
+ * Data: 01/06/2026
  * Autor: Alex Henrique Da Cruz Gomes
- * Versão: 1.0
+ * Versão: 1.1
  *******************************************************************************************/
 
 const acessoLivroDAO = require('../../model/DAO/acesso_livro.js');
-const messages = require('../modulo/config_messages.js'); // Ajuste o caminho se necessário
+const messages = require('../modulo/config_messages.js'); 
 
 // GET - Listar todos os acessos
 const listarAcessos = async function () {
@@ -28,7 +28,7 @@ const listarAcessos = async function () {
     }
 }
 
-// GET - Buscar um acesso específico pelo ID único dele
+// GET - Buscar um acesso específico pelo ID único dele (Numérico)
 const buscarAcessoPorId = async function (id) {
     if (id == '' || id == undefined || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS;
@@ -51,7 +51,7 @@ const buscarAcessoPorId = async function (id) {
     }
 }
 
-// GET - Buscar todo o histórico de um usuário
+// GET - Buscar todo o histórico de um usuário (Numérico)
 const listarHistoricoDoUsuario = async function (idUsuario) {
     if (idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
         return messages.ERROR_REQUIRED_FIELDS;
@@ -78,10 +78,11 @@ const listarHistoricoDoUsuario = async function (idUsuario) {
 const registrarAcesso = async function (dadosAcesso, contentType) {
     try {
         if (String(contentType).toLowerCase() !== 'application/json') {
-            return messages.ERROR_CONTENT_TYPE; // Ajustado o bug da de livros que dava required fields aqui
+            return messages.ERROR_CONTENT_TYPE;
         }
 
-        if (dadosAcesso.id_livro == '' || dadosAcesso.id_livro == undefined || isNaN(dadosAcesso.id_livro) ||
+        // AJUSTADO: Removido 'isNaN(dadosAcesso.id_livro)' do validador de campos obrigatórios
+        if (dadosAcesso.id_livro == '' || dadosAcesso.id_livro == undefined ||
             dadosAcesso.id_usuario == '' || dadosAcesso.id_usuario == undefined || isNaN(dadosAcesso.id_usuario)) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
@@ -101,7 +102,7 @@ const registrarAcesso = async function (dadosAcesso, contentType) {
     }
 }
 
-// DELETE - Remover um item do histórico
+// DELETE - Remover um item do histórico (Numérico)
 const excluirAcesso = async function (id) {
     if (id == '' || id == undefined || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS;

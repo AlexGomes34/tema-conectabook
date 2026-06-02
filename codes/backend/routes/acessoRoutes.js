@@ -1,9 +1,9 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pelas rotas do histórico de acessos de livros
  * Projeto: ConectaBook
- * Data: 15/05/2026
+ * Data: 01/06/2026
  * Autor: Alex Henrique Da Cruz Gomes
- * Versão: 1.0
+ * Versão: 1.1
  *******************************************************************************************/
 
 const express = require('express')
@@ -13,7 +13,7 @@ const bodyParser = require('body-parser')
 const router = express.Router() 
 const bodyParserJson = bodyParser.json()
 
-const controllerAcesso = require('../controller/acesso_livro/acesso_controller.js') // Ajuste o caminho se necessário
+const controllerAcesso = require('../controller/acesso_livro/acesso_controller.js')
 
 // Configuração do CORS local
 router.use((request, response, next) => {
@@ -24,51 +24,41 @@ router.use((request, response, next) => {
 
 // ENDPOINTS ACESSOS
 
-// http://localhost:8080/v1/conectaBook/livro-acesso
 // GET - Retorna o histórico de acessos geral do sistema
 router.get('/', cors(), async function(request, response){
     let dados = await controllerAcesso.listarAcessos()
-    response.status(dados.status_code)
-    response.json(dados)
+    response.status(dados.status_code).json(dados)
 })
 
-// http://localhost:8080/v1/conectaBook/livro-acesso/:id
-// GET - Retorna os dados de um acesso único pelo ID
+// GET - Retorna os dados de um acesso único pelo ID incremental da intermediária
 router.get('/:id', cors(), async function(request, response){
     let idAcesso = request.params.id
     let dados = await controllerAcesso.buscarAcessoPorId(idAcesso)
-    response.status(dados.status_code)
-    response.json(dados)
+    response.status(dados.status_code).json(dados)
 })
 
-// http://localhost:8080/v1/conectaBook/livro-acesso/usuario/:id
-// GET - Retorna todo o histórico de um usuário específico (Passando id_usuario na rota)
+// GET - Retorna todo o histórico de um usuário específico (id_usuario numérico)
 router.get('/usuario/:id', cors(), async function(request, response){
     let idUsuario = request.params.id
     let dados = await controllerAcesso.listarHistoricoDoUsuario(idUsuario)
-    response.status(dados.status_code)
-    response.json(dados)
+    response.status(dados.status_code).json(dados)
 })
 
-// http://localhost:8080/v1/conectaBook/livro-acesso
-// POST - Registra um novo acesso quando o usuário entra na tela do livro
+// POST - Registra um novo acesso quando o usuário entra na tela do livro (id_livro string no body)
 router.post('/', cors(), bodyParserJson, async function(request, response) {
     let dadosBody = request.body
     let contentType = request.headers['content-type']
 
     let result = await controllerAcesso.registrarAcesso(dadosBody, contentType)
-    response.status(result.status_code)
-    response.json(result)
+    response.status(result.status_code).json(result)
 })
 
-// http://localhost:8080/v1/conectaBook/livro-acesso/:id
 // DELETE - Remove um registro do histórico pelo ID único da tabela intermediária
 router.delete('/:id', cors(), async function(request, response){
     let idAcesso = request.params.id
 
     let result = await controllerAcesso.excluirAcesso(idAcesso)
-    response.status(result.status_code)
-    response.json(result)
+    response.status(result.status_code).json(result)
 })
 
-module.exports = router
+module.exports = router;

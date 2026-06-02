@@ -1,46 +1,45 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pela realização do CRUD de mensagem no Banco de Dados MySQL
+ * Mudança: Remoção completa de tbl_conversa. Relacionamento direto através de id_clube.
  * Projeto: ConectaBook
- * Data: 14/05/2026
- * Autor: Geovanna Silva
- * Versão: 1.2
+ * Data: 01/06/2026
+ * Autor: Geovanna Silva / Alex Gomes
+ * Versão: 2.0
  *******************************************************************************************/
 
 const db = require('../../database/connection')
 
 // RETORNA TODAS AS MENSAGENS
 const getSelectAllMessages = async function () {
-     try{
+    try {
         let sql = `select * from tbl_mensagem order by id_mensagem asc`
         let result = await db.raw(sql)
 
-        if(result && result[0].length > 0)
+        if (result && result[0].length > 0)
             return result[0]
         else
             return false
     } catch (error) {
         return false
     }
-    
 }
 
 // RETORNA UMA MENSAGEM PELO ID
 const getSelectByIdMessage = async function (id) {
     try {
-        let sql = `select * from tbl_mensagem where id_mensagem = ${id}`
-        let result = await db.raw(sql)
+        let sql = `select * from tbl_mensagem where id_mensagem = ?`
+        let result = await db.raw(sql, [id])
 
-        if(result && result[0].length > 0 )
+        if (result && result[0].length > 0)
             return result[0]
         else
             return false
-    } catch (error){
+    } catch (error) {
         return false
     }
-    
 }
 
-// RETORNA TODAS AS MENSAGENS DE UM CLUBE ESPECÍFICO
+// RETORNA TODAS AS MENSAGENS DE UM CLUBE ESPECÍFICO (CRONOLÓGICO)
 const getSelectMessagesByIdClub = async function (idClube) {
     try {
         let sql = `select 
@@ -49,13 +48,13 @@ const getSelectMessagesByIdClub = async function (idClube) {
                     tbl_mensagem.arquivo,
                     tbl_mensagem.data_postagem,
                     tbl_mensagem.id_mensagem_pai,
+                    tbl_mensagem.id_clube,
                     tbl_usuario.id_usuario,
                     tbl_usuario.nome_usuario,
                     tbl_usuario.foto_perfil
                    from tbl_mensagem
-                        inner join tbl_conversa on tbl_mensagem.id_conversa = tbl_conversa.id_conversa
                         inner join tbl_usuario on tbl_mensagem.id_usuario = tbl_usuario.id_usuario
-                   where tbl_conversa.id_clube = ?
+                   where tbl_mensagem.id_clube = ?
                    order by tbl_mensagem.data_postagem asc`
         
         let result = await db.raw(sql, [idClube])
@@ -85,7 +84,7 @@ const getRepliesByMessageId = async function (idMensagemPai) {
                    from tbl_mensagem
                         inner join tbl_usuario on tbl_mensagem.id_usuario = tbl_usuario.id_usuario
                    where tbl_mensagem.id_mensagem_pai = ?
-                   order by tbl_mensagem.data_postagem asc` // Ordem cronológica das respostas
+                   order by tbl_mensagem.data_postagem asc`
         
         let result = await db.raw(sql, [idMensagemPai])
 
@@ -108,15 +107,15 @@ const getMainMessagesByClubId = async function (idClube) {
                     tbl_mensagem.arquivo,
                     tbl_mensagem.data_postagem,
                     tbl_mensagem.id_mensagem_pai,
+                    tbl_mensagem.id_clube,
                     tbl_usuario.id_usuario,
                     tbl_usuario.nome_usuario,
                     tbl_usuario.foto_perfil
                    from tbl_mensagem
-                        inner join tbl_conversa on tbl_mensagem.id_conversa = tbl_conversa.id_conversa
                         inner join tbl_usuario on tbl_mensagem.id_usuario = tbl_usuario.id_usuario
-                   where tbl_conversa.id_clube = ? 
+                   where tbl_mensagem.id_clube = ? 
                      and tbl_mensagem.id_mensagem_pai is null
-                   order by tbl_mensagem.data_postagem desc` // 'desc' para ver os posts mais recentes no topo do feed
+                   order by tbl_mensagem.data_postagem desc`
         
         let result = await db.raw(sql, [idClube])
 
@@ -130,7 +129,7 @@ const getMainMessagesByClubId = async function (idClube) {
     }
 }
 
-// RETORNA AS MENSAGENS PRINCIPAIS DO FEED GERAL (COM OU SEM CLUBE VINCULADO)
+// RETORNA AS MENSAGENS PRINCIPAIS DO FEED GERAL (SEM CLUBE VINCULADO)
 const getAllMainMessagesFeed = async function () {
     try {
         let sql = `select 
@@ -142,10 +141,9 @@ const getAllMainMessagesFeed = async function () {
                     tbl_usuario.nome_usuario,
                     tbl_usuario.foto_perfil
                    from tbl_mensagem
-                        inner join tbl_conversa on tbl_mensagem.id_conversa = tbl_conversa.id_conversa
                         inner join tbl_usuario on tbl_mensagem.id_usuario = tbl_usuario.id_usuario
-                        left join tbl_clube on tbl_conversa.id_clube = tbl_clube.id_clube -- LEFT JOIN aceita NULL se for post geral
-                   where tbl_mensagem.id_mensagem_pai is null
+                   where tbl_mensagem.id_mensagem_pai is null 
+                     and tbl_mensagem.id_clube is null -- Filtra posts sem clube
                    order by tbl_mensagem.data_postagem desc`
         
         let result = await db.raw(sql)
@@ -163,10 +161,9 @@ const getAllMainMessagesFeed = async function () {
 // INSERE UMA MENSAGEM
 const setInsertMessage = async function (mensagem) {
     try {
-        // O Knex/MySQL aceita a palavra null nativa do JS se passarmos via parâmetro (?)
-        // Aqui garantimos o mapeamento correto dos campos que podem ser nulos
         const arquivo = mensagem.arquivo && mensagem.arquivo !== '' ? mensagem.arquivo : null;
         const idMensagemPai = mensagem.id_mensagem_pai && mensagem.id_mensagem_pai !== '' ? mensagem.id_mensagem_pai : null;
+        const idClube = mensagem.id_clube && mensagem.id_clube !== '' ? mensagem.id_clube : null; // Substitui id_conversa
 
         let sql = `
          insert into tbl_mensagem (
@@ -174,143 +171,110 @@ const setInsertMessage = async function (mensagem) {
                 arquivo,
                 id_usuario,
                 id_mensagem_pai,
-                id_conversa
-         ) values (?, ?, ?, ?, ?)` // 5 interrogações bem separadas por vírgulas
+                id_clube
+         ) values (?, ?, ?, ?, ?)`
 
-        // Passamos os dados estritamente na ordem das interrogações acima
         let result = await db.raw(sql, [
             mensagem.comentario,
             arquivo,
             mensagem.id_usuario,
             idMensagemPai,
-            mensagem.id_conversa
+            idClube
         ])
 
-        // Verifica se a linha foi afetada com sucesso
         if (result && result[0].affectedRows > 0)
             return true
         else
             return false
 
     } catch (error) {
-        // Log para você ver exatamente o que o banco reclamou caso falhe por outra coisa (como FK inexistente)
         console.error("🚨 ERRO NO BANCO AO INSERIR MENSAGEM:", error.message);
         return false
     }
 }
 
-// ATUALIZA UMA MENSAGEM (Geralmente usada para editar o texto ou o anexo de um post)
+// ATUALIZA UMA MENSAGEM
 const setUpdateMessages = async function (mensagem) {
     try {
-        // Tratamento para o arquivo (caso o usuário queira remover o anexo na edição, vira null)
-        const arquivo = mensagem.arquivo && mensagem.arquivo !== '' ? mensagem.arquivo : null;
+        const arquivo = message.arquivo && mensagem.arquivo !== '' ? mensagem.arquivo : null;
 
-        // Montamos a query usando os placeholders '?' para o Knex tratar as strings e nulos
         let sql = `update tbl_mensagem set
                         comentario = ?,
                         arquivo = ?
                    where id_mensagem = ?`
 
-        // Passamos os valores na ordem exata das interrogações
         let result = await db.raw(sql, [
             mensagem.comentario,
             arquivo,
-            mensagem.id_mensagem // Corrigido: pegando de dentro do objeto mensagem
+            mensagem.id_mensagem
         ])
 
-        // Verifica se o MySQL de fato alterou ou encontrou a linha
         if (result && result[0] && result[0].affectedRows > 0) {
             return true
         } else {
             return false
         }
-
     } catch (error) {
         console.error("🚨 ERRO NO BANCO AO ATUALIZAR MENSAGEM:", error.message);
         return false
     }
 }
 
-// DELETA UMA MENSAGEM, SUAS RESPOSTAS E SUAS CURTIDAS (Funciona para mensagens com ou sem replies)
+// DELETA UMA MENSAGEM E SUAS RESPOSTAS
 const setDeleteMessageWithReplies = async function (idMensagem) {
     const transaction = await db.transaction();
-
     try {
-        //DELETA as curtidas das respostas
         let sqlCurtidasFilhas = `delete from tbl_curtida 
-                                where id_mensagem in (select id_mensagem from tbl_mensagem where id_mensagem_pai = ${idMensagem})`
-        await transaction.raw(sqlCurtidasFilhas)
+                                where id_mensagem in (select id_mensagem from tbl_mensagem where id_mensagem_pai = ?)`
+        await transaction.raw(sqlCurtidasFilhas, [idMensagem])
 
-        //Deleta as curtidas da própria mensagem principal
-        let sqlCurtidasPrincipal = `delete from tbl_curtida where id_mensagem = ${idMensagem}`
-        await transaction.raw(sqlCurtidasPrincipal)
+        let sqlCurtidasPrincipal = `delete from tbl_curtida where id_mensagem = ?`
+        await transaction.raw(sqlCurtidasPrincipal, [idMensagem])
 
-        //Deleta todas as respostas
-        let sqlFilhas = `delete from tbl_mensagem where id_mensagem_pai = ${idMensagem}`
-        await transaction.raw(sqlFilhas)
+        let sqlFilhas = `delete from tbl_mensagem where id_mensagem_pai = ?`
+        await transaction.raw(sqlFilhas, [idMensagem])
 
-        //Deleta a mensagem principal
-        let sqlPrincipal = `delete from tbl_mensagem where id_mensagem = ${idMensagem}`
-        let resultPrincipal = await transaction.raw(sqlPrincipal)
+        let sqlPrincipal = `delete from tbl_mensagem where id_mensagem = ?`
+        let resultPrincipal = await transaction.raw(sqlPrincipal, [idMensagem])
 
         await transaction.commit();
 
         if (resultPrincipal && resultPrincipal[0].affectedRows > 0) {
             return true
         }
-        
         return false
-
     } catch (error) {
         await transaction.rollback();
         return false
     }
 }
 
-// DELETA TODAS AS MENSAGENS E CURTIDAS DE UM CLUBE ESPECÍFICO
+// DELETA TODAS AS MENSAGENS DE UM CLUBE ESPECÍFICO
 const setDeleteAllMessagesByClubId = async function (idClube) {
     const transaction = await db.transaction();
-
     try {
-        //Deleta todas as curtidas das mensagens que pertencem à conversa/chat desse clube
-        let sqlCurtidas = `delete from tbl_curtida 
-                           where id_mensagem in (
-                               select id_mensagem from tbl_mensagem 
-                               where id_conversa = (select id_conversa from tbl_conversa where id_clube = ?)
-                           )`
+        let sqlCurtidas = `delete from tbl_curtida where id_mensagem in (select id_mensagem from tbl_mensagem where id_clube = ?)`
         await transaction.raw(sqlCurtidas, [idClube])
 
-        //Deleta primeiro as respostas (mensagens filhas) para não quebrar a Foreign Key do auto-relacionamento
-        let sqlRespostas = `delete from tbl_mensagem 
-                            where id_mensagem_pai is not null 
-                              and id_conversa = (select id_conversa from tbl_conversa where id_clube = ?)`
+        let sqlRespostas = `delete from tbl_mensagem where id_mensagem_pai is not null and id_clube = ?`
         await transaction.raw(sqlRespostas, [idClube])
 
-        //Agora que as respostas sumiram, deleta as mensagens principais (posts iniciais) do clube
-        let sqlPrincipais = `delete from tbl_mensagem 
-                             where id_conversa = (select id_conversa from tbl_conversa where id_clube = ?)`
-        let result = await transaction.raw(sqlPrincipais, [idClube])
+        let sqlPrincipais = `delete from tbl_mensagem where id_clube = ?`
+        await transaction.raw(sqlPrincipais, [idClube])
 
-        //Confirma a limpa total no banco
         await transaction.commit();
-
-        //Se a query rodou com sucesso (mesmo que o clube já estivesse sem mensagens), retornamos true
         return true;
-
     } catch (error) {
-        //Se der ruim em qualquer passo, desfaz tudo
         await transaction.rollback();
         console.error("🚨 ERRO CRÍTICO AO LIMPAR MENSAGENS DO CLUBE:", error.message)
         return false
     }
 }
 
-// DELETA TODAS AS MENSAGENS, RESPOSTAS E CURTIDAS VINCULADAS A UM USUÁRIO ESPECÍFICO
+// DELETA TODAS AS MENSAGENS DE UM USUÁRIO
 const setDeleteAllMessagesByUserId = async function (idUsuario) {
     const transaction = await db.transaction();
-
     try {
-        //Deleta as curtidas recebidas nas RESPOSTAS dos posts desse usuário
         let sqlCurtidasRespostas = `
             delete from tbl_curtida 
             where id_mensagem in (
@@ -319,14 +283,11 @@ const setDeleteAllMessagesByUserId = async function (idUsuario) {
             )`
         await transaction.raw(sqlCurtidasRespostas, [idUsuario])
 
-        //Deleta as curtidas recebidas nas mensagens principais dele
         let sqlCurtidasPrincipais = `
             delete from tbl_curtida 
             where id_mensagem in (select id_mensagem from tbl_mensagem where id_usuario = ?)`
         await transaction.raw(sqlCurtidasPrincipais, [idUsuario])
 
-        //Deleta as respostas (comentários) que outros usuários deixaram nos posts dele
-        // Usamos um subquery com 'as tm' para o MySQL não reclamar de travar a tabela durante o delete
         let sqlRespostasDeTerceiros = `
             delete from tbl_mensagem 
             where id_mensagem_pai in (
@@ -334,18 +295,12 @@ const setDeleteAllMessagesByUserId = async function (idUsuario) {
             )`
         await transaction.raw(sqlRespostasDeTerceiros, [idUsuario])
 
-        //Agora que a área está limpa de dependências, deleta todas as mensagens do próprio usuário
-        // Isso inclui tanto os posts principais dele quanto as respostas que ele deu nos posts de outras pessoas
         let sqlMensagensDoUsuario = `delete from tbl_mensagem where id_usuario = ?`
-        let result = await transaction.raw(sqlMensagensDoUsuario, [idUsuario])
+        await transaction.raw(sqlMensagensDoUsuario, [idUsuario])
 
-        //Confirma as deleções em lote no banco
         await transaction.commit();
-
         return true;
-
     } catch (error) {
-        //Se der qualquer erro de constraint, desfaz tudo para não corromper os históricos
         await transaction.rollback();
         return false
     }

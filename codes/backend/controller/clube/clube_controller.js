@@ -7,7 +7,6 @@
  *******************************************************************************************/
 
 const clubeDAO = require("../../model/DAO/clube.js");
-const conversaDAO = require("../../model/DAO/conversa.js")
 const messages = require("../modulo/config_messages.js");
 
 

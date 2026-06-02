@@ -1,9 +1,9 @@
 /*******************************************************************************************
  * Objetivo: Arquivo responsável pela manipulação da camada model da relação Avaliação-Livro
  * Projeto: ConectaBook
- * Data: 26/05/2026
+ * Data: 01/06/2026
  * Autor: Alex Gomes
- * Versão: 1.0
+ * Versão: 1.1
  *******************************************************************************************/
 
 const avaliacaoLivroDAO = require("../../model/DAO/avaliacao_livro.js"); 
@@ -53,7 +53,8 @@ const listarAvaliacaoLivroID = async function (id) {
 
 // GET - Listar avaliações filtradas pelo ID do Livro
 const listarAvaliacoesPorLivro = async function (idLivro) {
-    if (idLivro == '' || idLivro == undefined || isNaN(idLivro)) {
+    // AJUSTADO: Removido 'isNaN(idLivro)' já que o ID agora é uma String da API
+    if (idLivro == '' || idLivro == undefined) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
     
@@ -101,7 +102,8 @@ const listarAvaliacoesPorUsuario = async function (idUsuario) {
 
 // GET - Listar estatísticas (total e média) de avaliações de um Livro
 const listarEstatisticasPorLivro = async function (idLivro) {
-    if (idLivro == '' || idLivro == undefined || isNaN(idLivro)) {
+    // AJUSTADO: Removido 'isNaN(idLivro)' já que o ID agora é uma String da API
+    if (idLivro == '' || idLivro == undefined) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
     
@@ -112,7 +114,7 @@ const listarEstatisticasPorLivro = async function (idLivro) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_REQUEST.status;
             responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-            responseData.response = result[0]; // Como é um agrupamento (group by), trazemos o índice 0
+            responseData.response = result[0]; 
             return responseData;
         } else {
             return messages.ERROR_NOT_FOUND;
@@ -129,10 +131,10 @@ const criarAvaliacaoLivro = async function (avaliacaoLivro, contentType) {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        // Validação: id_avaliacao e id_livro são obrigatórios na relação
+        // AJUSTADO: Removido 'isNaN(avaliacaoLivro.id_livro)' do validador do livro
         if (
             avaliacaoLivro.id_avaliacao == '' || avaliacaoLivro.id_avaliacao == undefined || isNaN(avaliacaoLivro.id_avaliacao) ||
-            avaliacaoLivro.id_livro == '' || avaliacaoLivro.id_livro == undefined || isNaN(avaliacaoLivro.id_livro)
+            avaliacaoLivro.id_livro == '' || avaliacaoLivro.id_livro == undefined
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
@@ -164,9 +166,10 @@ const atualizarAvaliacaoLivro = async function (avaliacaoLivro, contentType, id)
             return messages.ERROR_CONTENT_TYPE;
         }
 
+        // AJUSTADO: Removido 'isNaN(avaliacaoLivro.id_livro)' do validador do livro
         if (
             avaliacaoLivro.id_avaliacao == '' || avaliacaoLivro.id_avaliacao == undefined || isNaN(avaliacaoLivro.id_avaliacao) ||
-            avaliacaoLivro.id_livro == '' || avaliacaoLivro.id_livro == undefined || isNaN(avaliacaoLivro.id_livro)
+            avaliacaoLivro.id_livro == '' || avaliacaoLivro.id_livro == undefined
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
