@@ -155,7 +155,7 @@ function Feed() {
                 fotoUser={user?.user?.foto_perfil}
             />
             <div className={styles.mainFeed}>
-                <LeftFeed feedUrl={"http://localhost:8080/v1/conectaBook/mensagem/feed/principal"} idConversa={1} />
+                <LeftFeed feedUrl={"http://localhost:8080/v1/conectaBook/mensagem/feed/principal"} />
                 <div className={styles.feedPageRight}>
                     <div className={styles.divRight}>
                         <div className={styles.divRightTitulo}>

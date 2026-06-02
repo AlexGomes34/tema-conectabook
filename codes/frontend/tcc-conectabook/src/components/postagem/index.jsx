@@ -8,7 +8,7 @@ import Input from '../input';
 
 import "./style.css"
 
-export default function Postagem({ post }) {
+export default function Postagem({ post, idClube }) {
 
     const [abrirComentario, setAbrirComentario] = useState(false)
     const [comentario, setComentario] = useState("")
@@ -28,8 +28,9 @@ export default function Postagem({ post }) {
 
             const body = {
                 comentario: textoSubResposta,
+                arquivo: null,
                 id_usuario: user.user.id,
-                id_conversa: 2,
+                id_clube: idClube ?? null,
                 id_mensagem_pai: idRespostaPai
             }
 
@@ -97,9 +98,7 @@ export default function Postagem({ post }) {
             setRespostaRespondendo(null)
 
         } catch (error) {
-
             console.log(error)
-
         }
 
     }
@@ -114,8 +113,9 @@ export default function Postagem({ post }) {
 
             const body = {
                 comentario: textoResposta,
+                arquivo: null,
                 id_usuario: user.user.id,
-                id_conversa: 2,
+                id_clube: idClube ?? null,
                 id_mensagem_pai: idComentarioPai
             }
 
@@ -131,8 +131,6 @@ export default function Postagem({ post }) {
             )
 
             const data = await response.json()
-
-            console.log(data.response)
 
             if (data.response) {
 
@@ -171,54 +169,33 @@ export default function Postagem({ post }) {
     }
 
     async function buscarComentarios() {
-
         try {
-
             const response = await fetch(
                 `http://localhost:8080/v1/conectaBook/mensagem/${post.id_mensagem}/respostas`
             )
-
+    
             const data = await response.json()
-
-            const comentariosPai = []
-            const respostas = []
-
-            data.response.forEach((item) => {
-
+            const todos = data.respostas  // <-- era data.response
+    
+            const mapa = {}
+            todos.forEach((item) => {
+                mapa[item.id_mensagem] = { ...item, respostas: [] }
+            })
+    
+            const raizes = []
+    
+            todos.forEach((item) => {
                 if (item.id_mensagem_pai === post.id_mensagem) {
-
-                    comentariosPai.push({
-                        ...item,
-                        respostas: []
-                    })
-
-                } else {
-
-                    respostas.push(item)
-
+                    raizes.push(mapa[item.id_mensagem])
+                } else if (mapa[item.id_mensagem_pai]) {
+                    mapa[item.id_mensagem_pai].respostas.push(mapa[item.id_mensagem])
                 }
-
             })
-
-            respostas.forEach((resposta) => {
-
-                const comentarioPai = comentariosPai.find(
-                    (comentario) =>
-                        comentario.id_mensagem === resposta.id_mensagem_pai
-                )
-
-                if (comentarioPai) {
-                    comentarioPai.respostas.push(resposta)
-                }
-
-            })
-
-            setComentarios(comentariosPai)
-
+    
+            setComentarios(raizes)
+    
         } catch (error) {
-
             console.log(error)
-
         }
     }
 
@@ -232,13 +209,11 @@ export default function Postagem({ post }) {
 
             const body = {
                 comentario: comentario,
+                arquivo: null,
                 id_usuario: user.user.id,
-                id_conversa: 2,
+                id_clube: idClube ?? null,
                 id_mensagem_pai: post.id_mensagem
             }
-
-            console.log(body)
-            console.log(user)
 
             const response = await fetch(
                 "http://localhost:8080/v1/conectaBook/mensagem",
@@ -252,8 +227,6 @@ export default function Postagem({ post }) {
             )
 
             const data = await response.json()
-
-            console.log(data)
 
             if (data.response) {
 
@@ -425,10 +398,7 @@ export default function Postagem({ post }) {
                                                     >
 
                                                         <img
-                                                            src={
-                                                                resposta.foto_perfil ||
-                                                                userDefault
-                                                            }
+                                                            src={resposta.foto_perfil || userDefault}
                                                             alt=""
                                                         />
 
@@ -444,13 +414,9 @@ export default function Postagem({ post }) {
                                                                     onClick={() => {
 
                                                                         if (respostaRespondendo === resposta.id_mensagem) {
-
                                                                             setRespostaRespondendo(null)
-
                                                                         } else {
-
                                                                             setRespostaRespondendo(resposta.id_mensagem)
-
                                                                         }
 
                                                                     }}
@@ -513,10 +479,7 @@ export default function Postagem({ post }) {
                                                                         >
 
                                                                             <img
-                                                                                src={
-                                                                                    subResposta.foto_perfil ||
-                                                                                    userDefault
-                                                                                }
+                                                                                src={subResposta.foto_perfil || userDefault}
                                                                                 alt=""
                                                                             />
 

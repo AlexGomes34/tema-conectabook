@@ -8,7 +8,7 @@ import userDefault from "../../assets/userDefault.webp"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function LeftFeed({ posts, idConversa, feedUrl }) {
+export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
 
     const [user, setUser] = useState({})
     const [mensagem, setMensagem] = useState("")
@@ -17,7 +17,6 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
     const navigate = useNavigate()
 
     useEffect(() => {
-
         const userStorage = JSON.parse(localStorage.getItem("user"))
 
         if (!userStorage) {
@@ -26,7 +25,6 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
             setUser(userStorage)
             console.log(user)
         }
-
     }, [])
 
     useEffect(() => {
@@ -34,16 +32,11 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
     }, [])
 
     async function carregarPosts() {
-
         try {
             const response = await fetch(feedUrl)
-
             const data = await response.json()
-
             console.log(data)
-
             setListaPosts(data.response)
-
         } catch (error) {
             console.log(error)
         }
@@ -57,12 +50,13 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
 
         const body = {
             comentario: mensagem,
+            arquivo: null,
             id_usuario: user.user.id,
-            id_conversa: idConversa
+            id_clube: idClube ?? null,
+            id_mensagem_pai: idConversa,
         }
 
         try {
-
             const response = await fetch("http://localhost:8080/v1/conectaBook/mensagem", {
                 method: "POST",
                 headers: {
@@ -74,9 +68,7 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
             const data = await response.json()
 
             if (response.ok) {
-
                 setMensagem("")
-
                 await carregarPosts()
             }
 
@@ -86,8 +78,6 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
             console.log(error)
         }
     }
-
-
 
     return (
         <div className="left-main">
@@ -99,28 +89,21 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
                     handlePost()
                 }}
             >
-
                 <div className="inputComFoto">
-
                     <img src={userDefault} alt="" />
-
                     <Input
                         placeholder="O que está pensando?"
                         value={mensagem}
                         onChange={(e) => setMensagem(e.target.value)}
                     />
-
                 </div>
 
                 <div className="inputComArquivo">
-
                     <Button text="Arquivo" />
-
                     <Button
                         text="Postar"
                         type="submit"
                     />
-
                 </div>
 
             </form>
@@ -129,6 +112,7 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
                 <Postagem
                     key={post.id}
                     post={post}
+                    idClube={idClube ?? null}
                 />
             ))}
 

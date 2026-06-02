@@ -99,8 +99,8 @@ export default function FeedClube() {
                         </div>
 
                         <LeftFeed
-                            idConversa={clube?.id_conversa}
-                            feedUrl={`http://localhost:8080/v1/conectaBook/clube/${idClube}/mensagens/principais`}
+                            idClube={idClube}
+                            feedUrl={`http://localhost:8080/v1/conectaBook/mensagem/clube/${idClube}/mensagens/principais`}
                         />
 
                     </div>
