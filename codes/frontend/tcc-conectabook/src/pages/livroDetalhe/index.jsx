@@ -87,6 +87,8 @@ export default function LivroDetalhe() {
 
                 const edition = editionsData.entries?.[0]
 
+                let isbn = null
+
                 if (edition) {
 
                     paginas =
@@ -96,6 +98,11 @@ export default function LivroDetalhe() {
                     anoPublicacao =
                         edition.publish_date ??
                         "Não informado"
+
+                    isbn =
+                        edition.isbn_13?.[0] ||
+                        edition.isbn_10?.[0] ||
+                        null
                 }
 
                 // =========================
@@ -103,25 +110,22 @@ export default function LivroDetalhe() {
                 // =========================
 
                 setLivro({
+                    id,
                     title: data.title,
-
                     author: authorName,
-
                     description:
                         data.description?.value ??
                         data.description ??
                         "Sem descrição.",
-
                     genero,
-
                     paginas,
-
                     anoPublicacao,
-
+                    isbn,
                     coverUrl: data.covers?.[0]
                         ? `https://covers.openlibrary.org/b/id/${data.covers[0]}-L.jpg`
                         : fotoLivro1
                 })
+                
 
             } catch (error) {
 
