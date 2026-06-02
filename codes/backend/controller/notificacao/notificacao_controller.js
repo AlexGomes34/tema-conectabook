@@ -73,7 +73,7 @@ const listarNotificacoesIdUsuario = async function (id) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
-    
+
 
 
 // POST - Criar notificacao
@@ -108,9 +108,7 @@ const criarNotificacao = async function (notificacao, contentType) {
 
 // PUT - Atualizar notificacao
 const atualizarNotificacao = async function (notificacao, contentType, id) {
-
     try {
-
         if (id == '' || id == undefined || isNaN(id)) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
@@ -124,9 +122,10 @@ const atualizarNotificacao = async function (notificacao, contentType, id) {
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
-            let result = await notificacaoDAO.getSelectByIdNotification(id)
+            // CORRIGIDO: Verificamos se o registro realmente existe antes de atualizar
+            let validacaoId = await notificacaoDAO.getSelectByIdNotification(id)
 
-            if (buscarId) {
+            if (validacaoId) {
                 notificacao.id = id
                 let result = await notificacaoDAO.setUpdateNotification(notificacao)
 
@@ -140,10 +139,11 @@ const atualizarNotificacao = async function (notificacao, contentType, id) {
                     return messages.ERROR_INTERNAL_SERVER_MODEL;
                 }
             } else {
-                return messages.ERROR_NOT_FOUND;
+                return messages.ERROR_NOT_FOUND; // 404 se a notificação não existir
             }
         }
     } catch (error) {
+        console.error("🚨 Erro na Controller de Notificação:", error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
@@ -178,8 +178,8 @@ const excluirNotificacao = async function (id) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
-        
-    
+
+
 module.exports = {
     listarNotificacoes,
     listarNotificacaoId,

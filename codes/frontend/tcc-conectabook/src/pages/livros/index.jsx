@@ -206,6 +206,7 @@ export default function Livro() {
             <Input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder={"Digite o nome de um livro"}
             />
 
             <select

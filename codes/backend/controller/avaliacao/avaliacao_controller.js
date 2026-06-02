@@ -70,6 +70,7 @@ const criarAvaliacao = async function (avaliacao, contentType) {
             if(result) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_CREATED_ITEM.status;
+                responseData.id = result.insertId;
                 responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
                 responseData.id = result.insertId;
                 responseData.response = messages.SUCCESS_CREATED_ITEM.message;

@@ -18,9 +18,9 @@ const listarLivrosLidos = async function (idUsuario) {
     try {
         // CORRIGIDO: Alterado de 'Lidos' para 'Lido' para bater exatamente com o banco de dados
         let dados = await estanteDAO.getSelectBookcaseByStatus(idUsuario, 'Lido');
-        return { 
-            status_code: 200, 
-            livros: dados && dados.length > 0 ? dados : [] 
+        return {
+            status_code: 200,
+            livros: dados && dados.length > 0 ? dados : []
         };
     } catch (error) {
         console.error("Erro na controller (Lidos):", error);
@@ -37,9 +37,9 @@ const listarLivrosLendo = async function (idUsuario) {
     try {
         // 'Lendo' bate perfeitamente com o banco
         let dados = await estanteDAO.getSelectBookcaseByStatus(idUsuario, 'Lendo');
-        return { 
-            status_code: 200, 
-            livros: dados && dados.length > 0 ? dados : [] 
+        return {
+            status_code: 200,
+            livros: dados && dados.length > 0 ? dados : []
         };
     } catch (error) {
         console.error("Erro na controller (Lendo):", error);
@@ -56,9 +56,9 @@ const listarLivrosQueroLer = async function (idUsuario) {
     try {
         // 'Quero Ler' bate perfeitamente com o banco
         let dados = await estanteDAO.getSelectBookcaseByStatus(idUsuario, 'Quero Ler');
-        return { 
-            status_code: 200, 
-            livros: dados && dados.length > 0 ? dados : [] 
+        return {
+            status_code: 200,
+            livros: dados && dados.length > 0 ? dados : []
         };
     } catch (error) {
         console.error("Erro na controller (Quero Ler):", error);
@@ -111,24 +111,27 @@ const listarEstantePorUsuario = async function (idUsuario) {
 
     try {
         let dados = await estanteDAO.getSelectBookcaseByIdUser(idUsuario);
-        return { 
-            status_code: 200, 
-            estante: dados && dados.length > 0 ? dados : [] 
+        return {
+            status_code: 200,
+            estante: dados && dados.length > 0 ? dados : []
         };
     } catch (error) {
         return { status_code: 500, message: "Erro interno no servidor ao buscar a estante do usuário." };
     }
 };
 
-// Insere um novo livro na estante
+// Insere um novo livro na estante (Versão Corrigida e Segura)
 const criarItemEstante = async function (dadosCorpo, contentType) {
     if (String(contentType).toLowerCase() !== 'application/json') {
         return { status_code: 415, message: "Tipo de mídia não suportado. Use application/json" };
     }
 
-    // Validação de campos obrigatórios
-    if (!dadosCorpo.id_usuario || !dadosCorpo.id_status_livro || !dadosCorpo.id_livro) {
-        return { status_code: 400, message: "Campos obrigatórios ausentes (id_usuario, id_status_livro, id_livro)." };
+    if (
+        dadosCorpo.id_usuario === undefined || dadosCorpo.id_usuario === null || dadosCorpo.id_usuario === '' ||
+        dadosCorpo.id_status_livro === undefined || dadosCorpo.id_status_livro === null || dadosCorpo.id_status_livro === '' ||
+        dadosCorpo.id_livro === undefined || dadosCorpo.id_livro === null || String(dadosCorpo.id_livro).trim() === ''
+    ) {
+        return { status_code: 400, message: "Campos obrigatórios ausentes ou inválidos (id_usuario, id_status_livro, id_livro)." };
     }
 
     try {
@@ -136,20 +139,21 @@ const criarItemEstante = async function (dadosCorpo, contentType) {
         if (result) {
             return { status_code: 201, message: "Livro adicionado à estante com sucesso!" };
         } else {
-            return { status_code: 400, message: "Não foi possível inserir o livro na estante. Verifique os dados." };
+            console.log(result)
+            return { status_code: 400, message: "Não foi possível inserir o livro na estante. Verifique as chaves estrangeiras no banco." };
         }
     } catch (error) {
+        console.error("🚨 Erro na Controller da Estante:", error); // Adicionado para você ver o erro no terminal se estourar catch
         return { status_code: 500, message: "Erro interno no servidor ao salvar item na estante." };
     }
 };
 
-// text/JSON ou ID String compatível
 const atualizarItemEstante = async function (dadosCorpo, contentType, idEstante) {
     if (String(contentType).toLowerCase() !== 'application/json') {
         return { status_code: 415, message: "Tipo de mídia não suportado. Use application/json" };
     }
 
-    if (idEstante == undefined || idEstante == '') {
+    if (idEstante == undefined || idEstante == '' || isNaN(idEstante)) {
         return { status_code: 400, message: "O ID para atualização é inválido ou vazio." };
     }
 
@@ -158,11 +162,12 @@ const atualizarItemEstante = async function (dadosCorpo, contentType, idEstante)
     try {
         let result = await estanteDAO.setUpdateBookcase(dadosCorpo);
         if (result) {
-            return { status_code: 200, message: "Estante updated com sucesso!" };
+            return { status_code: 200, message: "Estante atualizada com sucesso!" };
         } else {
-            return { status_code: 404, message: "Não foi possível atualizar. Registro não encontrado." };
+            return { status_code: 404, message: "Não foi possível atualizar. Registro não encontrado ou dados idênticos." };
         }
     } catch (error) {
+        console.error("🚨 Erro na Controller da Estante:", error);
         return { status_code: 500, message: "Erro interno no servidor ao atualizar a estante." };
     }
 };

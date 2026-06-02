@@ -37,7 +37,11 @@ CREATE TABLE tbl_livro (
     titulo VARCHAR(50) NOT NULL,
     isbn VARCHAR(20) NOT NULL,
     autor VARCHAR(50) NOT NULL,
+<<<<<<< HEAD
+    descricao VARCHAR(300) NOT NULL,
+=======
     descricao TEXT NOT NULL,
+>>>>>>> main
     capa TEXT NOT NULL
 );
 

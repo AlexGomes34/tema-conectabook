@@ -3,6 +3,8 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import Button from "../button";
 import Input from "../input";
 
+import "./style.css"
+
 import FotoClubeDefault from "../../assets/group.png";
 
 export default function RightClube({

@@ -8,12 +8,14 @@
 
 .upMainRight{
     width: 20vw;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .container{
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
 }
 
 .main{

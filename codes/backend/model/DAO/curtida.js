@@ -16,33 +16,33 @@ const getSelectAllLikes = async function () {
 
         let result = await db.raw(sql)
 
-        if(result && result[0].length > 0){
+        if (result && result[0].length > 0) {
             return result[0]
         } else {
             return false
         }
-    } catch(error){
+    } catch (error) {
         return false
     }
-    
+
 }
 
 
 //RETORNA UMA CURTIDA PELO ID
 const getSelectByIdLike = async function (id) {
-    try{
+    try {
         let sql = `select * from tbl_curtida where id_curtida = ${id}`
         let result = await db.raw(sql)
 
-        if(result && result[0].length > 0){
+        if (result && result[0].length > 0) {
             return result[0]
         } else {
             return false
         }
-    } catch(error) {
+    } catch (error) {
         return false
     }
-    
+
 }
 
 //RETORNA CURTIDA PELO ID DA MENSAGEM
@@ -50,7 +50,7 @@ const getSelectByIdLike = async function (id) {
 //RETORNA CURTIDAS PELO ID DO USUÁRIO
 const getSelectLikeByIdUser = async function (idUsuario) {
     try {
-        let sql =  `
+        let sql = `
         select
                 tbl_curtida.id_curtida,
                 tbl_curtida.id_usuario,
@@ -61,21 +61,21 @@ const getSelectLikeByIdUser = async function (idUsuario) {
                       on tbl_usuario.id_usuario = tbl_curtida.id_usuario
             where tbl_curtida.id_usuario = ? 
          `
-         let result = await db.raw(sql, [idUsuario]);
+        let result = await db.raw(sql, [idUsuario]);
 
-         if (result && result[0].length > 0)
-             return result[0];
-         else
-             return false;
- 
-     } catch (error) {
-         console.log("Erro ao buscar curtidas", error);
-         return false;
-     }
- }
+        if (result && result[0].length > 0)
+            return result[0];
+        else
+            return false;
+
+    } catch (error) {
+        console.log("Erro ao buscar curtidas", error);
+        return false;
+    }
+}
 
 // RETORNA CURTIDAS PELO ID DA MENSAGEM (POST)
-const getSelectLikeByIdMensagem = async function (idMensagem) {
+const getSelectLikeByIdMessage = async function (idMensagem) {
     try {
         let sql = `
             select
@@ -103,35 +103,40 @@ const getSelectLikeByIdMensagem = async function (idMensagem) {
         return false;
     }
 }
- 
+
 
 //INSERE UMA CURTIDA
+// INSERE UMA NOVA CURTIDA (Versão Corrigida e Segura)
 const setInsertLike = async function (curtida) {
-    try{
+    try {
+        // Usamos placeholders '?' para o Knex processar os inteiros perfeitamente
         let sql = `insert into tbl_curtida (
-                   id_usuario,
-                   id_mensagem
-                   ) values (
-                   ${curtida.id_usuario},
-                   ${curtida.id_mensagem}
-                   )`
+                       id_usuario,
+                       id_mensagem
+                   ) values (?, ?)`
 
+        let result = await db.raw(sql, [
+            curtida.id_usuario,
+            curtida.id_mensagem
+        ])
 
-      let result = await db.raw(sql)
-
-        if (result && result[0].affectedRows > 0)
+        // Se a linha foi afetada, a curtida foi gravada com sucesso
+        if (result && result[0] && result[0].affectedRows > 0) {
             return true
-        else
+        } else {
             return false
+        }
 
     } catch (error) {
+        // Exibe no console exatamente o que o MySQL rejeitou
+        console.error("🚨 ERRO NO BANCO AO INSERIR CURTIDA:", error.message);
         return false
     }
 }
 
 //ATUALIZA UMA CURTIDA
 const setUpdateLike = async function (curtida) {
-    try{
+    try {
         let sql = `update tbl_curtida set
                      id_usuario = '${curtida.id_usuario}',
                      id_mensagem = '${curtida.id_mensagem}'
@@ -170,15 +175,15 @@ const setDeleteLikeByIdUser = async function (id) {
         let sql = `delete from tbl_curtida where id_usuario = ${id}`
         let result = await db.raw(sql)
 
-        if(result && result[0].affectedRows > 0)
+        if (result && result[0].affectedRows > 0)
             return true
         else
             return false
 
-    } catch(error) {
+    } catch (error) {
 
     }
-    
+
 }
 
 
@@ -187,6 +192,7 @@ module.exports = {
     getSelectAllLikes,
     getSelectByIdLike,
     getSelectLikeByIdUser,
+    getSelectLikeByIdMessage,
     setInsertLike,
     setUpdateLike,
     setDeleteLike,
