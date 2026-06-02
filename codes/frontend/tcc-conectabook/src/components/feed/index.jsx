@@ -36,7 +36,7 @@ export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
             const response = await fetch(feedUrl)
             const data = await response.json()
             console.log(data)
-            setListaPosts(data.response)
+            setListaPosts(data.response ?? [])
         } catch (error) {
             console.log(error)
         }
@@ -108,9 +108,9 @@ export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
 
             </form>
 
-            {listaPosts.map((post) => (
+            {listaPosts ?? [].map((post) => (
                 <Postagem
-                    key={post.id}
+                    key={post.id_mensagem}
                     post={post}
                     idClube={idClube ?? null}
                 />
