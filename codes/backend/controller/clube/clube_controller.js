@@ -16,23 +16,23 @@ const messages = require("../modulo/config_messages.js");
 const listarClubes = async function () {
     try {
         //No Controller (listarClubes)
-let result = await clubeDAO.getSelectAllClubs();
+        let result = await clubeDAO.getSelectAllClubs();
 
-if(result) {
-    let responseData = Object.assign({}, messages.HEADER);
-    responseData.status = messages.SUCCESS_REQUEST.status;
-    responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-    // IMPORTANTE: result já é o array limpo vindo do DAO agora
-    responseData.response = result; 
-    return responseData;
-} else {
-    // Se o banco estiver vazio ou o DAO retornar false, cai aqui
-    return messages.ERROR_NOT_FOUND;
-}
+        if (result) {
+            let responseData = Object.assign({}, messages.HEADER);
+            responseData.status = messages.SUCCESS_REQUEST.status;
+            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+            // IMPORTANTE: result já é o array limpo vindo do DAO agora
+            responseData.response = result;
+            return responseData;
+        } else {
+            // Se o banco estiver vazio ou o DAO retornar false, cai aqui
+            return messages.ERROR_NOT_FOUND;
+        }
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
-    
+
 }
 
 // GET id - Listar clubes pelo ID
@@ -41,21 +41,21 @@ const listarClubeID = async function (id) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
 
-    try{
+    try {
         let result = await clubeDAO.getSelectByIdClub(id);
 
-        if(result) {
-           let responseData = Object.assign({}, messages.HEADER);
-           responseData.status = messages.SUCCESS_REQUEST.status;
-           responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+        if (result) {
+            let responseData = Object.assign({}, messages.HEADER);
+            responseData.status = messages.SUCCESS_REQUEST.status;
+            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
             // O DAO já retorna o array de dados filtrado, pela a primeira posição
-            responseData.response = result[0]; 
+            responseData.response = result[0];
             return responseData;
-} else {
-                   return messages.ERROR_NOT_FOUND;
-}
+        } else {
+            return messages.ERROR_NOT_FOUND;
+        }
     } catch (error) {
-               return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
 
@@ -66,7 +66,7 @@ const listarClubesPorGenero = async function (idGenero) {
         if (idGenero == '' || idGenero == undefined || isNaN(idGenero)) {
             return messages.ERROR_INVALID_ID; // Ou a mensagem de erro de ID inválido do seu arquivo
         } else {
-            
+
             // Chama o DAO passando o ID recebido
             let result = await clubeDAO.getSelectClubsByGeneroID(idGenero);
 
@@ -74,9 +74,9 @@ const listarClubesPorGenero = async function (idGenero) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_REQUEST.status;
                 responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-                
+
                 // Retorna a lista de clubes filtrada
-                responseData.response = result; 
+                responseData.response = result;
                 return responseData;
             } else {
                 // Caso não encontre nenhum clube para esse gênero específico
@@ -137,29 +137,29 @@ const criarClube = async function (dadosClube, contentType) {
 
 // PUT - Atualizar clube 
 const atualizarClube = async function (clube, contentType, id) {
-  try {
-         if (id == '' || id == undefined || isNaN(id)) {
-             return messages.ERROR_REQUIRED_FIELDS;
-         }
- 
-         if (String(contentType).toLowerCase() !== 'application/json') {
-             return messages.ERROR_CONTENT_TYPE;
-         }
+    try {
+        if (id == '' || id == undefined || isNaN(id)) {
+            return messages.ERROR_REQUIRED_FIELDS;
+        }
 
-         if(clube.nome == '' || clube.nome == undefined || 
-           clube.sobre == '' || clube.sobre == undefined ||
-           clube.regras == ''|| clube.regras == undefined ||
-           clube.id_genero == '' || clube.id_genero == undefined 
+        if (String(contentType).toLowerCase() !== 'application/json') {
+            return messages.ERROR_CONTENT_TYPE;
+        }
+
+        if (clube.nome == '' || clube.nome == undefined ||
+            clube.sobre == '' || clube.sobre == undefined ||
+            clube.regras == '' || clube.regras == undefined ||
+            clube.id_genero == '' || clube.id_genero == undefined
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
             let buscarId = await clubeDAO.getSelectByIdClub(id);
 
-            if(buscarId) {
+            if (buscarId) {
                 clube.id = id;
                 let result = await clubeDAO.setUpdateClub(clube);
-                
-                if(result) {
+
+                if (result) {
                     let responseData = Object.assign({}, messages.HEADER);
                     responseData.status = messages.SUCCESS_UPDATED_ITEM.status;
                     responseData.status_code = messages.SUCCESS_UPDATED_ITEM.status_code;
@@ -172,30 +172,30 @@ const atualizarClube = async function (clube, contentType, id) {
                 return messages.ERROR_NOT_FOUND;
             }
         }
-        
-        } catch(error) {
-            return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
-        }
+
+    } catch (error) {
+        return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
+    }
 }
 
 
 // DELETE - Excluir clube
 const excluirClube = async function (id) {
-    if (id == ''|| id == undefined || isNaN(id)) {
+    if (id == '' || id == undefined || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
 
-    try{
+    try {
         let buscarId = await clubeDAO.getSelectByIdClub(id);
 
-        if(buscarId) {
+        if (buscarId) {
             let result = await clubeDAO.setDeleteClub(id);
 
-            if(result) {
+            if (result) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_DELETE_ITEM.status;
                 // CORREÇÃO AQUI: Troque .message por .status_code
-                responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code; 
+                responseData.status_code = messages.SUCCESS_DELETE_ITEM.status_code;
                 responseData.response = messages.SUCCESS_DELETE_ITEM.message;
                 return responseData;
             } else {
