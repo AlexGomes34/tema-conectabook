@@ -17,15 +17,15 @@ const getSelectAllBookcase = async function () {
 
         let result = await db.raw(sql)
 
-        if(result && result[0].length > 0){
+        if (result && result[0].length > 0) {
             return result[0]
         } else {
             return false
         }
-    } catch(error){
+    } catch (error) {
         return false
     }
-    
+
 }
 
 // RETORNA ESTANTES PELO ID ESTANTE
@@ -34,15 +34,15 @@ const getSelectByIdBookcase = async function (id) {
         let sql = `select * from tbl_estante where id_estante = ${id}`
         let result = await db.raw(sql)
 
-        if(result && result[0].length > 0) {
+        if (result && result[0].length > 0) {
             return result[0]
         } else {
             return false
         }
-    } catch(error){
+    } catch (error) {
         return false
     }
-    
+
 }
 
 // RETORNA ESTANTES PELO ID DO USUÁRIO
@@ -119,52 +119,66 @@ const getSelectBookcaseByStatus = async function (idUsuario, nomeStatus) {
 }
 
 // INSERE UMA NOVA ESTANTE
+// INSERE UMA NOVA ESTANTE (Versão Corrigida, Parametrizada e com Log de Erro)
 const setInsertBookcase = async function (estante) {
-    try{
-        let sql =  `insert into tbl_estante (
-                    id_usuario,
-                    id_status_livro,
-                    id_livro,
-                    data_adicao
-                    ) values (
-                        ${estante.id_usuario},
-                        ${estante.id_status_livro},
-                        '${estante.id_livro}',
-                        ${estante.data_adicao}
-                    )`
+    try {
+        let sql = `insert into tbl_estante (
+                        id_usuario,
+                        id_status_livro,
+                        id_livro,
+                        data_adicao
+                    ) values (?, ?, ?, ?)`
+        const dataAdicao = estante.data_adicao && estante.data_adicao !== ''
+            ? estante.data_adicao
+            : new Date().toISOString().slice(0, 10);
 
-        let result = await db.raw(sql)
+        let result = await db.raw(sql, [
+            estante.id_usuario,
+            estante.id_status_livro,
+            estante.id_livro,
+            dataAdicao
+        ])
 
-        // Verifica se a linha foi afetada no índice 0
-        if(result && result[0].affectedRows > 0)
+        if (result && result[0].affectedRows > 0)
             return true
         else
             return false
 
-    }catch(error){
+    } catch (error) {
+        console.error("🚨 ERRO CRÍTICO NO BANCO (DAO ESTANTE):", error.message);
         return false
     }
 }
 
-
-// ATUALIZA UMA ESTANTE
+// ATUALIZA UMA ESTANTE (Versão Corrigida e Segura)
 const setUpdateBookcase = async function (estante) {
     try {
         let sql = `update tbl_estante set
-                            id_usuario = ${estante.id_usuario},
-                            id_status_livro = ${estante.id_status_livro},
-                            id_livro = '${estante.id_livro}',
-                            data_adicao = ${estante.data_adicao}
-                    where id_estante = ${estante.id_estante}`
+                        id_usuario = ?,
+                        id_status_livro = ?,
+                        id_livro = ?,
+                        data_adicao = ?
+                    where id_estante = ?`
 
-           let result = await db.raw(sql)
+        const dataAdicao = estante.data_adicao && estante.data_adicao !== ''
+            ? estante.data_adicao
+            : new Date().toISOString().slice(0, 10);
 
-        if(result && result[0].affectedRows > 0)
+        let result = await db.raw(sql, [
+            estante.id_usuario,
+            estante.id_status_livro,
+            estante.id_livro,
+            dataAdicao,
+            estante.id_estante // ID do WHERE
+        ])
+        if (result && result[0] && (result[0].affectedRows > 0 || result[0].warningStatus === 0))
             return true
         else
             return false
 
-    }catch(error){
+    } catch (error) {
+        // Se o banco reclamar de algo, você verá o motivo real aqui no terminal
+        console.error("🚨 ERRO NO BANCO AO ATUALIZAR ESTANTE:", error.message);
         return false
     }
 }
@@ -175,31 +189,14 @@ const setDeleteBookcase = async function (id) {
         let sql = `delete from tbl_estante where id_estante = ${id}`
         let result = await db.raw(sql)
 
-         if(result && result[0].affectedRows > 0)
+        if (result && result[0].affectedRows > 0)
             return true
         else
             return false
 
-    }catch(error){
+    } catch (error) {
         return false
     }
-}
-
-
-// DELETA UMA ESTANTE PELO ID DO USUÁRIO
-const setDeleteBookcaseByUserId =  async function (id) {
-    try {
-        let sql = `delete from tbl_estante where id_usuario = ${id} `
-        let result = await db.raw(sql)
-
-        if(result && result[0].affectedRows > 0)
-            return true
-        else
-            return false
-    } catch(error) {
-        return false
-    }
-    
 }
 
 
@@ -211,7 +208,6 @@ module.exports = {
     getSelectBookcaseByStatus,
     setInsertBookcase,
     setUpdateBookcase,
-    setDeleteBookcase,
-    setDeleteBookcaseByUserId
-    
+    setDeleteBookcase
+
 }

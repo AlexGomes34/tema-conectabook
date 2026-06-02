@@ -49,7 +49,7 @@ const setInsertStatusBook = async function (statusLivro) {
                     ) values (
                         '${statusLivro.nome_status}'
                     )`
-        
+
         let result = await db.raw(sql);
 
         if (result && result[0].affectedRows > 0)
@@ -64,20 +64,29 @@ const setInsertStatusBook = async function (statusLivro) {
 
 
 // ATUALIZA UM STATUS_LIVRO
+// ATUALIZA O STATUS DE UM LIVRO (Versão Corrigida e Segura)
 const setUpdateStatusBook = async function (statusLivro) {
     try {
+        // CORRIGIDO: Removida a vírgula antes do WHERE e adicionado os '?'
         let sql = `update tbl_status_livro set 
-                        nome_status = '${statusLivro.nome_status}',
-                    where id_status = ${statusLivro.id}`
-        
-        let result = await db.raw(sql)
+                        nome_status = ?
+                    where id_status_livro = ?`
 
-        if (result && result[0].affectedRows > 0)
+        let idStatus = statusLivro.id_status_livro || statusLivro.id;
+
+        let result = await db.raw(sql, [
+            statusLivro.nome_status,
+            idStatus
+        ])
+
+        if (result && result[0] && (result[0].affectedRows > 0 || result[0].warningStatus === 0))
             return true
         else
             return false
 
     } catch (error) {
+        // Exibe o erro real no terminal do VS Code se o MySQL rejeitar
+        console.error("🚨 ERRO NO BANCO AO ATUALIZAR STATUS DO LIVRO:", error.message);
         return false
     }
 }
