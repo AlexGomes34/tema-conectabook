@@ -1,6 +1,12 @@
-main{
+.mainAvaliacao{
+    display: grid;
+    place-content: center;
+}
+
+.conteudoAvaliacao{
     display: flex;
-    margin: 5rem;
+    margin-top: 3rem;
+    gap: 10rem;
 }
 
 .livroTitulo{

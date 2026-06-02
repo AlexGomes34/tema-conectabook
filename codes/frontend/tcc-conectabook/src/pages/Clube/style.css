@@ -1,6 +1,6 @@
 /* ===== CONTAINER PRINCIPAL ===== */
 
-.main-clube{
+.main-clube {
     display: flex;
     justify-content: center;
     gap: 2rem;
@@ -9,16 +9,9 @@
     align-items: flex-start;
 }
 
-.input-clube{
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding-right: 2rem;
-}
-
 /* ===== SIDEBAR ===== */
 
-.left-clube{
+.left-clube {
     width: 100%;
     max-width: 25rem;
     min-height: 35rem;
@@ -40,7 +33,7 @@
 
 /* ===== TITULO ===== */
 
-.titulo-acess{
+.titulo-acess {
     display: flex;
     align-items: center;
     gap: .5rem;
@@ -50,7 +43,7 @@
 
 /* ===== LISTA CLUBES ===== */
 
-.meus-clubes{
+.meus-clubes {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -58,7 +51,7 @@
 
 /* ===== CARD CLUBE ===== */
 
-.clube-acess{
+.clube-acess {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -74,7 +67,7 @@
     cursor: pointer;
 }
 
-.clube-acess:hover{
+.clube-acess:hover {
     transform: translateY(-2px);
 
     border-color: var(--color-primary);
@@ -82,23 +75,23 @@
     box-shadow: 0 4px 10px rgba(123, 104, 238, 0.15);
 }
 
-.clubePage{
+.clubePage {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.clubePage h3{
+.clubePage h3 {
     color: var(--color-text);
 }
 
-.clubePage p{
+.clubePage p {
     color: var(--color-text-light);
 }
 
 /* ===== IMAGEM ===== */
 
-.clube-acess img{
+.clube-acess img {
     width: 70px;
     height: 70px;
 
@@ -108,190 +101,8 @@
 
 /* ===== TEXTO ===== */
 
-.clube-acess-text{
+.clube-acess-text {
     display: flex;
     flex-direction: column;
     gap: .3rem;
-}
-
-/* ===== ÁREA DIREITA ===== */
-
-.clubes{
-    flex: 1;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 2rem;
-}
-
-/* ===== PESQUISA ===== */
-
-.pesquisa{
-    width: 100%;
-    display: flex;
-    align-items: center;
-}
-
-.pesquisa input{
-    width: 35vw;
-
-    padding: 12px 14px;
-
-    border-radius: 10px;
-
-    border: 1px solid var(--color-border);
-
-    background-color: var(--color-surface);
-
-    color: var(--color-text);
-
-    outline: none;
-
-    font-size: 16px;
-}
-
-.pesquisa input:focus{
-    border-color: var(--color-primary);
-}
-
-/* ===== FILTROS ===== */
-
-.titulo-filtros{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 2rem;
-
-    gap: 1rem;
-
-    flex-wrap: wrap;
-}
-
-/* ===== SELECT ===== */
-
-select{
-    width: 100%;
-    max-width: 250px;
-
-    padding: 12px 14px;
-
-    border-radius: 10px;
-
-    border: 1px solid var(--color-border);
-
-    background-color: var(--color-surface);
-
-    font-size: 16px;
-
-    color: var(--color-text);
-
-    outline: none;
-
-    cursor: pointer;
-}
-
-select:focus{
-    border-color: var(--color-primary);
-}
-
-/* ===== CARD DETALHE ===== */
-
-.clube-detalhe{
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 2rem;
-
-    flex-wrap: wrap;
-
-    padding: 1.5rem;
-
-    border: 1px solid var(--color-border);
-
-    border-radius: 12px;
-
-    background-color: var(--color-surface);
-
-    box-shadow: 0 2px 8px rgba(97, 94, 110, 0.08);
-}
-
-/* ===== LADO ESQUERDO ===== */
-
-.info-left{
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-}
-
-/* ===== IMAGEM DETALHE ===== */
-
-.clube-detalhe img{
-    width: 100%;
-    max-width: 20rem;
-
-    height: 20rem;
-
-    object-fit: cover;
-
-    border-radius: 10px;
-}
-
-/* ===== INFO ===== */
-
-.info-clube{
-    display: flex;
-
-    width: 800px;
-
-    justify-content: space-between;
-    align-items: center;
-
-    gap: 1rem;
-}
-
-/* ===== SOBRE ===== */
-
-.sobre-clube{
-    width: 550px;
-    height: 100%;
-
-    max-width: 40rem;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 2rem;
-}
-
-.sobre-clube h2,
-.sobre-clube h3{
-    color: var(--color-text);
-}
-
-.sobre-text{
-    width: 100%;
-
-    color: var(--color-text-light);
-
-    line-height: 1.6;
-}
-
-.left-sobre{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-
-    height: 100%;
-}
-
-/* ===== BOTÃO ===== */
-
-.button-sobre{
-    display: flex;
-    align-self: flex-end;
 }

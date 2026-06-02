@@ -1,7 +1,6 @@
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 
-import fotoLivro1 from "../../assets/fotoLivro1.jpg"
 
 import Button from "../../components/button/index.jsx"
 
@@ -123,9 +122,9 @@ export default function LivroDetalhe() {
                     isbn,
                     coverUrl: data.covers?.[0]
                         ? `https://covers.openlibrary.org/b/id/${data.covers[0]}-L.jpg`
-                        : fotoLivro1
+                        : null
                 })
-                
+
 
             } catch (error) {
 
@@ -145,7 +144,7 @@ export default function LivroDetalhe() {
     return (
         <div>
             <Header fotoUser={user?.user?.foto_perfil} />
-            <main>
+            <main className={styles.mainDetalhe}>
                 <div className={styles.mainUp}>
                     <div>
                         <img src={livro.coverUrl} alt="" />
@@ -181,9 +180,10 @@ export default function LivroDetalhe() {
                         </div>
                     </div>
                 </div>
+                <LivroTitulosSemelhantes livroAtual={{ titulo: livro.title, autor: livro.author }} />
             </main>
 
-            <LivroTitulosSemelhantes livroAtual={{ titulo: livro.title, autor: livro.author }} />
+
             <Footer />
         </div>
     )

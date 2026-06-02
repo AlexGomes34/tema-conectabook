@@ -3,7 +3,6 @@ import Footer from "../../components/footer";
 import Header from "../../components/header";
 import LivroTitulosSemelhantes from "../../components/livroTitulosSemelhantes";
 
-import fotoLivro1 from "../../assets/fotoLivro1.jpg";
 import fotoPessoa1 from "../../assets/userDefault.webp";
 
 import styles from "./style.module.css";
@@ -192,119 +191,122 @@ export default function LivroAvaliacao() {
         <div>
             <Header fotoUser={user?.user?.foto_perfil} />
 
-            <main>
-                {/* ── Capa + estatísticas ── */}
-                <div>
-                    <img src={livro.coverUrl ?? fotoLivro1} alt={livro.title ?? livro.titulo} />
+            <main className={styles.mainAvaliacao}>
+                <div className={styles.conteudoAvaliacao}>
+                    {/* ── Capa + estatísticas ── */}
+                    <div>
+                    <img src={livro.coverUrl} alt={livro.title ?? livro.titulo} />
 
-                    <div className={styles.infosLivro}>
-                        <div className={styles.infoLivro}>
-                            <FontAwesomeIcon className={styles.icone} icon={faStar} size="lg" />
-                            <div>
-                                <p>Média</p>
-                                <p>{media?.media_estrelas ?? "—"}</p>
-                            </div>
-                        </div>
-                        <div className={styles.infoLivro}>
-                            <FontAwesomeIcon className={styles.icone} icon={faTags} size="lg" />
-                            <div>
-                                <p>Classificação</p>
-                                <p>{media?.classificacao ?? "—"}</p>
-                            </div>
-                        </div>
-                        <div className={styles.infoLivro}>
-                            <FontAwesomeIcon className={styles.icone} icon={faPeopleGroup} size="lg" />
-                            <div>
-                                <p>Avaliações</p>
-                                <p>{media?.total_avaliacoes ?? "—"}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* ── Formulário de avaliação ── */}
-                <div>
-                    <div className={styles.livroTitulo}>
-                        <div>
-                            <h1>{livro.title ?? livro.titulo}</h1>
-                            <p>{livro.author ?? livro.autor}</p>
-                        </div>
-                        <Button
-                            text={publicando ? "Publicando..." : "Publicar"}
-                            onClick={handlePublicar}
-                            disabled={publicando}
-                        />
-                    </div>
-
-                    {/* Seletor de estrelas */}
-                    <div className={styles.estrelasContainer}>
-                        {[1, 2, 3, 4, 5].map((n) => (
-                            <FontAwesomeIcon
-                                key={n}
-                                icon={n <= (estrelasHover || estrelas) ? faStar : faStarRegular}
-                                className={styles.estrelaSeletor}
-                                onClick={() => setEstrelas(n)}
-                                onMouseEnter={() => setEstrelasHover(n)}
-                                onMouseLeave={() => setEstrelasHover(0)}
-                                style={{
-                                    cursor: "pointer",
-                                    color: n <= (estrelasHover || estrelas) ? "#f5a623" : "#ccc",
-                                    fontSize: "1.4rem",
-                                    marginRight: "4px",
-                                    transition: "color 0.15s",
-                                }}
-                            />
-                        ))}
-                    </div>
-
-                    <textarea
-                        placeholder="Escreva sua avaliação..."
-                        value={novaAvaliacao}
-                        onChange={(e) => setNovaAvaliacao(e.target.value)}
-                    />
-
-                    {/* Feedback de erro ou sucesso */}
-                    {erro && <p style={{ color: "red", marginTop: "8px" }}>{erro}</p>}
-                    {sucesso && <p style={{ color: "green", marginTop: "8px" }}>Avaliação publicada com sucesso!</p>}
-
-                    {/* ── Lista de avaliações ── */}
-                    <div className={styles.users}>
-                        {avaliacoes.length === 0 && <p>Nenhuma avaliação ainda. Seja o primeiro!</p>}
-
-                        {Array.isArray(avaliacoes) && avaliacoes.map((avaliacao, index) => (
-                            <div key={avaliacao.id ?? index} className={styles.user}>
-                                <div className={styles.userPost}>
-                                    <img
-                                        src={avaliacao.foto_perfil ?? fotoPessoa1}
-                                        alt={avaliacao.nome_usuario ?? "Usuário"}
-                                    />
-                                    <p>{avaliacao.nome_usuario ?? "Usuário"}</p>
-                                </div>
-
-                                {/* Estrelas da avaliação */}
-                                {avaliacao.estrelas && (
-                                    <div>
-                                        {[1, 2, 3, 4, 5].map((n) => (
-                                            <FontAwesomeIcon
-                                                key={n}
-                                                icon={n <= avaliacao.estrelas ? faStar : faStarRegular}
-                                                style={{
-                                                    color: n <= avaliacao.estrelas ? "#f5a623" : "#ccc",
-                                                    fontSize: "0.9rem",
-                                                    marginRight: "2px",
-                                                }}
-                                            />
-                                        ))}
-                                    </div>
-                                )}
-
+                        <div className={styles.infosLivro}>
+                            <div className={styles.infoLivro}>
+                                <FontAwesomeIcon className={styles.icone} icon={faStar} size="lg" />
                                 <div>
-                                    <p>{avaliacao.mensagem}</p>
+                                    <p>Média</p>
+                                    <p>{media?.media_estrelas ?? "—"}</p>
                                 </div>
                             </div>
-                        ))}
+                            <div className={styles.infoLivro}>
+                                <FontAwesomeIcon className={styles.icone} icon={faTags} size="lg" />
+                                <div>
+                                    <p>Classificação</p>
+                                    <p>{media?.classificacao ?? "—"}</p>
+                                </div>
+                            </div>
+                            <div className={styles.infoLivro}>
+                                <FontAwesomeIcon className={styles.icone} icon={faPeopleGroup} size="lg" />
+                                <div>
+                                    <p>Avaliações</p>
+                                    <p>{media?.total_avaliacoes ?? "—"}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── Formulário de avaliação ── */}
+                    <div>
+                        <div className={styles.livroTitulo}>
+                            <div>
+                                <h1>{livro.title ?? livro.titulo}</h1>
+                                <p>{livro.author ?? livro.autor}</p>
+                            </div>
+                            <Button
+                                text={publicando ? "Publicando..." : "Publicar"}
+                                onClick={handlePublicar}
+                                disabled={publicando}
+                            />
+                        </div>
+
+                        {/* Seletor de estrelas */}
+                        <div className={styles.estrelasContainer}>
+                            {[1, 2, 3, 4, 5].map((n) => (
+                                <FontAwesomeIcon
+                                    key={n}
+                                    icon={n <= (estrelasHover || estrelas) ? faStar : faStarRegular}
+                                    className={styles.estrelaSeletor}
+                                    onClick={() => setEstrelas(n)}
+                                    onMouseEnter={() => setEstrelasHover(n)}
+                                    onMouseLeave={() => setEstrelasHover(0)}
+                                    style={{
+                                        cursor: "pointer",
+                                        color: n <= (estrelasHover || estrelas) ? "#f5a623" : "#ccc",
+                                        fontSize: "1.4rem",
+                                        marginRight: "4px",
+                                        transition: "color 0.15s",
+                                    }}
+                                />
+                            ))}
+                        </div>
+
+                        <textarea
+                            placeholder="Escreva sua avaliação..."
+                            value={novaAvaliacao}
+                            onChange={(e) => setNovaAvaliacao(e.target.value)}
+                        />
+
+                        {/* Feedback de erro ou sucesso */}
+                        {erro && <p style={{ color: "red", marginTop: "8px" }}>{erro}</p>}
+                        {sucesso && <p style={{ color: "green", marginTop: "8px" }}>Avaliação publicada com sucesso!</p>}
+
+                        {/* ── Lista de avaliações ── */}
+                        <div className={styles.users}>
+                            {avaliacoes.length === 0 && <p>Nenhuma avaliação ainda. Seja o primeiro!</p>}
+
+                            {Array.isArray(avaliacoes) && avaliacoes.map((avaliacao, index) => (
+                                <div key={avaliacao.id ?? index} className={styles.user}>
+                                    <div className={styles.userPost}>
+                                        <img
+                                            src={avaliacao.foto_perfil ?? fotoPessoa1}
+                                            alt={avaliacao.nome_usuario ?? "Usuário"}
+                                        />
+                                        <p>{avaliacao.nome_usuario ?? "Usuário"}</p>
+                                    </div>
+
+                                    {/* Estrelas da avaliação */}
+                                    {avaliacao.estrelas && (
+                                        <div>
+                                            {[1, 2, 3, 4, 5].map((n) => (
+                                                <FontAwesomeIcon
+                                                    key={n}
+                                                    icon={n <= avaliacao.estrelas ? faStar : faStarRegular}
+                                                    style={{
+                                                        color: n <= avaliacao.estrelas ? "#f5a623" : "#ccc",
+                                                        fontSize: "0.9rem",
+                                                        marginRight: "2px",
+                                                    }}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    <div>
+                                        <p>{avaliacao.mensagem}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
+
             </main>
 
             <LivroTitulosSemelhantes livroAtual={{ titulo: livro.title ?? livro.titulo, autor: livro.author ?? livro.autor }} />
