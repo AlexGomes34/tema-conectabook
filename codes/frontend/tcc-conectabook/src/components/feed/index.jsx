@@ -36,8 +36,53 @@ export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
         try {
             const response = await fetch(feedUrl)
             const data = await response.json()
-            console.log(data)
-            setListaPosts(data.response ?? [])
+    
+            const user = JSON.parse(localStorage.getItem("user"))
+    
+            const postsComDados = await Promise.all(
+                (data.response ?? []).map(async (post) => {
+                    try {
+                        const [responseCurtidas, responseComentarios] =
+                            await Promise.all([
+                                fetch(
+                                    `http://localhost:8080/v1/conectaBook/curtida/mensagem/${post.id_mensagem}`
+                                ),
+                                fetch(
+                                    `http://localhost:8080/v1/conectaBook/mensagem/${post.id_mensagem}/respostas`
+                                )
+                            ])
+    
+                        const dataCurtidas = await responseCurtidas.json()
+                        const dataComentarios = await responseComentarios.json()
+    
+                        const curtidaUsuario = dataCurtidas.curtidas?.find(
+                            (curtida) => curtida.id_usuario === user.user.id
+                        )
+    
+                        return {
+                            ...post,
+                            total_curtidas: dataCurtidas.quantidade || 0,
+                            total_comentarios: dataComentarios.respostas?.length || 0,
+                            curtido: !!curtidaUsuario,
+                            id_curtida: curtidaUsuario?.id_curtida || null
+                        }
+    
+                    } catch (error) {
+                        console.log(error)
+    
+                        return {
+                            ...post,
+                            total_curtidas: 0,
+                            total_comentarios: 0,
+                            curtido: false,
+                            id_curtida: null
+                        }
+                    }
+                })
+            )
+    
+            setListaPosts(postsComDados)
+    
         } catch (error) {
             console.log(error)
         }

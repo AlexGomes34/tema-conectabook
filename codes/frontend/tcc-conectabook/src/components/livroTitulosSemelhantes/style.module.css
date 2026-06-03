@@ -30,6 +30,7 @@
 
 .livro img{
     height: auto;
+    width: 200px;
     object-fit: cover;
 }
 

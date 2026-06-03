@@ -20,6 +20,9 @@ export default function Postagem({ post, idClube }) {
     const [curtido, setCurtido] = useState(post.curtido || false)
     const [idCurtida, setIdCurtida] = useState(post.id_curtida || null)
     const [curtidas, setCurtidas] = useState(post.total_curtidas || 0)
+    const [quantidadeComentarios, setQuantidadeComentarios] = useState(
+        post.total_comentarios || 0
+    )
 
 
     async function responderResposta(idRespostaPai, idComentarioPai) {
@@ -186,9 +189,9 @@ export default function Postagem({ post, idClube }) {
                         respostas: []
                     }
                 ])
+            
+                setQuantidadeComentarios(prev => prev + 1)
             }
-
-            setComentario("")
 
         } catch (error) {
             console.log(error)
@@ -292,7 +295,7 @@ export default function Postagem({ post, idClube }) {
                         }}
                     >
                         <FontAwesomeIcon className='icone' icon={faComment} />
-                        <p>{comentarios.length}</p>
+                        <p>{quantidadeComentarios}</p>
                     </div>
                 </div>
 
