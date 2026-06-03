@@ -156,6 +156,7 @@ const inserirCurtida = async function (curtida, contentType) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_CREATED_ITEM.status;
             responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
+            responseData.id = statusInsert.insertId || statusInsert
             responseData.response = {
                 message: "Curtida registrada com sucesso!"
             };

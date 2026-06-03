@@ -30,6 +30,8 @@ function Feed() {
 
     const [livrosSugeridos, setLivrosSugeridos] = useState([])
 
+    const [livrosPopulares, setLivrosPopulares] = useState([])
+
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -39,6 +41,29 @@ function Feed() {
             navigate("/")
         } else {
             setUser(userStorage)
+        }
+
+        async function getLivrosPopulares() {
+            try {
+                const response = await fetch(
+                    "https://openlibrary.org/trending/monthly.json?limit=3"
+                )
+        
+                const data = await response.json()
+        
+                const livros = data.works.map(livro => ({
+                    id: livro.key.split("/").pop(),
+                    titulo: livro.title,
+                    autor: livro.author_name?.[0] || "Autor desconhecido",
+                    capa: livro.cover_i
+                        ? `https://covers.openlibrary.org/b/id/${livro.cover_i}-M.jpg`
+                        : fotoLivro1
+                }))
+        
+                setLivrosPopulares(livros)
+            } catch (error) {
+                console.log(error)
+            }
         }
 
         async function getClubesUsuario(idUsuario) {
@@ -147,6 +172,7 @@ function Feed() {
         getPosts()
         getLivrosFavoritos(userStorage.user.id)
         getClubesUsuario(userStorage.user.id)
+        getLivrosPopulares()
     }, [])
 
     return (
@@ -166,14 +192,14 @@ function Feed() {
 
                         {
                             livrosSugeridos.slice(0, 5).map((livro, index) => (
-                                
+
                                 <div
                                     key={index}
                                     className={styles.titulos}
-                                    onClick={() => navigate(`/livroDetalhe/${livro.id}`)}
                                 >
 
-                                    <div className={styles.livro}>
+                                    <div className={styles.livro}
+                                        onClick={() => navigate(`/livroDetalhe/${livro.id}`)}>
                                         <img
                                             src={livro.capa}
                                             alt={livro.titulo}
@@ -266,66 +292,61 @@ function Feed() {
                             <p>Ver todos</p>
                         </div>
 
-                        <div className={styles.titulos}>
-                            <img src={fotoLivro1} alt="" />
-                            <div>
-                                <h4>Kallocaína</h4>
-                                <p>Karin Boye</p>
-                                <div>
-                                    <div className={styles.avaliacao}>
-                                        <div>
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
+                        {
+                            livrosPopulares.slice(0, 5).map((livro) => (
+                                <div
+                                    key={livro.id}
+                                    className={styles.titulos}
+                                >
+                                    <div
+                                        className={styles.livro}
+                                        onClick={() =>
+                                            navigate(`/livroDetalhe/${livro.id}`)
+                                        }
+                                    >
+                                        <img
+                                            src={livro.capa}
+                                            alt={livro.titulo}
+                                            onError={(e) => {
+                                                e.target.src = fotoLivro1
+                                            }}
+                                        />
 
+                                        <div>
+                                            <h4>{livro.titulo}</h4>
+                                            <p>{livro.autor}</p>
+
+                                            <div className={styles.avaliacao}>
+                                                <div>
+                                                    <FontAwesomeIcon
+                                                        icon={faStar}
+                                                        style={{ color: "rgb(255, 212, 59)" }}
+                                                    />
+                                                    <FontAwesomeIcon
+                                                        icon={faStar}
+                                                        style={{ color: "rgb(255, 212, 59)" }}
+                                                    />
+                                                    <FontAwesomeIcon
+                                                        icon={faStar}
+                                                        style={{ color: "rgb(255, 212, 59)" }}
+                                                    />
+                                                    <FontAwesomeIcon
+                                                        icon={faStar}
+                                                        style={{ color: "rgb(255, 212, 59)" }}
+                                                    />
+                                                    <FontAwesomeIcon
+                                                        icon={faStar}
+                                                        style={{ color: "rgb(255, 212, 59)" }}
+                                                    />
+                                                </div>
+
+                                                <p>Trending</p>
+                                            </div>
                                         </div>
-                                        <p>4.6</p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className={styles.titulos}>
-                            <img src={fotoLivro1} alt="" />
-                            <div>
-                                <h4>Kallocaína</h4>
-                                <p>Karin Boye</p>
-                                <div>
-                                    <div className={styles.avaliacao}>
-                                        <div>
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-
-                                        </div>
-                                        <p>4.6</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={styles.titulos}>
-                            <img src={fotoLivro1} alt="" />
-                            <div>
-                                <h4>Kallocaína</h4>
-                                <p>Karin Boye</p>
-                                <div>
-                                    <div className={styles.avaliacao}>
-                                        <div>
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-                                            <FontAwesomeIcon icon={faStar} style={{ color: "rgb(255, 212, 59)", }} />
-
-                                        </div>
-                                        <p>4.6</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            ))
+                        }
                     </div>
                 </div>
             </div>

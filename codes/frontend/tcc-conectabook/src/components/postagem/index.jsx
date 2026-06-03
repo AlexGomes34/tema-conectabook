@@ -17,6 +17,10 @@ export default function Postagem({ post, idClube }) {
     const [textoResposta, setTextoResposta] = useState("")
     const [respostaRespondendo, setRespostaRespondendo] = useState(null)
     const [textoSubResposta, setTextoSubResposta] = useState("")
+    const [curtido, setCurtido] = useState(post.curtido || false)
+    const [idCurtida, setIdCurtida] = useState(post.id_curtida || null)
+    const [curtidas, setCurtidas] = useState(post.total_curtidas || 0)
+
 
     async function responderResposta(idRespostaPai, idComentarioPai) {
         if (!textoSubResposta.trim()) return
@@ -191,6 +195,61 @@ export default function Postagem({ post, idClube }) {
         }
     }
 
+    async function curtirPost() {
+        try {
+            const user = JSON.parse(localStorage.getItem("user"));
+    
+            if (curtido) {
+                // 1. Faz o DELETE usando o ID correto salvo no estado
+                const response = await fetch(
+                    `http://localhost:8080/v1/conectaBook/curtida/${idCurtida}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+    
+                if (response.ok) {
+                    setCurtido(false);
+                    setIdCurtida(null); // Limpa o ID
+                    setCurtidas(prev => prev - 1);
+                } else {
+                    console.error("Erro ao remover curtida");
+                }
+    
+            } else {
+                // 2. Faz o POST para criar a curtida
+                const response = await fetch(
+                    "http://localhost:8080/v1/conectaBook/curtida",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            id_usuario: user.user.id,
+                            id_mensagem: post.id_mensagem
+                        })
+                    }
+                );
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+    
+                    setCurtido(true);
+                    // CORREÇÃO AQUI: A API retorna o ID na propriedade 'id'
+                    setIdCurtida(data.id); 
+                    setCurtidas(prev => prev + 1);
+                } else {
+                    console.error("Erro ao curtir post");
+                }
+            }
+    
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+        }
+    }
+
     return (
         <div className="postagem">
 
@@ -208,18 +267,21 @@ export default function Postagem({ post, idClube }) {
 
                 <p>{post.comentario}</p>
 
-                {post.arquivo && (  // 👈 só renderiza se tiver arquivo
+                {post.arquivo && (  // só renderiza se tiver arquivo
                     <img
-                    className="fotoPost"
+                        className="fotoPost"
                         src={`http://localhost:8080/uploads/${post.arquivo}`}
                         alt=""
                     />
                 )}
 
                 <div className="reacoes">
-                    <div className="reacao">
-                        <FontAwesomeIcon icon={faHeart} />
-                        <p>0</p>
+                    <div className="reacao" onClick={curtirPost}>
+                        <FontAwesomeIcon
+                            className={`icone ${curtido ? "curtido" : ""}`}
+                            icon={faHeart}
+                        />
+                        <p>{curtidas}</p>
                     </div>
                     <div
                         className="reacao"
@@ -229,7 +291,7 @@ export default function Postagem({ post, idClube }) {
                             if (novoEstado) buscarComentarios()
                         }}
                     >
-                        <FontAwesomeIcon icon={faComment} />
+                        <FontAwesomeIcon className='icone' icon={faComment} />
                         <p>{comentarios.length}</p>
                     </div>
                 </div>

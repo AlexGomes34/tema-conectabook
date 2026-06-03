@@ -26,8 +26,15 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-
+    transition: all 0.3s ease;
+    border-radius: 12px;
     cursor: pointer;
+}
+
+.clube:hover {
+    transform: translateY(-5px);
+    background-color: rgba(123, 104, 238, 0.05);
+    box-shadow: 0 8px 20px rgba(123, 104, 238, 0.15);
 }
 
 .titulos{
@@ -36,7 +43,6 @@
     height: 17rem;
     gap: 2rem;
 
-    cursor: pointer;
 }
 
 
@@ -75,9 +81,19 @@
     gap: 1rem;
 }
 
-.livro{
+.livro {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
-    justify-content: center;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    padding: 0.5rem;
+}
+
+.livro:hover {
+    transform: translateY(-5px);
+    background-color: rgba(123, 104, 238, 0.05);
+    box-shadow: 0 8px 20px rgba(123, 104, 238, 0.15);
 }
