@@ -142,7 +142,11 @@ const atualizarClube = async function (clube, contentType, id) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
-        if (String(contentType).toLowerCase() !== 'application/json') {
+        // CORRIGIDO: Agora aceita tanto JSON tradicional quanto Multipart/Form-Data para as fotos da Azure
+        if (
+            !String(contentType).toLowerCase().includes('application/json') &&
+            !String(contentType).toLowerCase().includes('multipart/form-data')
+        ) {
             return messages.ERROR_CONTENT_TYPE;
         }
 
