@@ -3,37 +3,129 @@ import Input from "../input";
 
 import Postagem from "../postagem";
 
-import fotoPessoa1 from "../../assets/fotoPessoa1.jpg";
+import userDefault from "../../assets/userDefault.webp"
+
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+export default function LeftFeed({ posts, idConversa, feedUrl }) {
+
+    const [user, setUser] = useState({})
+    const [mensagem, setMensagem] = useState("")
+    const [listaPosts, setListaPosts] = useState([])
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+
+        const userStorage = JSON.parse(localStorage.getItem("user"))
+
+        if (!userStorage) {
+            navigate("/")
+        } else {
+            setUser(userStorage)
+            console.log(user)
+        }
+
+    }, [])
+
+    useEffect(() => {
+        carregarPosts()
+    }, [])
+
+    async function carregarPosts() {
+
+        try {
+            const response = await fetch(feedUrl)
+
+            const data = await response.json()
+
+            console.log(data)
+
+            setListaPosts(data.response)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function handlePost() {
+
+        if (mensagem.trim() === "") {
+            return
+        }
+
+        const body = {
+            comentario: mensagem,
+            id_usuario: user.user.id,
+            id_conversa: idConversa
+        }
+
+        try {
+
+            const response = await fetch("http://localhost:8080/v1/conectaBook/mensagem", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            })
+
+            const data = await response.json()
+
+            if (response.ok) {
+
+                setMensagem("")
+
+                await carregarPosts()
+            }
+
+            console.log(data)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
-export default function LeftFeed({ posts }) {
 
     return (
         <div className="left-main">
 
-            <div className="titulo-left-main">
-                <h2>Amantes de Percy Jackson</h2>
-                <p>320 membros</p>
-            </div>
-
-            <div className="input-postagem">
+            <form
+                className="input-postagem"
+                onSubmit={(e) => {
+                    e.preventDefault()
+                    handlePost()
+                }}
+            >
 
                 <div className="inputComFoto">
-                    <img src={fotoPessoa1} alt="" />
+
+                    <img src={userDefault} alt="" />
 
                     <Input
                         placeholder="O que está pensando?"
+                        value={mensagem}
+                        onChange={(e) => setMensagem(e.target.value)}
                     />
+
                 </div>
 
                 <div className="inputComArquivo">
+
                     <Button text="Arquivo" />
-                    <Button text="Postar" />
+
+                    <Button
+                        text="Postar"
+                        type="submit"
+                    />
+
                 </div>
 
-            </div>
+            </form>
 
-            {posts.map((post) => (
+            {listaPosts.map((post) => (
                 <Postagem
                     key={post.id}
                     post={post}

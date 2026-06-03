@@ -10,68 +10,42 @@ import fotoClube1 from "../../assets/fotoClube1.jpg"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faComment } from '@fortawesome/free-solid-svg-icons';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import "./style.css"
 
 import { useEffect, useState } from "react";
 import LeftFeed from "../../components/feed/index.jsx";
 
-const POSTS_DATA = [
-    {
-        id: 1,
-        nome: "Renato Zimbaue",
-        foto: fotoPessoa1,
-        postagem:
-            "Terminei de ler O Hobbit e fiquei impressionado com a construção do mundo do Tolkien. A aventura consegue ser leve e épica ao mesmo tempo.",
-        curtidas: 7,
-        comentarios: 10
-    },
-
-    {
-        id: 2,
-        nome: "Ana Clara",
-        foto: fotoPessoa1,
-        postagem:
-            "Comecei Maus hoje e já senti o peso emocional da história nas primeiras páginas. A arte simples deixa tudo ainda mais impactante.",
-        curtidas: 15,
-        comentarios: 6
-    },
-
-    {
-        id: 3,
-        nome: "Lucas Ferreira",
-        foto: fotoPessoa1,
-        postagem:
-            "Vocês também têm dificuldade para escolher o próximo livro depois de terminar uma leitura muito boa? Estou nesse vazio literário agora 😭",
-        curtidas: 21,
-        comentarios: 14
-    },
-
-    {
-        id: 4,
-        nome: "Marina Costa",
-        foto: fotoPessoa1,
-        postagem:
-            "1984 continua sendo um dos livros mais assustadores que já li. É absurdo como a obra ainda parece atual.",
-        curtidas: 30,
-        comentarios: 18
-    },
-
-    {
-        id: 5,
-        nome: "Pedro Henrique",
-        foto: fotoPessoa1,
-        postagem:
-            "Passei a tarde inteira organizando minha estante e percebi que compro livros mais rápido do que consigo ler 😂",
-        curtidas: 12,
-        comentarios: 4
-    }
-]
-
 export default function FeedClube() {
 
+    const { idClube } = useParams()
+
     const [user, setUser] = useState(null)
+    const [isAdmin, setIsAdmin] = useState(null)
+    const [clube, setClube] = useState(null)
+
+    useEffect(() => {
+        async function verificarAdmin() {
+            const res = await fetch(
+                `http://localhost:8080/v1/conectaBook/membros/clube/${idClube}`
+            )
+
+            const data = await res.json()
+
+            const membro = data.response.find(
+                membro =>
+                    membro.id_usuario === user?.user?.id_usuario ||
+                    membro.id_usuario === user?.user?.id
+            )
+
+            setIsAdmin(membro?.administrador === 1)
+        }
+
+        if (user) {
+            verificarAdmin()
+        }
+    }, [user, idClube])
 
     useEffect(() => {
 
@@ -85,6 +59,17 @@ export default function FeedClube() {
 
     }, [])
 
+    useEffect(() => {
+        async function buscarClube() {
+            const res = await fetch(`http://localhost:8080/v1/conectaBook/clubes/${idClube}`)
+            const data = await res.json()
+            console.log(data)
+            setClube(data.response)
+        }
+        buscarClube()
+    }, [idClube])
+
+
     const navigate = useNavigate()
     return (
 
@@ -93,27 +78,39 @@ export default function FeedClube() {
             <main className="main-container">
                 <div className="up-main">
                     <div className="up-left-main">
-                        <Button text="Feed" />
-                        <Button text="Membros" onClick={() => navigate('/membros')} />
+                        <Button text="Feed" onClick={() => navigate(`/feedClube/${idClube}`)} />
+                        <Button text="Membros" onClick={() => navigate(`/membros/${idClube}`)} />
                     </div>
-                    <Button onClick={() => navigate("/editarClube")} text="Editar" />
+                    {
+                        isAdmin && (
+                            <Button
+                                onClick={() => navigate(`/editarClube/${idClube}`)}
+                                text="Editar"
+                            />
+                        )
+                    }
                 </div>
                 <div className="main-feedClube">
-                    
-                    <LeftFeed posts={POSTS_DATA}/>
+
+                    <div>
+                        <div className="titulo-left-main">
+                            <h2>{clube?.nome}</h2>
+                            <p>{clube?.total_membros} membros</p>
+                        </div>
+
+                        <LeftFeed
+                            idConversa={clube?.id_conversa}
+                            feedUrl={`http://localhost:8080/v1/conectaBook/clube/${idClube}/mensagens/principais`}
+                        />
+
+                    </div>
+
+
 
                     <div className="right-main">
                         <div className="sobre">
                             <h3>Sobre</h3>
-                            <p>
-                                Somos mais do que um clube de leitura — somos um acampamento para semideuses apaixonados pelo universo de Percy Jackson & the Olympians.
-
-                                Aqui, leitores se reúnem para explorar mitologia grega, teorias sobre os personagens, batalhas épicas, profecias e todos os momentos marcantes das aventuras de Percy, Annabeth, Grover e companhia.
-
-                                Nosso clube é um espaço para compartilhar opiniões, fazer amizades, participar de debates, indicar livros do universo de Rick Riordan e viver a experiência de leitura de forma divertida e interativa.
-
-                                Se você já escolheu seu chalé no Acampamento Meio-Sangue, este é o lugar certo para você
-                            </p>
+                            <p>{clube?.sobre}</p>
                         </div>
                         <div className="administradores">
                             <h3>Administradores</h3>

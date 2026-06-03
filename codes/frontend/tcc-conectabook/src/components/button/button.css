@@ -6,7 +6,7 @@
 
 a{
     text-decoration: none;
-    color: #fafafa;
+    color: var(--surface);
 }
 
 main{
@@ -14,19 +14,23 @@ main{
 }
 
 button{
-    background-color: #4D8ED0;
-    color: #fafafa;
-    border: 1px solid white;
-    border-radius: 8px ;
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+
+    border: none;
+
+    border-radius: 8px;
     height: 48px;
     width: 187px;
+
     font-size: 14px;
-    transition: background-color 0.5s ease;
+    font-weight: 500;
+
     cursor: pointer;
+    transition: all .3s ease;
 }
 
 button:hover{
-    background-color: #141F3C;
-    transform: scale(1);
-
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
 }

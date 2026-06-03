@@ -3,6 +3,8 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import Button from "../button";
 import Input from "../input";
 
+import "./style.css"
+
 import FotoClubeDefault from "../../assets/group.png";
 
 export default function RightClube({
@@ -97,7 +99,7 @@ export default function RightClube({
                                         text={meusClubes ? "Entrar no Feed" : "Participar do Clube"}
                                         onClick={() => {
                                             if (meusClubes) {
-                                                navigate(`/feedClube`)
+                                                navigate(`/feedClube/${clube.id_clube}`)
                                             } else {
                                                 participarClube(clube.id_clube)
                                             }

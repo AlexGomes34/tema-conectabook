@@ -12,29 +12,29 @@ const messages = require("../modulo/config_messages.js");
 const bcrypt = require('bcrypt');
 
 // GET - Listar todos os usuários
-const listarUsuarios = async function() {
+const listarUsuarios = async function () {
     try {
         // No seu Controller (listarUsuarios)
-let result = await usuarioDAO.getSelectAllUsers();
+        let result = await usuarioDAO.getSelectAllUsers();
 
-if (result) {
-    let responseData = Object.assign({}, messages.HEADER);
-    responseData.status = messages.SUCCESS_REQUEST.status;
-    responseData.status_code = messages.SUCCESS_REQUEST.status_code;
-    // IMPORTANTE: result já é o array limpo vindo do DAO agora
-    responseData.response = result; 
-    return responseData;
-} else {
-    // Se o banco estiver vazio ou o DAO retornar false, cai aqui
-    return messages.ERROR_NOT_FOUND;
-}
+        if (result) {
+            let responseData = Object.assign({}, messages.HEADER);
+            responseData.status = messages.SUCCESS_REQUEST.status;
+            responseData.status_code = messages.SUCCESS_REQUEST.status_code;
+            // IMPORTANTE: result já é o array limpo vindo do DAO agora
+            responseData.response = result;
+            return responseData;
+        } else {
+            // Se o banco estiver vazio ou o DAO retornar false, cai aqui
+            return messages.ERROR_NOT_FOUND;
+        }
     } catch (error) {
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
 
 // GET id - Listar usuário pelo ID
-const listarUsuarioID = async function(id) {
+const listarUsuarioID = async function (id) {
     if (id == '' || id == undefined || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
@@ -47,7 +47,7 @@ const listarUsuarioID = async function(id) {
             responseData.status = messages.SUCCESS_REQUEST.status;
             responseData.status_code = messages.SUCCESS_REQUEST.status_code;
             // O DAO já retorna o array de dados filtrado, pegamos a primeira posição
-            responseData.response = result[0]; 
+            responseData.response = result[0];
             return responseData;
         } else {
             return messages.ERROR_NOT_FOUND;
@@ -58,33 +58,38 @@ const listarUsuarioID = async function(id) {
 }
 
 // POST - Criar usuário
-const criarUsuario = async function(usuario, contentType) {
+const criarUsuario = async function (usuario, contentType) {
     try {
-        if (String(contentType).toLowerCase() !== 'application/json') {
+        // CORRIGIDO: Agora aceita tanto JSON tradicional quanto Multipart/Form-Data para envio de fotos
+        if (
+            !String(contentType).toLowerCase().includes('application/json') &&
+            !String(contentType).toLowerCase().includes('multipart/form-data')
+        ) {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        if (usuario.nome == '' || usuario.nome == undefined || 
-            usuario.nome_usuario == '' || usuario.nome_usuario == undefined || 
-            usuario.email == '' || usuario.email == undefined || 
+        // Validação dos campos obrigatórios
+        if (usuario.nome == '' || usuario.nome == undefined ||
+            usuario.nome_usuario == '' || usuario.nome_usuario == undefined ||
+            usuario.email == '' || usuario.email == undefined ||
             usuario.senha == '' || usuario.senha == undefined ||
             (usuario.data_nascimento == '' || usuario.data_nascimento == undefined)
         ) {
             return messages.ERROR_REQUIRED_FIELDS;
         } else {
-            
+
             let senhaCriptografada = await bcrypt.hash(usuario.senha, 10);
             usuario.senha = senhaCriptografada;
 
             // Aqui, 'result' receberá o ID que o DAO retornar
             let result = await usuarioDAO.setInsertUser(usuario);
-            
+
             if (result) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_CREATED_ITEM.status;
                 responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
                 responseData.message = messages.SUCCESS_CREATED_ITEM.message;
-                
+
                 // Retornamos o ID que veio do banco
                 responseData.usuario_criado = {
                     id: result
@@ -96,20 +101,20 @@ const criarUsuario = async function(usuario, contentType) {
             }
         }
     } catch (error) {
-        console.log(error); 
+        console.log(error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
 
 // PUT - Atualizar usuário
-const atualizarUsuario = async function(usuario, contentType, id, file) {
+const atualizarUsuario = async function (usuario, contentType, id, file) {
     try {
         if (id == '' || id == undefined || isNaN(id)) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
         if (String(contentType).toLowerCase() !== 'application/json' &&
-         !String(contentType).toLowerCase().includes('multipart/form-data')) {
+            !String(contentType).toLowerCase().includes('multipart/form-data')) {
             return messages.ERROR_CONTENT_TYPE;
         }
         let buscarId = await usuarioDAO.getSelectByIdUser(id);
@@ -122,9 +127,9 @@ const atualizarUsuario = async function(usuario, contentType, id, file) {
                 usuario.senha = buscarId[0].senha;
             }
 
-            if(file){
+            if (file) {
                 usuario.foto_perfil = `http://localhost:8080/uploads/${file.filename}`
-            }else{
+            } else {
                 usuario.foto_perfil = buscarId[0].foto_perfil
             }
 
@@ -151,17 +156,17 @@ const atualizarUsuario = async function(usuario, contentType, id, file) {
 }
 
 // DELETE - Excluir usuário
-const excluirUsuario = async function(id) {
+const excluirUsuario = async function (id) {
     if (id == '' || id == undefined || isNaN(id)) {
         return messages.ERROR_REQUIRED_FIELDS;
     }
 
     try {
         let buscarId = await usuarioDAO.getSelectByIdUser(id);
-        
+
         if (buscarId) {
             let result = await usuarioDAO.setDeleteUser(id);
-            
+
             if (result) {
                 let responseData = Object.assign({}, messages.HEADER);
                 responseData.status = messages.SUCCESS_DELETE_ITEM.status;
