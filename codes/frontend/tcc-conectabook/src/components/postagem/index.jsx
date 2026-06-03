@@ -210,6 +210,7 @@ export default function Postagem({ post, idClube }) {
 
                 {post.arquivo && (  // 👈 só renderiza se tiver arquivo
                     <img
+                    className="fotoPost"
                         src={`http://localhost:8080/uploads/${post.arquivo}`}
                         alt=""
                     />

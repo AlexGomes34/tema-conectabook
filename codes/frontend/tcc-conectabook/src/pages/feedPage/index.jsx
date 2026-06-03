@@ -102,6 +102,7 @@ function Feed() {
                         const dataLivro = await responseLivro.json()
 
                         return dataLivro.docs.map(livro => ({
+                            id: livro.key.split("/").pop(),
                             titulo: livro.title,
                             autor: livro.author_name?.[0] || "Autor desconhecido",
                             capa: livro.cover_i
@@ -165,9 +166,11 @@ function Feed() {
 
                         {
                             livrosSugeridos.slice(0, 5).map((livro, index) => (
+                                
                                 <div
                                     key={index}
                                     className={styles.titulos}
+                                    onClick={() => navigate(`/livroDetalhe/${livro.id}`)}
                                 >
 
                                     <div className={styles.livro}>
@@ -230,6 +233,7 @@ function Feed() {
                                     <div
                                         key={clube.id_clube}
                                         className={styles.clube}
+                                        onClick={() => navigate(`/feedClube/${clube.id_clube}`)}
                                     >
                                         <img
                                             className={styles.imagemClube}

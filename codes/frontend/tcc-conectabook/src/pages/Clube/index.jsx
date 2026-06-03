@@ -191,7 +191,10 @@ export default function Clube() {
                         </div>
                         <div className="clube-acess">
                             {meuClubeMembro ? (
-                                <Link className="clubePage">
+                                <Link
+                                    to={`/feedClube/${meuClubeMembro.id_clube}`}
+                                    className="clubePage"
+                                >
                                     <img
                                         src={
                                             meuClubeMembro.foto
@@ -224,7 +227,10 @@ export default function Clube() {
                         </div>
                         <div className="clube-acess">
                             {meuClubeAdmin ? (
-                                <Link className="clubePage">
+                                <Link
+                                    to={`/feedClube/${meuClubeAdmin.id_clube}`}
+                                    className="clubePage"
+                                >
                                     <img
                                         src={
                                             meuClubeAdmin.foto
