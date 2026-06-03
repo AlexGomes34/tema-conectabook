@@ -47,6 +47,10 @@ export default function Clube() {
     const [pesquisa, setPesquisa] = useState("")
     const [clubeAdmin, setClubeAdmin] = useState([])
     const [clubeMembro, setClubeMembro] = useState([])
+    const idsClubesMembro = [
+        ...clubeMembro.map(clube => clube.id_clube),
+        ...clubeAdmin.map(clube => clube.id_clube)
+    ]
 
     const clubesFiltrados = clubes.filter((clube) => {
 
@@ -257,6 +261,7 @@ export default function Clube() {
                     clubesFiltrados={clubesFiltrados}
                     participarClube={participarClube}
                     meusClubes={false}
+                    idsClubesMembro={idsClubesMembro}
                 />
             </main>
 

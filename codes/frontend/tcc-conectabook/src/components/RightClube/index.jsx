@@ -16,8 +16,10 @@ export default function RightClube({
     setGeneroSelecionado,
     clubesFiltrados,
     participarClube,
-    meusClubes = false
+    meusClubes = false,
+    idsClubesMembro = []
 }) {
+
     return (
         <div className="right-clube">
 
@@ -62,57 +64,64 @@ export default function RightClube({
             </div>
 
             <div className="clubes">
-                {clubesFiltrados.map((clube) => (
-                    <div className="clube-detalhe" key={clube.id_clube}>
+                {clubesFiltrados.map((clube) => {
 
-                        <div className="info-left">
-                            <img
-                                src={
-                                    clube.foto
-                                        ? `http://localhost:8080/uploads/${clube.foto}`
-                                        : FotoClubeDefault
-                                }
-                                alt=""
-                            />
+                    const participaDoClube = idsClubesMembro.includes(clube.id_clube)
 
-                            <div className="info-clube">
-                                <div className="left-sobre">
-                                    <h3>{clube.nome}</h3>
+                    return (
+                        <div className="clube-detalhe" key={clube.id_clube}>
 
-                                    <div className="p-clube">
-                                        <p>{clube.genero}</p>
-                                        <p>{clube.membros} membros</p>
-                                    </div>
 
-                                    <div className="sobre-clube">
-                                        <div className="sobre-clube-text">
-                                            <h4>Sobre o clube</h4>
-                                            <p className="sobre-text">{clube.sobre}</p>
+                            <div className="info-left">
+                                <img
+                                    src={
+                                        clube.foto
+                                            ? `http://localhost:8080/uploads/${clube.foto}`
+                                            : FotoClubeDefault
+                                    }
+                                    alt=""
+                                />
+
+                                <div className="info-clube">
+                                    <div className="left-sobre">
+                                        <h3>{clube.nome}</h3>
+
+                                        <div className="p-clube">
+                                            <p>{clube.genero}</p>
+                                            <p>{clube.membros} membros</p>
                                         </div>
 
+                                        <div className="sobre-clube">
+                                            <div className="sobre-clube-text">
+                                                <h4>Sobre o clube</h4>
+                                                <p className="sobre-text">{clube.sobre}</p>
+                                            </div>
 
+
+                                        </div>
+                                    </div>
+
+                                    <div className="button-sobre">
+                                        <Button
+
+                                            text={participaDoClube ? "Entrar no Feed" : "Participar do Clube"}
+                                            onClick={() => {
+                                                if (participaDoClube) {
+                                                    navigate(`/feedClube/${clube.id_clube}`)
+                                                } else {
+                                                    participarClube(clube.id_clube)
+                                                }
+                                            }}
+                                        />
                                     </div>
                                 </div>
-
-                                <div className="button-sobre">
-                                    <Button
-                                        text={meusClubes ? "Entrar no Feed" : "Participar do Clube"}
-                                        onClick={() => {
-                                            if (meusClubes) {
-                                                navigate(`/feedClube/${clube.id_clube}`)
-                                            } else {
-                                                participarClube(clube.id_clube)
-                                            }
-                                        }}
-                                    />
-                                </div>
                             </div>
+
+
+
                         </div>
-
-
-
-                    </div>
-                ))}
+                    )
+                })}
             </div>
 
         </div>
