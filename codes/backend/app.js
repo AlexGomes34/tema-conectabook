@@ -6,25 +6,61 @@
  * Versão: 1.2
  *******************************************************************************************/
 
-const express = require('express')
-const cors = require('cors')
-const bodyParser = require('body-parser')
 
-const app = express()
 
-const http = require('http')
-// const { setupSocket } = require('./socket/socketHandler')
 
-// Configuração global do CORS 
 
-app.use('/uploads', express.static('uploads'))
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const http = require('http');
+const { Server } = require('socket.io');
 
-// setupSocket(server);
+const app = express();
+const server = http.createServer(app);  
 
-app.use(cors())
+console.log("Versão do Socket.IO:", require("socket.io/package.json").version);
 
-// Middleware para JSON
-app.use(bodyParser.json())
+// =========================================================================
+// 1. MIDDLEWARES GLOBAIS DO EXPRESS (Devem vir ANTES de tudo para proteger/filtrar)
+// =========================================================================
+app.use(cors()); // 💡 CORS do Express DEVE ser o primeiro para não barrar requisições HTTP locais
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/uploads', express.static('uploads'));
+
+// 💡 SEU LOG DE DIAGNÓSTICO: Agora ele captura TUDO, pois está no topo!
+app.use((req, res, next) => {
+    if (req.url.includes('socket.io')) {
+        console.log(`📥 Uma requisição do Socket chegou no Express! URL: ${req.url}`);
+    }
+    next();
+});
+
+// =========================================================================
+// 2. CONFIGURAÇÃO DO SOCKET.IO (Acoplado ao servidor HTTP)
+// =========================================================================
+const io = new Server(server, {
+    // 💡 IMPORTANTE: Se sua API inteira usa o prefixo /v1/conectaBook,
+    // o Socket.io precisa escutar neste mesmo caminho, senão dá 404.
+    path: '/v1/conectaBook/mensagem/socket.io',
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        credentials: true
+    },
+    allowEIO3: true, 
+    transports: ['polling', 'websocket'] 
+});
+
+// Inicializa os seus módulos de socket externos
+require('./socket/socketServer.js')(io);
+
+// Teste rápido nativo
+io.on('connection', (socket) => {
+    console.log(`✅ Postman ou usuário conectou via Socket! ID: ${socket.id}`);
+});
+
 
 
 const usuarioRoutes = require('./routes/usuarioRoutes.js')
@@ -59,7 +95,7 @@ app.use('/v1/conectaBook/livros', livrosRoutes)
 const acessoLivroRoutes = require('./routes/acessoRoutes.js')
 app.use('/v1/conectaBook/livro-acesso', acessoLivroRoutes)
 
-const mensagemRoutes = require('./routes/mensagemRoutes.js')
+const mensagemRoutes = require('./routes/mensagemRoutes.js')(io)
 app.use('/v1/conectaBook/mensagem', mensagemRoutes)
 
 const curtidasRoutes = require('./routes/curtidaRoutes.js')
@@ -82,6 +118,6 @@ app.use('/v1/conectaBook/statusLivro', statusLivroRoutes)
 
 const PORT = process.env.PORT || 8080
 
-app.listen(PORT, function () {
-    console.log(`Servidor rodando na porta ${PORT}...`)
+server.listen(PORT, function () {
+    console.log(`Servidor HTTP e Socket.io rodando na porta ${PORT}...`)
 })

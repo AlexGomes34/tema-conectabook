@@ -35,6 +35,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
+
+module.exports = function(io) {
+
 // =========================================================================
 // ENDPOINTS DE BUSCA E FEEDS (GET)
 // =========================================================================
@@ -100,19 +103,19 @@ router.get('/:id/curtidas', cors(), async function (request, response) {
 // URL: POST http://localhost:8080/v1/conectaBook/mensagem
 // POST: Cria um post principal (id_clube nulo ou preenchido) ou envia uma resposta (id_mensagem_pai preenchido)
 router.post('/', cors(), upload.single('arquivo'), async function (request, response) {
-    let dadosBody = request.body;
-    let contentType = request.headers['content-type'];
+        let dadosBody = request.body;
+        let contentType = request.headers['content-type'];
 
-    // Se o Multer interceptou um arquivo, injetamos o nome gerado por ele no corpo dos dados
-    if (request.file) {
-        dadosBody.arquivo = request.file.filename;
-    } else {
-        dadosBody.arquivo = null; // Caso o post seja apenas texto, sem anexo
-    }
+        if (request.file) {
+            dadosBody.arquivo = request.file.filename;
+        } else {
+            dadosBody.arquivo = null;
+        }
 
-    let dados = await mensagemController.inserirMensagem(dadosBody, contentType);
-    response.status(dados.status_code).json(dados);
-});
+        // Passando o 'io' para emitir os eventos após salvar no banco
+        let dados = await mensagemController.inserirMensagem(dadosBody, contentType, io);
+        response.status(dados.status_code).json(dados);
+    });
 
 // URL: PUT http://localhost:8080/v1/conectaBook/mensagem/:id
 // PUT: Edita as informações de texto (comentario) ou anexo de uma mensagem existente
@@ -139,11 +142,17 @@ router.put('/:id', cors(), upload.single('arquivo'), async function (request, re
 // URL: DELETE http://localhost:8080/v1/conectaBook/mensagem/:id
 // DELETE: Remove uma mensagem específica, limpando em cascata as suas respostas e curtidas
 router.delete('/:id', async function (request, response) {
-    let idMensagem = request.params.id;
+        let idMensagem = request.params.id;
 
-    let dados = await mensagemController.excluirMensagemComRespostas(idMensagem);
-    response.status(dados.status_code).json(dados);
-});
+        let dados = await mensagemController.excluirMensagemComRespostas(idMensagem);
+        
+        // Se deletou do banco com sucesso, avisa o front-end em tempo real para sumir com o post
+        if(dados.status_code === 200) {
+            io.emit('mensagem_deletada', { id_mensagem: idMensagem });
+        }
+
+        response.status(dados.status_code).json(dados);
+    });
 
 // URL: DELETE http://localhost:8080/v1/conectaBook/mensagem/clube/:id
 // DELETE: Limpa o histórico completo de mensagens e curtidas associadas a um clube específico
@@ -163,4 +172,5 @@ router.delete('/usuario/:id', async function (request, response) {
     response.status(dados.status_code).json(dados);
 });
 
-module.exports = router;
+   return router
+}
