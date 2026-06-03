@@ -24,10 +24,6 @@
     width: 70vw;
 }
 
-.right-main{
-    width: 30vw;
-    padding: 3rem;
-}
 
 .main-feedClube{
     flex: 1;
@@ -127,11 +123,11 @@
 
 .right-main{
     padding-top: 1.5rem;
-    margin: 1rem;
-    height:50rem;
+    margin: 2rem;
+    height:60rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    gap: 2rem;
 }
 
 

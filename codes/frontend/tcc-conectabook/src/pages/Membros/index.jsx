@@ -3,12 +3,14 @@ import Button from "../../components/button"
 import Footer from "../../components/footer"
 import Header from "../../components/header"
 
+import userDefault from "../../assets/userDefault.webp"
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faCrown } from '@fortawesome/free-solid-svg-icons';
 
 import styles from "./style.module.css"
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function Membros() {
@@ -30,45 +32,60 @@ export default function Membros() {
         { id: 15, nome: "Matheus Silva", administrador: "Membro", foto: fotoPessoa1 }
     ]
 
+
+    const { idClube } = useParams()
+
+    const [membros, setMembros] = useState([])
+
     const [user, setUser] = useState(null)
-    
-        useEffect(() => {
-    
-            const userStorage = JSON.parse(
-                localStorage.getItem("user")
-            )
-    
-            if (userStorage) {
-                setUser(userStorage)
-            }
-    
-        }, [])
+
+    useEffect(() => {
+
+        const userStorage = JSON.parse(
+            localStorage.getItem("user")
+        )
+
+        if (userStorage) {
+            setUser(userStorage)
+        }
+
+    }, [])
+
+    useEffect(() => {
+        async function buscarMembros() {
+            const res = await fetch(`http://localhost:8080/v1/conectaBook/membros/clube/${idClube}`)
+            const data = await res.json()
+            console.log(data)
+            setMembros(data.response)
+        }
+        buscarMembros()
+    }, [idClube])
 
     const navigate = useNavigate()
     return (
-        <div>
-            <Header fotoUser={user?.user?.foto_perfil}/>
+        <div className={styles.container}>
+            <Header fotoUser={user?.user?.foto_perfil} />
             <main className={styles.mainMembro}>
                 <div className={styles.membrosButton}>
                     <div>
-                        <Button text={"Feed"} onClick={() => navigate('/feedClube')} />
-                        <Button text={"Membros"} />
+                        <Button text="Feed" onClick={() => navigate(`/feedClube/${idClube}`)} />
+                        <Button text="Membros" onClick={() => navigate(`/membros/${idClube}`)} />
                     </div>
-                    <Button text={"Editar"}/>
+                    <Button text={"Editar"} />
                 </div>
 
                 <div>
                     <i></i>
-                    <h2>Membros do Clube - Amantes de Percy Jackson</h2>
+                    <h2>Membros do Clube - {membros[0]?.nome_clube}</h2>
                     <p>Veja todos os membros do clube e sua função</p>
                 </div>
                 <hr />
                 <div className={styles.membros}>
-                    {MEMBROS_DATA.map((membro) => (
+                    {membros.map((membro) => (
                         <div className={styles.membro}>
-                            <img src={membro.foto} alt="" />
+                            <img src={membro.foto_perfil || userDefault} alt="" />
                             <div>
-                                <h3>{membro.nome}</h3>
+                                <h3>{membro.nome_usuario}</h3>
                                 <p>{membro.administrador}</p>
                             </div>
                             <div>

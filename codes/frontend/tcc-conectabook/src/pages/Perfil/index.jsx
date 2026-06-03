@@ -152,6 +152,7 @@ function Perfil() {
 
         console.log("FILE ORIGINAL:", file)
         console.log("COMPRESSED FILE:", compressedFile)
+        
     }
 
     const INPUT_DATA = [
@@ -169,6 +170,7 @@ function Perfil() {
         if (userStorage) {
 
             setUser(userStorage)
+            console.log(userStorage.user)
 
 
             setFormData({
@@ -176,7 +178,9 @@ function Perfil() {
                 nome: userStorage.user.nome || "",
                 email: userStorage.user.email || "",
                 senha: "",
-                dataNascimento: userStorage.user.data_nascimento || "",
+                dataNascimento: userStorage.user.data_nascimento
+                    ? userStorage.user.data_nascimento.split("T")[0]
+                    : "",
                 id: userStorage.user.id_usuario || ""
             })
         }

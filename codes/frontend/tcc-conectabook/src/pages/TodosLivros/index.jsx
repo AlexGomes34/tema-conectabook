@@ -27,7 +27,7 @@ export default function TodosLivros() {
                 const data = await res.json()
 
                 const mapped = data.docs
-                    .filter(book => book.cover_i && book.title)
+                    .filter(book => book.cover_i && book.title && book.author_name && book.author_name.length > 0)
                     .slice(0, 20)
                     .map(book => ({
                         key: book.key,
@@ -36,7 +36,6 @@ export default function TodosLivros() {
 
                         coverUrl: `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
                     }))
-
                 setBooks(mapped)
 
             } catch (error) {

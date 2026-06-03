@@ -65,6 +65,7 @@ const setInsertBook = async function (livro) {
         else
             return false
     } catch (error) {
+        console.log(error)
         return false
     }
 }

@@ -75,6 +75,7 @@ const criarLivro = async function (livro, contentType) {
                 responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
                 return responseData;
             } else {
+                console.log(result)
                 return messages.ERROR_INTERNAL_SERVER_MODEL;
             }
         }
