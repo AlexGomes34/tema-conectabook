@@ -13,6 +13,7 @@ export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
     const [user, setUser] = useState({})
     const [mensagem, setMensagem] = useState("")
     const [listaPosts, setListaPosts] = useState([])
+    const [arquivo, setArquivo] = useState(null)
 
     const navigate = useNavigate()
 
@@ -48,27 +49,26 @@ export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
             return
         }
 
-        const body = {
-            comentario: mensagem,
-            arquivo: null,
-            id_usuario: user.user.id,
-            id_clube: idClube ?? null,
-            id_mensagem_pai: idConversa,
+        const formData = new FormData()
+
+        formData.append("comentario", mensagem)
+        formData.append("id_usuario", user.user.id)
+        formData.append("id_clube", idClube ?? "")
+        if (arquivo) {
+            formData.append("arquivo", arquivo)
         }
 
         try {
             const response = await fetch("http://localhost:8080/v1/conectaBook/mensagem", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
+                body: formData
             })
 
             const data = await response.json()
 
             if (response.ok) {
                 setMensagem("")
+                setArquivo(null)
                 await carregarPosts()
             }
 
@@ -99,7 +99,7 @@ export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
                 </div>
 
                 <div className="inputComArquivo">
-                    <Button text="Arquivo" />
+                    <input type="file" onChange={(e) => setArquivo(e.target.files[0])} />
                     <Button
                         text="Postar"
                         type="submit"

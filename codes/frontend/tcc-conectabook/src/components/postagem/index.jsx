@@ -19,56 +19,36 @@ export default function Postagem({ post, idClube }) {
     const [textoSubResposta, setTextoSubResposta] = useState("")
 
     async function responderResposta(idRespostaPai, idComentarioPai) {
-
         if (!textoSubResposta.trim()) return
 
         try {
-
             const user = JSON.parse(localStorage.getItem("user"))
 
-            const body = {
-                comentario: textoSubResposta,
-                arquivo: null,
-                id_usuario: user.user.id,
-                id_clube: idClube ?? null,
-                id_mensagem_pai: idRespostaPai
-            }
+            const formData = new FormData()
+            formData.append("comentario", textoSubResposta)
+            formData.append("id_usuario", user.user.id)
+            formData.append("id_clube", idClube ?? "")
+            formData.append("id_mensagem_pai", idRespostaPai)
 
             const response = await fetch(
                 "http://localhost:8080/v1/conectaBook/mensagem",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(body)
-                }
+                { method: "POST", body: formData }
             )
 
             const data = await response.json()
 
             if (data.response) {
-
                 setComentarios((prev) =>
                     prev.map((comentario) => {
-
                         if (comentario.id_mensagem === idComentarioPai) {
-
                             return {
-
                                 ...comentario,
-
                                 respostas: comentario.respostas.map((resposta) => {
-
                                     if (resposta.id_mensagem === idRespostaPai) {
-
                                         return {
-
                                             ...resposta,
-
                                             respostas: [
                                                 ...(resposta.respostas || []),
-
                                                 {
                                                     ...data.response,
                                                     nome_usuario: user.user.nome,
@@ -76,22 +56,14 @@ export default function Postagem({ post, idClube }) {
                                                 }
                                             ]
                                         }
-
                                     }
-
                                     return resposta
-
                                 })
-
                             }
-
                         }
-
                         return comentario
-
                     })
                 )
-
             }
 
             setTextoSubResposta("")
@@ -100,45 +72,31 @@ export default function Postagem({ post, idClube }) {
         } catch (error) {
             console.log(error)
         }
-
     }
 
     async function responderComentario(idComentarioPai) {
-
         if (!textoResposta.trim()) return
 
         try {
-
             const user = JSON.parse(localStorage.getItem("user"))
 
-            const body = {
-                comentario: textoResposta,
-                arquivo: null,
-                id_usuario: user.user.id,
-                id_clube: idClube ?? null,
-                id_mensagem_pai: idComentarioPai
-            }
+            const formData = new FormData()
+            formData.append("comentario", textoResposta)
+            formData.append("id_usuario", user.user.id)
+            formData.append("id_clube", idClube ?? "")
+            formData.append("id_mensagem_pai", idComentarioPai)
 
             const response = await fetch(
                 "http://localhost:8080/v1/conectaBook/mensagem",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(body)
-                }
+                { method: "POST", body: formData }
             )
 
             const data = await response.json()
 
             if (data.response) {
-
                 setComentarios((prev) =>
                     prev.map((comentario) => {
-
                         if (comentario.id_mensagem === idComentarioPai) {
-
                             return {
                                 ...comentario,
                                 respostas: [
@@ -150,14 +108,10 @@ export default function Postagem({ post, idClube }) {
                                     }
                                 ]
                             }
-
                         }
-
                         return comentario
-
                     })
                 )
-
             }
 
             setTextoResposta("")
@@ -173,17 +127,19 @@ export default function Postagem({ post, idClube }) {
             const response = await fetch(
                 `http://localhost:8080/v1/conectaBook/mensagem/${post.id_mensagem}/respostas`
             )
-    
+
             const data = await response.json()
-            const todos = data.respostas  // <-- era data.response
-    
+
+            console.log("respostas brutas:", data)
+            const todos = data.respostas
+
             const mapa = {}
             todos.forEach((item) => {
                 mapa[item.id_mensagem] = { ...item, respostas: [] }
             })
-    
+
             const raizes = []
-    
+
             todos.forEach((item) => {
                 if (item.id_mensagem_pai === post.id_mensagem) {
                     raizes.push(mapa[item.id_mensagem])
@@ -191,45 +147,34 @@ export default function Postagem({ post, idClube }) {
                     mapa[item.id_mensagem_pai].respostas.push(mapa[item.id_mensagem])
                 }
             })
-    
+
             setComentarios(raizes)
-    
+
         } catch (error) {
             console.log(error)
         }
     }
 
     async function criarComentario() {
-
         if (!comentario.trim()) return
 
         try {
-
             const user = JSON.parse(localStorage.getItem("user"))
 
-            const body = {
-                comentario: comentario,
-                arquivo: null,
-                id_usuario: user.user.id,
-                id_clube: idClube ?? null,
-                id_mensagem_pai: post.id_mensagem
-            }
+            const formData = new FormData()
+            formData.append("comentario", comentario)
+            formData.append("id_usuario", user.user.id)
+            formData.append("id_clube", idClube ?? "")
+            formData.append("id_mensagem_pai", post.id_mensagem)
 
             const response = await fetch(
                 "http://localhost:8080/v1/conectaBook/mensagem",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(body)
-                }
+                { method: "POST", body: formData }
             )
 
             const data = await response.json()
 
             if (data.response) {
-
                 setComentarios((prev) => [
                     ...prev,
                     {
@@ -237,7 +182,6 @@ export default function Postagem({ post, idClube }) {
                         respostas: []
                     }
                 ])
-
             }
 
             setComentario("")
@@ -250,11 +194,9 @@ export default function Postagem({ post, idClube }) {
     return (
         <div className="postagem">
 
-            <img
+            <img className='fotoPerfilPostagem'
                 src={post.foto_perfil || userDefault}
-                onError={(e) => {
-                    e.target.src = userDefault
-                }}
+                onError={(e) => { e.target.src = userDefault }}
                 alt=""
             />
 
@@ -266,258 +208,127 @@ export default function Postagem({ post, idClube }) {
 
                 <p>{post.comentario}</p>
 
-                <div className="reacoes">
+                {post.arquivo && (  // 👈 só renderiza se tiver arquivo
+                    <img
+                        src={`http://localhost:8080/uploads/${post.arquivo}`}
+                        alt=""
+                    />
+                )}
 
+                <div className="reacoes">
                     <div className="reacao">
                         <FontAwesomeIcon icon={faHeart} />
                         <p>0</p>
                     </div>
-
                     <div
                         className="reacao"
                         onClick={() => {
-
                             const novoEstado = !abrirComentario
-
                             setAbrirComentario(novoEstado)
-
-                            if (novoEstado) {
-                                buscarComentarios()
-                            }
-
+                            if (novoEstado) buscarComentarios()
                         }}
                     >
                         <FontAwesomeIcon icon={faComment} />
                         <p>{comentarios.length}</p>
                     </div>
-
                 </div>
 
-                {
-                    abrirComentario && (
+                {abrirComentario && (
+                    <div className="area-comentarios">
 
-                        <div className="area-comentarios">
+                        <div className="criar-comentario">
+                            <Input
+                                type="text"
+                                placeholder="Comente algo..."
+                                value={comentario}
+                                onChange={(e) => setComentario(e.target.value)}
+                                onKeyDown={(e) => { if (e.key === "Enter") criarComentario() }}
+                            />
+                            <button onClick={criarComentario}>Comentar</button>
+                        </div>
 
-                            <div className="criar-comentario">
+                        {comentarios.map((item) => (
+                            <div key={item.id_mensagem}>
+                                <div className="comentario">
+                                    <img className='fotoPerfilPostagem' src={item.foto_perfil || userDefault} alt="" />
+                                    <div>
+                                        <h3>{item.nome_usuario}</h3>
+                                        <p>{item.comentario}</p>
+                                        <button onClick={() => {
+                                            setComentarioRespondendo(
+                                                comentarioRespondendo === item.id_mensagem ? null : item.id_mensagem
+                                            )
+                                        }}>
+                                            Responder
+                                        </button>
+                                    </div>
+                                </div>
 
-                                <Input
-                                    type="text"
-                                    placeholder="Comente algo..."
-                                    value={comentario}
-                                    onChange={(e) => setComentario(e.target.value)}
-                                    onKeyDown={(e) => {
+                                {comentarioRespondendo === item.id_mensagem && (
+                                    <div style={{ marginLeft: "40px" }}>
+                                        <Input
+                                            type="text"
+                                            placeholder="Responder comentário..."
+                                            value={textoResposta}
+                                            onChange={(e) => setTextoResposta(e.target.value)}
+                                            onKeyDown={(e) => { if (e.key === "Enter") responderComentario(item.id_mensagem) }}
+                                        />
+                                        <button onClick={() => responderComentario(item.id_mensagem)}>Responder</button>
+                                    </div>
+                                )}
 
-                                        if (e.key === "Enter") {
-                                            criarComentario()
-                                        }
-
-                                    }}
-                                />
-
-                                <button onClick={criarComentario}>
-                                    Comentar
-                                </button>
-
-                            </div>
-
-                            {
-                                comentarios.map((item) => (
-                                    <div key={item.id_mensagem}>
-
-                                        <div className="comentario">
-
-                                            <img
-                                                src={item.foto_perfil || userDefault}
-                                                alt=""
-                                            />
-
+                                <div style={{ marginLeft: "40px" }}>
+                                    {item.respostas?.map((resposta) => (
+                                        <div key={resposta.id_mensagem} className="comentario">
+                                            <img src={resposta.foto_perfil || userDefault} alt="" />
                                             <div>
-
-                                                <h3>{item.nome_usuario}</h3>
-
-                                                <p>{item.comentario}</p>
-
-                                                <button
-                                                    onClick={() => {
-
-                                                        if (comentarioRespondendo === item.id_mensagem) {
-                                                            setComentarioRespondendo(null)
-                                                        } else {
-                                                            setComentarioRespondendo(item.id_mensagem)
-                                                        }
-
-                                                    }}
-                                                >
+                                                <h3>{resposta.nome_usuario}</h3>
+                                                <p>{resposta.comentario}</p>
+                                                <button onClick={() => {
+                                                    setRespostaRespondendo(
+                                                        respostaRespondendo === resposta.id_mensagem ? null : resposta.id_mensagem
+                                                    )
+                                                }}>
                                                     Responder
                                                 </button>
 
-                                            </div>
-
-                                        </div>
-
-                                        {
-                                            comentarioRespondendo === item.id_mensagem && (
-                                                <div style={{ marginLeft: "40px" }}>
-
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Responder comentário..."
-                                                        value={textoResposta}
-                                                        onChange={(e) =>
-                                                            setTextoResposta(e.target.value)
-                                                        }
-                                                        onKeyDown={(e) => {
-
-                                                            if (e.key === "Enter") {
-                                                                responderComentario(item.id_mensagem)
-                                                            }
-
-                                                        }}
-                                                    />
-
-                                                    <button
-                                                        onClick={() =>
-                                                            responderComentario(item.id_mensagem)
-                                                        }
-                                                    >
-                                                        Responder
-                                                    </button>
-
-                                                </div>
-                                            )
-                                        }
-
-                                        <div style={{ marginLeft: "40px" }}>
-
-                                            {
-                                                item.respostas?.map((resposta) => (
-
-                                                    <div
-                                                        key={resposta.id_mensagem}
-                                                        className="comentario"
-                                                    >
-
-                                                        <img
-                                                            src={resposta.foto_perfil || userDefault}
-                                                            alt=""
+                                                {respostaRespondendo === resposta.id_mensagem && (
+                                                    <div>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Responder resposta..."
+                                                            value={textoSubResposta}
+                                                            onChange={(e) => setTextoSubResposta(e.target.value)}
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === "Enter") responderResposta(resposta.id_mensagem, item.id_mensagem)
+                                                            }}
                                                         />
-
-                                                        <div>
-
-                                                            <h3>{resposta.nome_usuario}</h3>
-
-                                                            <p>{resposta.comentario}</p>
-
-                                                            <div className="reacoes">
-
-                                                                <button
-                                                                    onClick={() => {
-
-                                                                        if (respostaRespondendo === resposta.id_mensagem) {
-                                                                            setRespostaRespondendo(null)
-                                                                        } else {
-                                                                            setRespostaRespondendo(resposta.id_mensagem)
-                                                                        }
-
-                                                                    }}
-                                                                >
-                                                                    Responder
-                                                                </button>
-
-                                                            </div>
-
-                                                            {
-                                                                respostaRespondendo === resposta.id_mensagem && (
-
-                                                                    <div>
-
-                                                                        <Input
-                                                                            type="text"
-                                                                            placeholder="Responder resposta..."
-                                                                            value={textoSubResposta}
-                                                                            onChange={(e) =>
-                                                                                setTextoSubResposta(e.target.value)
-                                                                            }
-                                                                            onKeyDown={(e) => {
-
-                                                                                if (e.key === "Enter") {
-
-                                                                                    responderResposta(
-                                                                                        resposta.id_mensagem,
-                                                                                        item.id_mensagem
-                                                                                    )
-
-                                                                                }
-
-                                                                            }}
-                                                                        />
-
-                                                                        <button
-                                                                            onClick={() =>
-                                                                                responderResposta(
-                                                                                    resposta.id_mensagem,
-                                                                                    item.id_mensagem
-                                                                                )
-                                                                            }
-                                                                        >
-                                                                            Responder
-                                                                        </button>
-
-                                                                    </div>
-
-                                                                )
-                                                            }
-
-                                                            <div style={{ marginLeft: "40px" }}>
-
-                                                                {
-                                                                    resposta.respostas?.map((subResposta) => (
-
-                                                                        <div
-                                                                            key={subResposta.id_mensagem}
-                                                                            className="comentario"
-                                                                        >
-
-                                                                            <img
-                                                                                src={subResposta.foto_perfil || userDefault}
-                                                                                alt=""
-                                                                            />
-
-                                                                            <div>
-
-                                                                                <h3>{subResposta.nome_usuario}</h3>
-
-                                                                                <p>{subResposta.comentario}</p>
-
-                                                                            </div>
-
-                                                                        </div>
-
-                                                                    ))
-                                                                }
-
-                                                            </div>
-
-                                                        </div>
-
+                                                        <button onClick={() => responderResposta(resposta.id_mensagem, item.id_mensagem)}>
+                                                            Responder
+                                                        </button>
                                                     </div>
+                                                )}
 
-                                                ))
-                                            }
-
+                                                <div style={{ marginLeft: "40px" }}>
+                                                    {resposta.respostas?.map((subResposta) => (
+                                                        <div key={subResposta.id_mensagem} className="comentario">
+                                                            <img src={subResposta.foto_perfil || userDefault} alt="" />
+                                                            <div>
+                                                                <h3>{subResposta.nome_usuario}</h3>
+                                                                <p>{subResposta.comentario}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
-
-                                    </div>
-                                ))
-                            }
-
-                        </div>
-
-                    )
-                }
-
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
-
         </div>
     )
 }
