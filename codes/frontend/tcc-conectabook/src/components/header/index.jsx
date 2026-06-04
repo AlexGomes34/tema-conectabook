@@ -1,5 +1,5 @@
 import './header.css'
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logoAtualizado.png';
 import { Link } from 'react-router-dom';
 
 import fotoDefault from "../../assets/userDefault.webp"

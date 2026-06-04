@@ -41,6 +41,10 @@ function Feed() {
             navigate("/")
         } else {
             setUser(userStorage)
+            getPosts()
+            getLivrosFavoritos(userStorage.user.id)
+            getClubesUsuario(userStorage.user.id)
+            getLivrosPopulares()
         }
 
         async function getLivrosPopulares() {
@@ -48,9 +52,9 @@ function Feed() {
                 const response = await fetch(
                     "https://openlibrary.org/trending/monthly.json?limit=3"
                 )
-        
+
                 const data = await response.json()
-        
+
                 const livros = data.works.map(livro => ({
                     id: livro.key.split("/").pop(),
                     titulo: livro.title,
@@ -59,7 +63,7 @@ function Feed() {
                         ? `https://covers.openlibrary.org/b/id/${livro.cover_i}-M.jpg`
                         : fotoLivro1
                 }))
-        
+
                 setLivrosPopulares(livros)
             } catch (error) {
                 console.log(error)
@@ -74,7 +78,7 @@ function Feed() {
 
                 const data = await response.json()
 
-                setClubesUsuario(data.response)
+                setClubesUsuario(data.response ?? [])
 
                 console.log(data.response)
             } catch (error) {
@@ -118,8 +122,9 @@ function Feed() {
                     "Policial": "crime"
                 }
 
+                const generos = dataGenero.response ?? []
                 const resultados = await Promise.all(
-                    dataGenero.response.map(async (genero) => {
+                    generos.map(async (genero) => {
                         const assunto = mapaGeneros[genero.nome] || genero.nome
 
                         const responseLivro = await fetch(`https://openlibrary.org/search.json?subject=${encodeURIComponent(assunto)}&limit=3`)
@@ -170,8 +175,6 @@ function Feed() {
         }
 
         getPosts()
-        getLivrosFavoritos(userStorage.user.id)
-        getClubesUsuario(userStorage.user.id)
         getLivrosPopulares()
     }, [])
 
