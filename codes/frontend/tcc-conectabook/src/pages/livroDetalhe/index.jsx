@@ -29,7 +29,6 @@ export default function LivroDetalhe() {
         lido: "Já li"
     }
 
-    // ✅ Mapeia o string que o backend retorna → chave interna
     const statusNomeParaChave = {
         "Quero Ler": "quero_ler",
         "Lendo": "lendo",
@@ -40,6 +39,32 @@ export default function LivroDetalhe() {
         const userStorage = JSON.parse(localStorage.getItem("user"))
         if (userStorage) setUser(userStorage)
     }, [])
+
+    // ─── Garante que o livro existe no banco ───────────────────────────────────
+    useEffect(() => {
+        if (!livro) return;
+
+        async function garantirLivroNoBanco() {
+            try {
+                await fetch(`http://localhost:8080/v1/conectaBook/livros`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        id_livro: livro.id,
+                        isbn: livro.isbn,
+                        titulo: livro.title,
+                        autor: livro.author,
+                        descricao: livro.description ?? "Sem descrição",
+                        capa: livro.coverUrl
+                    }),
+                });
+            } catch (error) {
+                console.error("Erro ao garantir livro no banco:", error);
+            }
+        }
+
+        garantirLivroNoBanco();
+    }, [livro]);
 
     useEffect(() => {
         async function fetchLivro() {
@@ -109,7 +134,7 @@ export default function LivroDetalhe() {
                 const encontrado = lista.find(item => item.id_livro === id)
 
                 if (encontrado) {
-                    setLivroNaEstante(encontrado) 
+                    setLivroNaEstante(encontrado)
 
                     setStatusSelecionado(statusNomeParaChave[encontrado.status_leitura])
                 }
@@ -124,7 +149,7 @@ export default function LivroDetalhe() {
 
     const handleAbrirModal = () => {
         if (livroNaEstante) {
-            
+
             setStatusSelecionado(statusNomeParaChave[livroNaEstante.status_leitura])
         } else {
             setStatusSelecionado(null)
@@ -143,7 +168,7 @@ export default function LivroDetalhe() {
             if (livroNaEstante) {
 
                 console.log(livroNaEstante)
-                
+
                 res = await fetch(
                     `http://localhost:8080/v1/conectaBook/estante/${livroNaEstante.id_estante}`,
                     {
@@ -170,7 +195,7 @@ export default function LivroDetalhe() {
                 return
             }
 
-            
+
             const statusLeituraMap = {
                 quero_ler: "Quero Ler",
                 lendo: "Lendo",
@@ -193,7 +218,7 @@ export default function LivroDetalhe() {
         if (!livroNaEstante || !user) return
 
         try {
-            
+
             const res = await fetch(
                 `http://localhost:8080/v1/conectaBook/estante/${livroNaEstante.id_estante}`,
                 { method: 'DELETE' }
