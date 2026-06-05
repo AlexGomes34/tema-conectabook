@@ -13,12 +13,21 @@
 
 .main-feedClube{
     flex: 1;
+    margin: 1rem;
 }
 
 .up-main{
     display: flex;
     justify-content: space-between;
+    margin: 1rem;
 }
+
+.up-left-main{
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+}
+
 
 .left-main{
     width: 70vw;
@@ -28,6 +37,7 @@
 .main-feedClube{
     flex: 1;
     display: flex;
+    padding: 1rem;
 }
 
 .reacoes{

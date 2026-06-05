@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react"
 import Input from "../../components/input"
-import logo from "../../assets/logo.png"
+import logo from "../../assets/logoAtualizado.png"
 import "./style.css"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

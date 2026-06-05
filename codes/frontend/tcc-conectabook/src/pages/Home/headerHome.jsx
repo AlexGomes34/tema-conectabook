@@ -1,6 +1,6 @@
 // import './style.css'
 // import logo from './logo.png';
-import logo from '../../assets/logo.png'
+import logo from '../../assets/logoAtualizado.png'
 
 function headerHome() {
 

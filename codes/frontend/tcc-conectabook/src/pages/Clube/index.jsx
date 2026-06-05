@@ -214,10 +214,7 @@ export default function Clube() {
                                 </div>
                             )}
                         </div>
-                        <Button
-                            text={"Ver Todos os clubes"}
-                            onClick={() => navigate("/meusClubes")}
-                        />
+                        
                     </div>
 
                     <div className="meus-clubes">
@@ -252,6 +249,7 @@ export default function Clube() {
                         </div>
                         <Button
                             text={"Ver Todos os clubes"}
+                            onClick={() => navigate("/meusClubes")}
                         />
                     </div>
 
