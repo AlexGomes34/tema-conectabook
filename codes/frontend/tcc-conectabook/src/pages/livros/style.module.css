@@ -72,6 +72,6 @@
 
 .livro img {
     height: auto;
-    width: 100%; /* era 20vw dentro de um elemento 10vw — estourava */
+    width: 100%; 
     object-fit: cover;
 }

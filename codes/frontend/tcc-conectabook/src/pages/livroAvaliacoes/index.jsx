@@ -11,13 +11,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faTags, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const API_URL = "http://localhost:8080/v1/conectaBook";
 
 export default function LivroAvaliacao() {
     const { state } = useLocation();
+    const navigate = useNavigate();
     const livro = state?.livro; // dados vindos do LivroDetalhe
 
     const [user, setUser] = useState(null);
@@ -220,6 +221,8 @@ export default function LivroAvaliacao() {
                                 </div>
                             </div>
                         </div>
+
+                        <Button text={"Ver Detalhes"} onClick={() => navigate(`/livroDetalhe/${livro.id}`)} />
                     </div>
 
                     {/* ── Formulário de avaliação ── */}

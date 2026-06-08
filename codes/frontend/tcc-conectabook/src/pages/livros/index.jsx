@@ -186,7 +186,7 @@ export default function Livro() {
             <div className={styles.livros}>
               <div className={styles.divMain}>
                 <h3>Minha estante</h3>
-                <Button text={"Ver Todos"} onClick={() => navigate('/todosLivros')} />
+                <Button text={"Ver Todos"} onClick={() => navigate('/estante')} />
               </div>
 
               {estanteLoading && <p>Carregando estante...</p>}
