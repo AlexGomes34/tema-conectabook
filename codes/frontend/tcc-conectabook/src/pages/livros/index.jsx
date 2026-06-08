@@ -59,7 +59,7 @@ export default function Livro() {
   // Busca estante quando o usuário estiver disponível
   useEffect(() => {
     const userId = user?.user?.id
-    console.log("user state:", user)      // 👈 ver estrutura completa
+    console.log("user state:", user)  
     console.log("userId extraído:", userId)
     if (!userId) return
 
@@ -73,7 +73,7 @@ export default function Livro() {
       })
       .then(data => {
         console.log("data da estante:", data)
-        const lista = Array.isArray(data.estante) ? data.estante : []  // 👈
+        const lista = Array.isArray(data.estante) ? data.estante : [] 
         setEstante(lista)
       })
       .catch(err => {
