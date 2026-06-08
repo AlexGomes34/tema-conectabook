@@ -56,6 +56,7 @@ const getSelectBookcaseByIdUser = async function (idUsuario) {
     tbl_livro.id_livro,
     tbl_livro.isbn,
     tbl_livro.titulo,
+    tbl_livro.capa,
     tbl_livro.autor,
     tbl_livro.descricao,
     tbl_status_livro.nome_status as status_leitura 
@@ -93,6 +94,7 @@ const getSelectBookcaseByStatus = async function (idUsuario, nomeStatus) {
                 tbl_livro.id_livro,
                 tbl_livro.isbn,
                 tbl_livro.titulo,
+                tbl_livro.capa,
                 tbl_livro.autor,
                 tbl_livro.descricao,
                 tbl_status_livro.nome_status as status_leitura

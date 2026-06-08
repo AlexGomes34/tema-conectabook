@@ -127,27 +127,34 @@ const setInsertClub = async function (clube) {
 }
 
 // ATUALIZA UM CLUBE NO BANCO
+// ATUALIZA UM CLUBE NO BANCO
 const setUpdateClub = async function (clube) {
     try {
-        const foto = clube.foto ? `'${clube.foto}'` : "NULL";
+        // CORRIGIDO: Se tiver foto, colocamos as aspas aqui. Se não, deixamos NULL sem aspas.
+        const fotoValida = clube.foto ? `'${clube.foto}'` : "NULL";
+
+        // CORRIGIDO: Removemos as aspas simples de '${foto}' na query abaixo,
+        // deixando apenas ${fotoValida}, pois ela já vem com as aspas certas do ternário.
         let sql = `update tbl_clube set 
                     nome = '${clube.nome}',
                     sobre = '${clube.sobre}',
                     regras = '${clube.regras}',
-                    foto = '${foto}',
+                    foto = ${fotoValida},
                     id_genero = '${clube.id_genero}'
                 Where id_clube = ${clube.id} `
 
         let result = await db.raw(sql)
 
-        if (result && result[0].affectedRows > 0)
+        // Se você estiver usando o MySQL puro via Knex (db.raw)
+        // o affectedRows costuma vir direto no primeiro objeto do resultado
+        if (result && (result[0].affectedRows > 0 || result.affectedRows > 0))
             return true
         else
             return false
     } catch (error) {
+        console.error("🚨 Erro SQL na Model do Clube:", error); // Adicionado para te ajudar a debugar se der outro erro
         return false
     }
-
 }
 
 // DELETA UM CLUBE NO BANCO

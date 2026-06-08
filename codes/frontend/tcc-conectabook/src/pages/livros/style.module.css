@@ -40,8 +40,8 @@
 
 .listLivros {
     display: flex;
-    justify-content: space-between;
-    gap: 2rem; /* era 10rem — muito grande */
+    justify-content: flex-start; /* era space-between */
+    gap: 12vw;
     padding-bottom: 1rem;
     margin: 1rem 0;
     flex-wrap: wrap;

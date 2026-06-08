@@ -174,7 +174,11 @@ export default function LivroDetalhe() {
                     {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id_status_livro: statusId })
+                        body: JSON.stringify({
+                            id_usuario: user.user.id,       // ← adicionar
+                            id_livro: livro.id,             // ← adicionar
+                            id_status_livro: statusId
+                        })
                     }
                 )
             } else {

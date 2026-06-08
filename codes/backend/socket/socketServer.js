@@ -6,40 +6,35 @@
  * Versão: 1.0
  *******************************************************************************************/
 
-const socketIo = require('socket.io')
 
-let io
-
-const setupSocket = (server) => {
-    io = socketIo(server, {
-        cors: { origin: "*" } 
-    })
-
+ module.exports = (io) => {
     io.on('connection', (socket) => {
-        console.log(` Usuário conectado: ${socket.id}`)
+        console.log(`Usuário conectado ao Socket: ${socket.id}`);
 
-        // O Front-end deve enviar o id_conversa ao abrir um chat
-        socket.on('join_chat', (idConversa) => {
-            socket.join(`chat_${idConversa}`)
-            console.log(`Usuário entrou na sala: chat_${idConversa}`)
+        // O usuário avisa qual tela/contexto ele está acessando
+        socket.on('entrar_contexto', (dados) => {
+            // dados = { tipoContexto: 'feed' | 'resenha' | 'clube', idClube: 12 }
+            
+            if (dados.tipoContexto === 'feed') {
+                socket.join('sala_feed_geral');
+            } 
+            else if (dados.tipoContexto === 'clube' && dados.idClube) {
+                socket.join(`sala_clube_${dados.idClube}`);
+            } 
+            else if (dados.tipoContexto === 'resenha' && dados.idMensagemPai) {
+                socket.join(`sala_resenha_${dados.idMensagemPai}`);
+            }
         });
 
-        // Sala para notificações (cada usuário entra na sua própria sala baseada no ID)
-        socket.on('join_notifications', (idUsuario) => {
-            socket.join(`user_${idUsuario}`)
+        // Evento opcional para quando o usuário sai de uma tela específica
+        socket.on('sair_contexto', (dados) => {
+            if (dados.tipoContexto === 'feed') socket.leave('sala_feed_geral');
+            if (dados.idClube) socket.leave(`sala_clube_${dados.idClube}`);
+            if (dados.idMensagemPai) socket.leave(`sala_resenha_${dados.idMensagemPai}`);
         });
 
         socket.on('disconnect', () => {
-            console.log('Usuário desconectado')
-        });
-    });
-
-    return io
-};
-
-const getIo = () => {
-    if (!io) throw new Error("Socket não inicializado")
-    return io;
-};
-
-module.exports = { setupSocket, getIo }
+            console.log(`Usuário desconectou: ${socket.id}`);
+        })
+    })
+}

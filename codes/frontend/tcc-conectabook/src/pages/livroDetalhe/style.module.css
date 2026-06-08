@@ -102,3 +102,116 @@ h2{
     width: auto;
     padding: 4px 1rem;
 }
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(2px);
+}
+
+.modal {
+    background: var(--color-background-primary, #fff);
+    border-radius: 16px;
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
+    padding: 2rem;
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.modal p {
+    font-size: 13px;
+    color: #888;
+    margin: 0 0 4px;
+}
+
+.modal h2 {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+    color: #111;
+}
+
+.statusBtn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+    background: #f5f5f3;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #222;
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+}
+
+.statusBtn:hover {
+    border-color: rgba(83, 74, 183, 0.4);
+    background: #EEEDFE;
+}
+
+.statusBtn.selected {
+    border: 2px solid #534AB7;
+    background: #EEEDFE;
+    color: #26215C;
+}
+
+.modalActions {
+    display: flex;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.modalActions button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: opacity 0.15s;
+}
+
+.modalActions button:first-of-type {
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+    background: transparent;
+    color: #666;
+}
+
+.modalActions button:last-of-type {
+    border: none;
+    background: #534AB7;
+    color: #fff;
+    flex: 2;
+}
+
+.modalActions button:last-of-type:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.removerBtn {
+    padding: 9px;
+    border-radius: 8px;
+    border: 0.5px solid #e57373;
+    background: transparent;
+    font-size: 13px;
+    color: #c62828;
+    cursor: pointer;
+    transition: background 0.15s;
+    width: 100%;
+}
+
+.removerBtn:hover {
+    background: #FCEBEB;
+}
