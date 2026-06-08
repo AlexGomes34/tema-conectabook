@@ -111,14 +111,12 @@ const listarFeedPrincipalGeral = async function () {
     }
 }
 
-const inserirMensagem = async function (dadosMensagem, contentType) {
+const inserirMensagem = async function (dadosMensagem, contentType, io) { 
     try {
-        // 1. CORRIGIDO: Agora aceita multipart/form-data em vez de travar apenas em application/json
         if (String(contentType).toLowerCase().includes('multipart/form-data') === false) {
             return messages.ERROR_CONTENT_TYPE;
         }
 
-        // VALIDAÇÃO: Campos estritamente obrigatórios
         if (
             dadosMensagem.comentario == '' || dadosMensagem.comentario == undefined || dadosMensagem.comentario.length > 65535 ||
             dadosMensagem.id_usuario == '' || dadosMensagem.id_usuario == undefined || isNaN(dadosMensagem.id_usuario)
@@ -126,11 +124,9 @@ const inserirMensagem = async function (dadosMensagem, contentType) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
-        // 2. CORRIGIDO: Limpa chaves vazias vindas do form-data para não quebrar no isNaN()
         if (dadosMensagem.id_clube === '' || dadosMensagem.id_clube === 'null') dadosMensagem.id_clube = undefined;
         if (dadosMensagem.id_mensagem_pai === '' || dadosMensagem.id_mensagem_pai === 'null') dadosMensagem.id_mensagem_pai = undefined;
 
-        // Valida se o id_clube enviado (caso exista) é numérico
         if (dadosMensagem.id_clube !== undefined && dadosMensagem.id_clube !== null) {
             if (isNaN(dadosMensagem.id_clube)) return messages.ERROR_REQUIRED_FIELDS;
         }
@@ -139,9 +135,35 @@ const inserirMensagem = async function (dadosMensagem, contentType) {
             if (isNaN(dadosMensagem.id_mensagem_pai)) return messages.ERROR_REQUIRED_FIELDS;
         }
 
+        // Salva no Banco de Dados normalmente
         let result = await mensagemDAO.setInsertMessage(dadosMensagem);
 
         if (result) {
+            // LOGICA DO SOCKET EM TEMPO REAL 
+            // Monta o payload que o front-end vai receber (contendo o ID gerado e dados do autor)
+            const novaMensagemRealtime = {
+                id: result.insertId || null, // Se o DAO retornar o ID gerado
+                comentario: dadosMensagem.comentario,
+                id_usuario: dadosMensagem.id_usuario,
+                id_clube: dadosMensagem.id_clube,
+                id_mensagem_pai: dadosMensagem.id_mensagem_pai,
+                arquivo: dadosMensagem.arquivo || null,
+                data_criacao: new Date()
+            };
+
+            // CASO A: É uma resposta de uma resenha existente
+            if (dadosMensagem.id_mensagem_pai) {
+                io.to(`sala_resenha_${dadosMensagem.id_mensagem_pai}`).emit('nova_resposta', novaMensagemRealtime);
+            } 
+            // CASO B: É uma mensagem de um Clube específico
+            else if (dadosMensagem.id_clube) {
+                io.to(`sala_clube_${dadosMensagem.id_clube}`).emit('nova_mensagem_clube', novaMensagemRealtime);
+            } 
+            // CASO C: É uma postagem direta no Feed Geral
+            else {
+                io.to('sala_feed_geral').emit('nova_mensagem_feed', novaMensagemRealtime);
+            }
+
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_CREATED_ITEM.status;
             responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
@@ -151,7 +173,7 @@ const inserirMensagem = async function (dadosMensagem, contentType) {
             return messages.ERROR_INTERNAL_SERVER_MODEL;
         }
     } catch (error) {
-        console.error("🚨 Erro na Controller de Mensagem:", error); // Adicionado log para te ajudar no terminal
+        console.error("Erro na Controller de Mensagem:", error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }

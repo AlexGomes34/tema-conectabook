@@ -26,6 +26,8 @@ router.use((request, response, next) => {
     next()
 })
 
+module.exports = function(io) {
+
 // =========================================================================
 // ENDPOINTS DE BUSCA E FEEDS (GET)
 // =========================================================================
@@ -83,8 +85,8 @@ router.get('/:id/curtidas', cors(), async function (request, response) {
 
 // URL: POST http://localhost:8080/v1/conectaBook/mensagem
 router.post('/', cors(), upload.single('arquivo'), async function (request, response) {
-    let dadosBody = request.body;
-    let contentType = request.headers['content-type'];
+        let dadosBody = request.body;
+        let contentType = request.headers['content-type'];
 
     try {
         if (request.file) {
@@ -94,7 +96,7 @@ router.post('/', cors(), upload.single('arquivo'), async function (request, resp
             dadosBody.arquivo = null;
         }
 
-        let dados = await mensagemController.inserirMensagem(dadosBody, contentType);
+        let dados = await mensagemController.inserirMensagem(dadosBody, contentType, io);
         response.status(dados.status_code).json(dados);
 
     } catch (error) {
@@ -130,10 +132,17 @@ router.put('/:id', cors(), upload.single('arquivo'), async function (request, re
 
 // URL: DELETE http://localhost:8080/v1/conectaBook/mensagem/:id
 router.delete('/:id', async function (request, response) {
-    let idMensagem = request.params.id;
-    let dados = await mensagemController.excluirMensagemComRespostas(idMensagem);
-    response.status(dados.status_code).json(dados);
-});
+        let idMensagem = request.params.id;
+
+        let dados = await mensagemController.excluirMensagemComRespostas(idMensagem);
+        
+        // Se deletou do banco com sucesso, avisa o front-end em tempo real para sumir com o post
+        if(dados.status_code === 200) {
+            io.emit('mensagem_deletada', { id_mensagem: idMensagem });
+        }
+
+        response.status(dados.status_code).json(dados);
+    });
 
 // URL: DELETE http://localhost:8080/v1/conectaBook/mensagem/clube/:id
 router.delete('/clube/:id', async function (request, response) {
@@ -149,4 +158,5 @@ router.delete('/usuario/:id', async function (request, response) {
     response.status(dados.status_code).json(dados);
 });
 
-module.exports = router;
+   return router
+}
