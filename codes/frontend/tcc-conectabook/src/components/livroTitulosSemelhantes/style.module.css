@@ -73,8 +73,7 @@
 }
 
 .tituloSemelhante img{
-    width: auto;
-    height: 13vw;
+    width: 100%;
     object-fit: cover;
 }
 

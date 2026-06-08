@@ -195,7 +195,7 @@ export default function LivroAvaliacao() {
                 <div className={styles.conteudoAvaliacao}>
                     {/* ── Capa + estatísticas ── */}
                     <div>
-                    <img src={livro.coverUrl} alt={livro.title ?? livro.titulo} />
+                        <img src={livro.coverUrl} alt={livro.title ?? livro.titulo} />
 
                         <div className={styles.infosLivro}>
                             <div className={styles.infoLivro}>
@@ -223,7 +223,7 @@ export default function LivroAvaliacao() {
                     </div>
 
                     {/* ── Formulário de avaliação ── */}
-                    <div>
+                    <div className={styles.avaliacao}>
                         <div className={styles.livroTitulo}>
                             <div>
                                 <h1>{livro.title ?? livro.titulo}</h1>
@@ -257,11 +257,15 @@ export default function LivroAvaliacao() {
                             ))}
                         </div>
 
-                        <textarea
-                            placeholder="Escreva sua avaliação..."
-                            value={novaAvaliacao}
-                            onChange={(e) => setNovaAvaliacao(e.target.value)}
-                        />
+                        <div className={styles.textarea}>
+                            <textarea
+                                placeholder="Escreva sua avaliação..."
+                                value={novaAvaliacao}
+                                onChange={(e) => setNovaAvaliacao(e.target.value)}
+                            />
+                        </div>
+
+
 
                         {/* Feedback de erro ou sucesso */}
                         {erro && <p style={{ color: "red", marginTop: "8px" }}>{erro}</p>}
