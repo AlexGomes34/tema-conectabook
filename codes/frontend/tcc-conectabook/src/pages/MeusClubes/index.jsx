@@ -186,6 +186,7 @@ export default function MeusClubes() {
                     clubesFiltrados={clubesFiltrados}
                     participarClube={participarClube}
                     meusClubes={true}
+                    idsClubesMembro={[...clubesMembro, ...clubesAdmin].map(c => c.id_clube)}
                 />
             </div>
 

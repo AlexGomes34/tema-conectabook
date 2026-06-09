@@ -2,122 +2,159 @@
     margin: 0;
     padding: 0;
     gap: 0;
+
     box-sizing: border-box;
-    background-color: white;
-    color: black;
+
     display: flex;
+
+    min-height: 100vh;
+
+    background-color: var(--color-background);
+
+    color: var(--color-text);
 }
 
+/* ===================================
+   LADO ESQUERDO
+=================================== */
+
 .left-login{
-    background: #0D47A1;
-    background: linear-gradient(90deg, rgba(13, 71, 161, 1) 0%, rgba(45, 127, 249, 1) 100%);
     width: 25vw;
+
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+
+    background: linear-gradient(
+        135deg,
+        var(--color-primary),
+        var(--color-primary-dark)
+    );
+
+    color: var(--color-surface);
 }
 
 .header-login-left{
     display: flex;
     align-items: center;
     justify-content: start;
+
     padding-left: 3%;
 }
 
 .header-login-left h2{
     font-weight: 400;
-    color: white;
+    color: var(--color-surface);
+}
+
+.header-login-left span{
+    color: var(--color-accent);
 }
 
 .text-login-left{
     width: 67%;
+
     padding-left: 64px;
-    color: white;
+
     display: flex;
     flex-direction: column;
+
     gap: 32px;
+
+    color: var(--color-surface);
 }
 
 .text-login-left span{
-    color: #1976D2;
+    color: var(--color-accent);
+    font-weight: 600;
 }
 
-.header-login-left span{
-    color: blue;
-}
+/* ===================================
+   LADO DIREITO
+=================================== */
 
 .right-login{
+    width: 75vw;
+
     display: flex;
     flex-direction: column;
-    width: 75vw;
     justify-content: center;
 
-}
-
-.text-right-login{
-    display: flex;
-    text-align: center;
-    flex-direction: column;
+    background-color: var(--color-surface);
 }
 
 .right-up-login{
     height: 100%;
+    width: 100%;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
+
     padding-inline: 30%;
 }
 
-.right-up-login input{
-    width: 100%;
-}
+/* ===================================
+   TEXTO
+=================================== */
 
-.esqueci-senha{
-    color: #1976D2;
-}
-
-.previa-footer{
+.text-right-login{
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-grow: 1;
-    background-color: #e8f1ff;
+    flex-direction: column;
+    text-align: center;
+
+    margin-bottom: 2rem;
 }
 
-.previa{
-    display: flex;
-    gap: 16px;
-    align-items: center;
+.text-right-login h1{
+    color: var(--color-text);
 }
 
+.text-right-login p{
+    color: var(--color-text-light);
+}
 
 .faca-login{
-    color: #64748b;
+    color: var(--color-text-light);
 }
+
+/* ===================================
+   INPUTS
+=================================== */
 
 .login-input{
     display: flex;
     flex-direction: column;
 }
 
-.button-login{
+.right-up-login input{
     width: 100%;
-    padding-left: 3%;
-    display: flex;
-    justify-content: center;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    border: 1px solid var(--color-border);
+
+    background-color: var(--color-surface);
+
+    color: var(--color-text);
+
+    transition: .3s ease;
 }
 
-.criar-conta-login{
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    gap: 10px;
+.right-up-login input:focus{
+    outline: none;
+
+    border-color: var(--color-primary);
+
+    box-shadow:
+        0 0 0 3px rgba(123,104,238,.15);
 }
 
-.criar-conta-login a{
-    color: #1976D2;
-}
+/* ===================================
+   SENHA
+=================================== */
 
 .senha{
     display: flex;
@@ -126,30 +163,126 @@
 
 .senha a{
     text-align: end;
+
     padding-right: 3%;
+
+    color: var(--color-primary);
+
+    font-weight: 500;
 }
 
+.esqueci-senha{
+    color: var(--color-primary);
+}
+
+/* ===================================
+   BOTÃO
+=================================== */
+
+.button-login{
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    padding-left: 3%;
+}
+
+/* ===================================
+   CRIAR CONTA
+=================================== */
+
+.criar-conta-login{
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    gap: 10px;
+}
+
+.criar-conta-login p{
+    color: var(--color-text-light);
+}
+
+.criar-conta-login a{
+    color: var(--color-primary);
+
+    font-weight: 600;
+}
+
+/* ===================================
+   PRÉVIA
+=================================== */
+
+.previa-footer{
+    display: flex;
+
+    justify-content: space-around;
+    align-items: center;
+
+    flex-grow: 1;
+
+    background-color: rgba(123,104,238,.05);
+
+    border-top: 1px solid var(--color-border);
+}
+
+.previa{
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+}
+
+.previa h3{
+    color: var(--color-text);
+}
+
+.previa p{
+    color: var(--color-text-light);
+}
+
+/* ===================================
+   FOOTER
+=================================== */
+
 .footer-login{
-    color: black;
     height: 180px;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    color: var(--color-text);
 }
 
 .br-login{
-    background-color: black;
+    background-color: var(--color-border);
 }
 
 .footer-copyright{
     height: 30%;
-    background-color: #e8f1ff;
-    border: 1px solid #cbd5e1;
-    color: black;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--color-background);
+
+    border-top: 1px solid var(--color-border);
+
+    color: var(--color-text-light);
 }
 
-.erro {
-    color: #ff4d4f;
-    font-size: 14px;
+/* ===================================
+   ERROS
+=================================== */
+
+.erro{
     padding-left: 3%;
+
+    font-size: 14px;
+
+    color: #e53935;
 }

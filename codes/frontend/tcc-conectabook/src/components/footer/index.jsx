@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFacebook, faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons"
-import logoPng from "../../assets/pngLogo.png"
+import logoPng from "../../assets/logoAtualizado.png"
 import { Link } from "react-router-dom"
 import "./style.css"
 

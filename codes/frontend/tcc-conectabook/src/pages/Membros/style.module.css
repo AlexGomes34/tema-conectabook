@@ -12,9 +12,20 @@
     width: 50px;
 }
 
+.buttons{
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    margin: 1rem;
+}
+
 .membrosButton{
     display: flex;
     justify-content: space-between;
+}
+
+.titulo{
+    margin: 1rem;
 }
 
 .membros{

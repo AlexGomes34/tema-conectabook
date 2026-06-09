@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react"
 import Input from "../../components/input"
-import logo from "../../assets/logo.png"
+import logo from "../../assets/logoAtualizado.png"
 import "./style.css"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -204,7 +204,7 @@ function Cadastro() {
             </header>
             <main className="main-cadastro">
                 <div className="titulo-criar-conta">
-                    <FontAwesomeIcon icon={faCircleUser} style={{ color: "rgb(116, 192, 252)", }} size="8x" />
+                    <FontAwesomeIcon icon={faCircleUser} style={{ color: "rgb(123,104,238)", }} size="8x" />
                     <h1>Criar Conta</h1>
                     <p>Preencha os dados abaixo para criar sua conta</p>
                 </div>

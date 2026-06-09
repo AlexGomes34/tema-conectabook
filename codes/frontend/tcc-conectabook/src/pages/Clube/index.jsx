@@ -47,6 +47,10 @@ export default function Clube() {
     const [pesquisa, setPesquisa] = useState("")
     const [clubeAdmin, setClubeAdmin] = useState([])
     const [clubeMembro, setClubeMembro] = useState([])
+    const idsClubesMembro = [
+        ...clubeMembro.map(clube => clube.id_clube),
+        ...clubeAdmin.map(clube => clube.id_clube)
+    ]
 
     const clubesFiltrados = clubes.filter((clube) => {
 
@@ -187,7 +191,10 @@ export default function Clube() {
                         </div>
                         <div className="clube-acess">
                             {meuClubeMembro ? (
-                                <Link className="clubePage">
+                                <Link
+                                    to={`/feedClube/${meuClubeMembro.id_clube}`}
+                                    className="clubePage"
+                                >
                                     <img
                                         src={
                                             meuClubeMembro.foto
@@ -207,10 +214,7 @@ export default function Clube() {
                                 </div>
                             )}
                         </div>
-                        <Button
-                            text={"Ver Todos os clubes"}
-                            onClick={() => navigate("/meusClubes")}
-                        />
+                        
                     </div>
 
                     <div className="meus-clubes">
@@ -220,7 +224,10 @@ export default function Clube() {
                         </div>
                         <div className="clube-acess">
                             {meuClubeAdmin ? (
-                                <Link className="clubePage">
+                                <Link
+                                    to={`/feedClube/${meuClubeAdmin.id_clube}`}
+                                    className="clubePage"
+                                >
                                     <img
                                         src={
                                             meuClubeAdmin.foto
@@ -242,6 +249,7 @@ export default function Clube() {
                         </div>
                         <Button
                             text={"Ver Todos os clubes"}
+                            onClick={() => navigate("/meusClubes")}
                         />
                     </div>
 
@@ -257,6 +265,7 @@ export default function Clube() {
                     clubesFiltrados={clubesFiltrados}
                     participarClube={participarClube}
                     meusClubes={false}
+                    idsClubesMembro={idsClubesMembro}
                 />
             </main>
 

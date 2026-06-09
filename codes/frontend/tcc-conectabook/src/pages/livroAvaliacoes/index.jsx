@@ -11,13 +11,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faTags, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const API_URL = "http://localhost:8080/v1/conectaBook";
 
 export default function LivroAvaliacao() {
     const { state } = useLocation();
+    const navigate = useNavigate();
     const livro = state?.livro; // dados vindos do LivroDetalhe
 
     const [user, setUser] = useState(null);
@@ -195,7 +196,7 @@ export default function LivroAvaliacao() {
                 <div className={styles.conteudoAvaliacao}>
                     {/* ── Capa + estatísticas ── */}
                     <div>
-                    <img src={livro.coverUrl} alt={livro.title ?? livro.titulo} />
+                        <img src={livro.coverUrl} alt={livro.title ?? livro.titulo} />
 
                         <div className={styles.infosLivro}>
                             <div className={styles.infoLivro}>
@@ -220,10 +221,12 @@ export default function LivroAvaliacao() {
                                 </div>
                             </div>
                         </div>
+
+                        <Button text={"Ver Detalhes"} onClick={() => navigate(`/livroDetalhe/${livro.id}`)} />
                     </div>
 
                     {/* ── Formulário de avaliação ── */}
-                    <div>
+                    <div className={styles.avaliacao}>
                         <div className={styles.livroTitulo}>
                             <div>
                                 <h1>{livro.title ?? livro.titulo}</h1>
@@ -257,11 +260,15 @@ export default function LivroAvaliacao() {
                             ))}
                         </div>
 
-                        <textarea
-                            placeholder="Escreva sua avaliação..."
-                            value={novaAvaliacao}
-                            onChange={(e) => setNovaAvaliacao(e.target.value)}
-                        />
+                        <div className={styles.textarea}>
+                            <textarea
+                                placeholder="Escreva sua avaliação..."
+                                value={novaAvaliacao}
+                                onChange={(e) => setNovaAvaliacao(e.target.value)}
+                            />
+                        </div>
+
+
 
                         {/* Feedback de erro ou sucesso */}
                         {erro && <p style={{ color: "red", marginTop: "8px" }}>{erro}</p>}

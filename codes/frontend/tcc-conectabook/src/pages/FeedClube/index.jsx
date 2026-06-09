@@ -25,6 +25,29 @@ export default function FeedClube() {
     const [isAdmin, setIsAdmin] = useState(null)
     const [clube, setClube] = useState(null)
 
+    const [clubesGenero, setClubesGenero] = useState([])
+
+    useEffect(() => {
+        async function buscarClubesGenero() {
+            if (!clube?.id_genero) return
+
+            const res = await fetch(
+                `http://localhost:8080/v1/conectaBook/clubes/genero/${clube.id_genero}`
+            )
+
+            const data = await res.json()
+
+            // remove o próprio clube da lista
+            const clubesFiltrados = data.response.filter(
+                item => item.id_clube !== Number(idClube)
+            )
+
+            setClubesGenero(clubesFiltrados)
+        }
+
+        buscarClubesGenero()
+    }, [clube, idClube])
+
     useEffect(() => {
         async function verificarAdmin() {
             const res = await fetch(
@@ -99,8 +122,8 @@ export default function FeedClube() {
                         </div>
 
                         <LeftFeed
-                            idConversa={clube?.id_conversa}
-                            feedUrl={`http://localhost:8080/v1/conectaBook/clube/${idClube}/mensagens/principais`}
+                            idClube={idClube}
+                            feedUrl={`http://localhost:8080/v1/conectaBook/mensagem/clube/${idClube}/mensagens/principais`}
                         />
 
                     </div>
@@ -112,48 +135,27 @@ export default function FeedClube() {
                             <h3>Sobre</h3>
                             <p>{clube?.sobre}</p>
                         </div>
-                        <div className="administradores">
-                            <h3>Administradores</h3>
-                            <div className="adm">
-                                <img src={fotoPessoa1} alt="" />
-                                <p>Renato Soares</p>
-                            </div>
-                            <div className="adm">
-                                <img src={fotoPessoa1} alt="" />
-                                <p>Luciano Lucas</p>
-                            </div>
-                            <div className="adm">
-                                <img src={fotoPessoa1} alt="" />
-                                <p>Hebert Silva</p>
-                            </div>
-                        </div>
                         <div className="clubesMesmoGenero">
-                            <h3>
-                                Clubes do mesmo Genero
-                            </h3>
-                            <div className="clube-diverso">
-                                <img src="" alt="" />
-                                <div className="titulo-clube-diverso">
-                                    <p>Mitologia</p>
-                                    <p>285 membros</p>
-                                </div>
-                                <Button text="Ver clube" />
-                            </div>
-                            <div className="clube-diverso">
-                                <div className="titulo-clube-diverso">
-                                    <p>Mitologia</p>
-                                    <p>285 membros</p>
-                                </div>
-                                <Button text="Ver clube" />
-                            </div>
-                            <div className="clube-diverso">
-                                <div className="titulo-clube-diverso">
-                                    <p>Mitologia</p>
-                                    <p>285 membros</p>
-                                </div>
-                                <Button text="Ver clube" />
-                            </div>
+                            <h3>Clubes do mesmo Gênero</h3>
 
+                            {clubesGenero.map((item) => (
+                                <div className="clube-diverso" key={item.id_clube}>
+                                    <img
+                                        src={item.foto}
+                                        alt={item.nome}
+                                    />
+
+                                    <div className="titulo-clube-diverso">
+                                        <p>{item.nome}</p>
+                                        <p>{item.total_membros} membros</p>
+                                    </div>
+
+                                    <Button
+                                        text="Ver clube"
+                                        onClick={() => navigate(`/feedClube/${item.id_clube}`)}
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

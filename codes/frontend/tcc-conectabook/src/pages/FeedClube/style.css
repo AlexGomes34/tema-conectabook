@@ -2,7 +2,6 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #fcfcfd;
 }
 
 .main-container{
@@ -13,12 +12,21 @@
 
 .main-feedClube{
     flex: 1;
+    margin: 1rem;
 }
 
 .up-main{
     display: flex;
     justify-content: space-between;
+    margin: 1rem;
 }
+
+.up-left-main{
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+}
+
 
 .left-main{
     width: 70vw;
@@ -28,6 +36,7 @@
 .main-feedClube{
     flex: 1;
     display: flex;
+    padding: 1rem;
 }
 
 .reacoes{
@@ -84,7 +93,7 @@
     padding-right: 2.5vw;
 }
 
-.postagem img{
+.fotoPerfilPostagem{
     height: 70px;
     width: 70px;
     border-radius: 50%;
@@ -116,6 +125,7 @@
 }
 
 .reacao{
+    height: 30px;
     display: flex;
     gap: 0.5rem;
     align-items: center;

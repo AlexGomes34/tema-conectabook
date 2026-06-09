@@ -4,3 +4,13 @@ align-items: center;
 margin-top: 1rem;
 gap: 1rem;
 }
+
+.fotoPost{
+    height: auto;
+    width: 400px;
+    object-fit: cover;
+}
+
+.icone{
+    height: 20px;
+}

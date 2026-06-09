@@ -8,16 +8,16 @@ import userDefault from "../../assets/userDefault.webp"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function LeftFeed({ posts, idConversa, feedUrl }) {
+export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
 
     const [user, setUser] = useState({})
     const [mensagem, setMensagem] = useState("")
     const [listaPosts, setListaPosts] = useState([])
+    const [arquivo, setArquivo] = useState(null)
 
     const navigate = useNavigate()
 
     useEffect(() => {
-
         const userStorage = JSON.parse(localStorage.getItem("user"))
 
         if (!userStorage) {
@@ -26,7 +26,6 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
             setUser(userStorage)
             console.log(user)
         }
-
     }, [])
 
     useEffect(() => {
@@ -34,16 +33,56 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
     }, [])
 
     async function carregarPosts() {
-
         try {
             const response = await fetch(feedUrl)
-
             const data = await response.json()
-
-            console.log(data)
-
-            setListaPosts(data.response)
-
+    
+            const user = JSON.parse(localStorage.getItem("user"))
+    
+            const postsComDados = await Promise.all(
+                (data.response ?? []).map(async (post) => {
+                    try {
+                        const [responseCurtidas, responseComentarios] =
+                            await Promise.all([
+                                fetch(
+                                    `http://localhost:8080/v1/conectaBook/curtida/mensagem/${post.id_mensagem}`
+                                ),
+                                fetch(
+                                    `http://localhost:8080/v1/conectaBook/mensagem/${post.id_mensagem}/respostas`
+                                )
+                            ])
+    
+                        const dataCurtidas = await responseCurtidas.json()
+                        const dataComentarios = await responseComentarios.json()
+    
+                        const curtidaUsuario = dataCurtidas.curtidas?.find(
+                            (curtida) => curtida.id_usuario === user.user.id
+                        )
+    
+                        return {
+                            ...post,
+                            total_curtidas: dataCurtidas.quantidade || 0,
+                            total_comentarios: dataComentarios.respostas?.length || 0,
+                            curtido: !!curtidaUsuario,
+                            id_curtida: curtidaUsuario?.id_curtida || null
+                        }
+    
+                    } catch (error) {
+                        console.log(error)
+    
+                        return {
+                            ...post,
+                            total_curtidas: 0,
+                            total_comentarios: 0,
+                            curtido: false,
+                            id_curtida: null
+                        }
+                    }
+                })
+            )
+    
+            setListaPosts(postsComDados)
+    
         } catch (error) {
             console.log(error)
         }
@@ -55,28 +94,26 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
             return
         }
 
-        const body = {
-            comentario: mensagem,
-            id_usuario: user.user.id,
-            id_conversa: idConversa
+        const formData = new FormData()
+
+        formData.append("comentario", mensagem)
+        formData.append("id_usuario", user.user.id)
+        formData.append("id_clube", idClube ?? "")
+        if (arquivo) {
+            formData.append("arquivo", arquivo)
         }
 
         try {
-
             const response = await fetch("http://localhost:8080/v1/conectaBook/mensagem", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
+                body: formData
             })
 
             const data = await response.json()
 
             if (response.ok) {
-
                 setMensagem("")
-
+                setArquivo(null)
                 await carregarPosts()
             }
 
@@ -86,8 +123,6 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
             console.log(error)
         }
     }
-
-
 
     return (
         <div className="left-main">
@@ -99,36 +134,30 @@ export default function LeftFeed({ posts, idConversa, feedUrl }) {
                     handlePost()
                 }}
             >
-
                 <div className="inputComFoto">
-
                     <img src={userDefault} alt="" />
-
                     <Input
                         placeholder="O que está pensando?"
                         value={mensagem}
                         onChange={(e) => setMensagem(e.target.value)}
                     />
-
                 </div>
 
                 <div className="inputComArquivo">
-
-                    <Button text="Arquivo" />
-
+                    <input type="file" onChange={(e) => setArquivo(e.target.files[0])} />
                     <Button
                         text="Postar"
                         type="submit"
                     />
-
                 </div>
 
             </form>
 
-            {listaPosts.map((post) => (
+            {(listaPosts ?? []).map((post) => (
                 <Postagem
-                    key={post.id}
+                    key={post.id_mensagem}
                     post={post}
+                    idClube={idClube ?? null}
                 />
             ))}
 

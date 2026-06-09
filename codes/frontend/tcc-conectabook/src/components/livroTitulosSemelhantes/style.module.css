@@ -30,6 +30,7 @@
 
 .livro img{
     height: auto;
+    width: 200px;
     object-fit: cover;
 }
 
@@ -72,8 +73,7 @@
 }
 
 .tituloSemelhante img{
-    width: auto;
-    height: 13vw;
+    width: 100%;
     object-fit: cover;
 }
 

@@ -39,6 +39,31 @@ export default function Membros() {
 
     const [user, setUser] = useState(null)
 
+    const [isAdmin, setIsAdmin] = useState(null)
+    const [clube, setClube] = useState(null)
+
+    useEffect(() => {
+        async function verificarAdmin() {
+            const res = await fetch(
+                `http://localhost:8080/v1/conectaBook/membros/clube/${idClube}`
+            )
+
+            const data = await res.json()
+
+            const membro = data.response.find(
+                membro =>
+                    membro.id_usuario === user?.user?.id_usuario ||
+                    membro.id_usuario === user?.user?.id
+            )
+
+            setIsAdmin(membro?.administrador === 1)
+        }
+
+        if (user) {
+            verificarAdmin()
+        }
+    }, [user, idClube])
+
     useEffect(() => {
 
         const userStorage = JSON.parse(
@@ -67,19 +92,27 @@ export default function Membros() {
             <Header fotoUser={user?.user?.foto_perfil} />
             <main className={styles.mainMembro}>
                 <div className={styles.membrosButton}>
-                    <div>
+                    <div className={styles.buttons}>
                         <Button text="Feed" onClick={() => navigate(`/feedClube/${idClube}`)} />
                         <Button text="Membros" onClick={() => navigate(`/membros/${idClube}`)} />
                     </div>
-                    <Button text={"Editar"} />
+                    {
+                        isAdmin && (
+                            <Button
+                                onClick={() => navigate(`/editarClube/${idClube}`)}
+                                text="Editar"
+                            />
+                        )
+                    }
                 </div>
 
-                <div>
+                <div className={styles.titulo}>
                     <i></i>
                     <h2>Membros do Clube - {membros[0]?.nome_clube}</h2>
                     <p>Veja todos os membros do clube e sua função</p>
+                    <hr />
                 </div>
-                <hr />
+                
                 <div className={styles.membros}>
                     {membros.map((membro) => (
                         <div className={styles.membro}>

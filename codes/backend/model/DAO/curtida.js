@@ -122,7 +122,7 @@ const setInsertLike = async function (curtida) {
 
         // Se a linha foi afetada, a curtida foi gravada com sucesso
         if (result && result[0] && result[0].affectedRows > 0) {
-            return true
+            return result[0].insertId
         } else {
             return false
         }
