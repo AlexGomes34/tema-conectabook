@@ -189,7 +189,7 @@ export default function Postagem({ post, idClube }) {
                         respostas: []
                     }
                 ])
-            
+
                 setQuantidadeComentarios(prev => prev + 1)
             }
 
@@ -201,7 +201,7 @@ export default function Postagem({ post, idClube }) {
     async function curtirPost() {
         try {
             const user = JSON.parse(localStorage.getItem("user"));
-    
+
             if (curtido) {
                 // 1. Faz o DELETE usando o ID correto salvo no estado
                 const response = await fetch(
@@ -210,7 +210,7 @@ export default function Postagem({ post, idClube }) {
                         method: "DELETE"
                     }
                 );
-    
+
                 if (response.ok) {
                     setCurtido(false);
                     setIdCurtida(null); // Limpa o ID
@@ -218,7 +218,7 @@ export default function Postagem({ post, idClube }) {
                 } else {
                     console.error("Erro ao remover curtida");
                 }
-    
+
             } else {
                 // 2. Faz o POST para criar a curtida
                 const response = await fetch(
@@ -234,20 +234,20 @@ export default function Postagem({ post, idClube }) {
                         })
                     }
                 );
-    
+
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data);
-    
+
                     setCurtido(true);
                     // CORREÇÃO AQUI: A API retorna o ID na propriedade 'id'
-                    setIdCurtida(data.id); 
+                    setIdCurtida(data.id);
                     setCurtidas(prev => prev + 1);
                 } else {
                     console.error("Erro ao curtir post");
                 }
             }
-    
+
         } catch (error) {
             console.error("Erro na requisição:", error);
         }
@@ -270,10 +270,10 @@ export default function Postagem({ post, idClube }) {
 
                 <p>{post.comentario}</p>
 
-                {post.arquivo && (  // só renderiza se tiver arquivo
+                {post.arquivo && (
                     <img
                         className="fotoPost"
-                        src={`http://localhost:8080/uploads/${post.arquivo}`}
+                        src={post.arquivo}
                         alt=""
                     />
                 )}
