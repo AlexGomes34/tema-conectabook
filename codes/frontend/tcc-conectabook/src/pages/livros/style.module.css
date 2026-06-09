@@ -41,7 +41,7 @@
 .listLivros {
     display: flex;
     justify-content: flex-start; /* era space-between */
-    gap: 12vw;
+    gap: 8vw;
     padding-bottom: 1rem;
     margin: 1rem 0;
     flex-wrap: wrap;

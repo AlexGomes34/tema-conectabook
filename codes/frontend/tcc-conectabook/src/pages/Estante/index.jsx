@@ -3,6 +3,9 @@ import Header from "../../components/header"
 import Footer from "../../components/footer"
 import CardLivro from "../../components/CardLivro/CardLivro"
 
+
+import styles from "./style.module.css"
+
 export default function Estante() {
     const [livros, setLivros] = useState([])
     const [user, setUser] = useState(null)
@@ -37,10 +40,10 @@ export default function Estante() {
         <>
             <Header />
 
-            <main>
+            <main className={styles.mainLivros}>
                 <div>
                     <h2>Lendo</h2>
-                    <div>
+                    <div className={styles.livros}>
                         {livros
                             .filter(livro => livro.status_leitura === "Lendo")
                             .map(livro => (
@@ -57,7 +60,7 @@ export default function Estante() {
 
                 <div>
                     <h2>Lido</h2>
-                    <div>
+                    <div className={styles.livros}>
                         {livros
                             .filter(livro => livro.status_leitura === "Lido")
                             .map(livro => (
@@ -72,9 +75,9 @@ export default function Estante() {
                     </div>
                 </div>
 
-                <div>
+                <div >
                     <h2>Quero Ler</h2>
-                    <div>
+                    <div className={styles.livros}>
                         {livros
                             .filter(livro => livro.status_leitura === "Quero Ler")
                             .map(livro => (
