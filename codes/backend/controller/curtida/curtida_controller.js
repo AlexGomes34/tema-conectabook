@@ -141,34 +141,38 @@ const inserirCurtida = async function (curtida, contentType) {
             return messages.ERROR_CONTENT_TYPE
         }
 
-        // NOVO: Validação dos campos obrigatórios para evitar passar valores inválidos para o banco
+        // Validação dos campos obrigatórios
         if (
             curtida.id_usuario === undefined || curtida.id_usuario === null || curtida.id_usuario === '' ||
             curtida.id_mensagem === undefined || curtida.id_mensagem === null || curtida.id_mensagem === ''
         ) {
-            return messages.ERROR_REQUIRED_FIELDS; // Retorna erro 400 se faltar dados
+            return messages.ERROR_REQUIRED_FIELDS;
         }
 
-        // Chama a DAO que agora retorna estritamente true ou false
-        let statusInsert = await curtidaDAO.setInsertLike(curtida)
+        // MODIFICADO: Agora espera receber o ID gerado vindo da DAO (ou false caso falhe)
+        let idGerado = await curtidaDAO.setInsertLike(curtida)
 
-        if (statusInsert) {
+        if (idGerado) {
             let responseData = Object.assign({}, messages.HEADER);
             responseData.status = messages.SUCCESS_CREATED_ITEM.status;
             responseData.status_code = messages.SUCCESS_CREATED_ITEM.status_code;
-            responseData.id = statusInsert.insertId || statusInsert
-            responseData.response = {
+
+            // CORRIGIDO: Garante que o ID vai estruturado no corpo do JSON de resposta
+            responseData.curtida_criada = {
+                id: idGerado,
                 message: "Curtida registrada com sucesso!"
             };
+
             return responseData;
         } else {
-            return messages.ERROR_INTERNAL_SERVER_MODEL; // 500 se falhar no banco (FK inexistente, por exemplo)
+            return messages.ERROR_INTERNAL_SERVER_MODEL;
         }
     } catch (error) {
         console.error("🚨 Erro na Controller de Curtida:", error);
         return messages.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
+
 
 
 // DELETE  - Apagar uma curtida 

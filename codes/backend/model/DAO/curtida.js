@@ -104,33 +104,24 @@ const getSelectLikeByIdMessage = async function (idMensagem) {
     }
 }
 
-
 //INSERE UMA CURTIDA
-// INSERE UMA NOVA CURTIDA (Versão Corrigida e Segura)
 const setInsertLike = async function (curtida) {
     try {
-        // Usamos placeholders '?' para o Knex processar os inteiros perfeitamente
-        let sql = `insert into tbl_curtida (
-                       id_usuario,
-                       id_mensagem
-                   ) values (?, ?)`
+        let sql = `insert into tbl_curtida (id_usuario, id_mensagem) values (${curtida.id_usuario}, ${curtida.id_mensagem});`;
 
-        let result = await db.raw(sql, [
-            curtida.id_usuario,
-            curtida.id_mensagem
-        ])
+        let result = await db.raw(sql);
 
-        // Se a linha foi afetada, a curtida foi gravada com sucesso
-        if (result && result[0] && result[0].affectedRows > 0) {
-            return result[0].insertId
+        // No MySQL via Knex, o "insertId" do elemento inserido fica no result[0].insertId
+        if (result && result[0].insertId) {
+            return result[0].insertId; // Retorna o ID numérico gerado
+        } else if (result && result.insertId) {
+            return result.insertId;
         } else {
-            return false
+            return false;
         }
-
     } catch (error) {
-        // Exibe no console exatamente o que o MySQL rejeitou
-        console.error("🚨 ERRO NO BANCO AO INSERIR CURTIDA:", error.message);
-        return false
+        console.error("🚨 Erro SQL ao inserir curtida:", error);
+        return false;
     }
 }
 
