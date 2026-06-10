@@ -15,8 +15,11 @@ function Header({ fotoUser }) {
             <Link className='a' to="/feed">Feed</Link>
             <Link className='a' to="/cafeteria">Cafeteria</Link>
             <Link to={"/perfil"} className='user'>
-                <img className='fotoUser' src=
-                {fotoUser || fotoDefault} alt="" />
+                <img
+                    className='fotoUser'
+                    src={(fotoUser && fotoUser !== "null" ? fotoUser : null) || fotoDefault}
+                    alt=""
+                />
             </Link>
         </header>
     )

@@ -12,8 +12,8 @@ const INPUT_DATA = [
     { id: 3, name: "regras", label: "Regras", placeholder: "Descreva as regras do clube...", type: "text", required: true },
 ]
 
-const API_GENEROS = "http://localhost:8080/v1/conectaBook/generos"
-const API_CLUBES = "http://localhost:8080/v1/conectaBook/clubes"
+const API_GENEROS = "https://conectabook.onrender.com/v1/conectaBook/generos"
+const API_CLUBES = "https://conectabook.onrender.com/v1/conectaBook/clubes"
 
 export default function CriarClube() {
 
@@ -60,7 +60,7 @@ export default function CriarClube() {
         }
 
         try {
-            const responseClubes = await fetch("http://localhost:8080/v1/conectaBook/clubes")
+            const responseClubes = await fetch("https://conectabook.onrender.com/v1/conectaBook/clubes")
             const dataClubes = await responseClubes.json()
 
             const erroDuplicado = verificarDuplicados(dataClubes.response, form)
@@ -111,7 +111,7 @@ export default function CriarClube() {
                 administrador: 1
             })
 
-            const responseMembros = await fetch("http://localhost:8080/v1/conectaBook/membros", {
+            const responseMembros = await fetch("https://conectabook.onrender.com/v1/conectaBook/membros", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

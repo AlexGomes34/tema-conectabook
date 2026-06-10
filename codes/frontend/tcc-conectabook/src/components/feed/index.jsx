@@ -45,10 +45,10 @@ export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
                         const [responseCurtidas, responseComentarios] =
                             await Promise.all([
                                 fetch(
-                                    `http://localhost:8080/v1/conectaBook/curtida/mensagem/${post.id_mensagem}`
+                                    `https://conectabook.onrender.com/v1/conectaBook/curtida/mensagem/${post.id_mensagem}`
                                 ),
                                 fetch(
-                                    `http://localhost:8080/v1/conectaBook/mensagem/${post.id_mensagem}/respostas`
+                                    `https://conectabook.onrender.com/v1/conectaBook/mensagem/${post.id_mensagem}/respostas`
                                 )
                             ])
     
@@ -104,7 +104,7 @@ export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
         }
 
         try {
-            const response = await fetch("http://localhost:8080/v1/conectaBook/mensagem", {
+            const response = await fetch("https://conectabook.onrender.com/v1/conectaBook/mensagem", {
                 method: "POST",
                 body: formData
             })

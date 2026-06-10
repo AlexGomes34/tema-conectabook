@@ -14,7 +14,7 @@ import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:8080/v1/conectaBook";
+const API_URL = "https://conectabook.onrender.com/v1/conectaBook/";
 
 export default function LivroAvaliacao() {
     const { state } = useLocation();
@@ -53,7 +53,7 @@ export default function LivroAvaliacao() {
             }
             console.log(payload)
             try {
-                await fetch(`${API_URL}/livros`, {
+                await fetch(`${API_URL}livros`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -82,8 +82,8 @@ export default function LivroAvaliacao() {
         async function fetchAvaliacoes() {
             try {
                 const [avaliacoesRes, mediaRes] = await Promise.all([
-                    fetch(`${API_URL}/avaliacao-livro/livro/${livro.id}`),
-                    fetch(`${API_URL}/avaliacao-livro/estatisticas/livro/${livro.id}`),
+                    fetch(`${API_URL}avaliacao-livro/livro/${livro.id}`),
+                    fetch(`${API_URL}avaliacao-livro/estatisticas/livro/${livro.id}`),
                 ]);
 
                 const avaliacoesData = await avaliacoesRes.json();
@@ -124,7 +124,7 @@ export default function LivroAvaliacao() {
 
         try {
             // ── Etapa A: cria a avaliação ──────────────────────────────────────
-            const resAvaliacao = await fetch(`${API_URL}/avaliacao`, {
+            const resAvaliacao = await fetch(`${API_URL}avaliacao`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -147,7 +147,7 @@ export default function LivroAvaliacao() {
 
             console.log(avaliacaoData)
 
-            const resVinculo = await fetch(`${API_URL}/avaliacao-livro`, {
+            const resVinculo = await fetch(`${API_URL}avaliacao-livro`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

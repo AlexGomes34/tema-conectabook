@@ -38,7 +38,7 @@ export default function Postagem({ post, idClube }) {
             formData.append("id_mensagem_pai", idRespostaPai)
 
             const response = await fetch(
-                "http://localhost:8080/v1/conectaBook/mensagem",
+                "https://conectabook.onrender.com/v1/conectaBook/mensagem",
                 { method: "POST", body: formData }
             )
 
@@ -94,7 +94,7 @@ export default function Postagem({ post, idClube }) {
             formData.append("id_mensagem_pai", idComentarioPai)
 
             const response = await fetch(
-                "http://localhost:8080/v1/conectaBook/mensagem",
+                "https://conectabook.onrender.com/v1/conectaBook/mensagem",
                 { method: "POST", body: formData }
             )
 
@@ -132,7 +132,7 @@ export default function Postagem({ post, idClube }) {
     async function buscarComentarios() {
         try {
             const response = await fetch(
-                `http://localhost:8080/v1/conectaBook/mensagem/${post.id_mensagem}/respostas`
+                `https://conectabook.onrender.com/v1/conectaBook/mensagem/${post.id_mensagem}/respostas`
             )
 
             const data = await response.json()
@@ -175,7 +175,7 @@ export default function Postagem({ post, idClube }) {
             formData.append("id_mensagem_pai", post.id_mensagem)
 
             const response = await fetch(
-                "http://localhost:8080/v1/conectaBook/mensagem",
+                "https://conectabook.onrender.com/v1/conectaBook/mensagem",
                 { method: "POST", body: formData }
             )
 
@@ -205,7 +205,7 @@ export default function Postagem({ post, idClube }) {
             if (curtido) {
                 // 1. Faz o DELETE usando o ID correto salvo no estado
                 const response = await fetch(
-                    `http://localhost:8080/v1/conectaBook/curtida/${idCurtida}`,
+                    `https://conectabook.onrender.com/v1/conectaBook/curtida/${idCurtida}`,
                     {
                         method: "DELETE"
                     }
@@ -222,7 +222,7 @@ export default function Postagem({ post, idClube }) {
             } else {
                 // 2. Faz o POST para criar a curtida
                 const response = await fetch(
-                    "http://localhost:8080/v1/conectaBook/curtida",
+                    "https://conectabook.onrender.com/v1/conectaBook/curtida",
                     {
                         method: "POST",
                         headers: {
