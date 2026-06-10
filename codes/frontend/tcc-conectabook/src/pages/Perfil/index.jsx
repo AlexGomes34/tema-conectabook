@@ -69,6 +69,8 @@ function Perfil() {
 
             if (foto) {
                 form.append("foto", foto)
+            } else if (userStorage?.user?.foto_perfil) {
+                form.append("foto", userStorage.user.foto_perfil)
             }
 
             const userId =

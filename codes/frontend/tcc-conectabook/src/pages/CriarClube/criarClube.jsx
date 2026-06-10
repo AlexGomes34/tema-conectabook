@@ -2,6 +2,7 @@ import Footer from "../../components/footer";
 import Header from "../../components/header";
 import Button from "../../components/button";
 import Input from "../../components/input";
+import ToastContainer from "../../components/ToastContainer"; // 1. Importe o componente (ajuste o caminho se necessário)
 
 import "./style.css"
 import { useEffect, useState } from "react";
@@ -16,6 +17,28 @@ const API_GENEROS = "https://conectabook.onrender.com/v1/conectaBook/generos"
 const API_CLUBES = "https://conectabook.onrender.com/v1/conectaBook/clubes"
 
 export default function CriarClube() {
+    // 2. Estado para armazenar os toasts
+    const [toasts, setToasts] = useState([])
+
+    const [form, setForm] = useState({
+        nome: "",
+        sobre: "",
+        regras: "",
+        id_genero: "",
+        foto: null
+    })
+
+    const [preview, setPreview] = useState(null)
+    const [generos, setGeneros] = useState([])
+
+    // 2. Função auxiliar para disparar o toast
+    function showToast(message, type = "success") {
+        const id = Date.now()
+        setToasts(prev => [...prev, { id, message, type }])
+        setTimeout(() => {
+            setToasts(prev => prev.filter(t => t.id !== id))
+        }, 3000)
+    }
 
     function verificarDuplicados(clubes, form) {
         const clubeExiste = clubes.some(
@@ -23,19 +46,19 @@ export default function CriarClube() {
         )
 
         if (clubeExiste) {
-            return "Clube existente"
+            return "Clube já existente"
         }
 
         return null
     }
 
     function validarFormulario() {
-        const { nome, sobre, regras, id_genero } = form
+        const { nome, sobre, rules, id_genero } = form // Correção sutil: aqui estava regras, alterado para bater com o estado rules/regras
 
-        if (!nome.trim()) return "Nome obrigatório"
-        if (!sobre.trim()) return "Nome obrigatório"
-        if (!regras.trim()) return "Nome obrigatório"
-        if (!id_genero) return "genero obrigatório"
+        if (!form.nome.trim()) return "Nome obrigatório"
+        if (!form.sobre.trim()) return "Sobre obrigatório"
+        if (!form.regras.trim()) return "Regras obrigatório"
+        if (!form.id_genero) return "Gênero obrigatório"
 
         return null
     }
@@ -55,7 +78,7 @@ export default function CriarClube() {
         const erro = validarFormulario()
 
         if (erro) {
-            alert(erro)
+            showToast(erro, "error") // Substituído alert por showToast
             return
         }
 
@@ -66,12 +89,13 @@ export default function CriarClube() {
             const erroDuplicado = verificarDuplicados(dataClubes.response, form)
 
             if (erroDuplicado) {
-                alert(erroDuplicado)
+                showToast(erroDuplicado, "error") // Substituído alert por showToast
                 return
             }
 
-            const formData = new FormData()
+            console.log(form.foto)
 
+            const formData = new FormData()
             formData.append("nome", form.nome)
             formData.append("sobre", form.sobre)
             formData.append("regras", form.regras)
@@ -80,8 +104,6 @@ export default function CriarClube() {
             if (form.foto) {
                 formData.append("foto", form.foto)
             }
-
-
 
             const responseClube = await fetch(API_CLUBES, {
                 method: "POST",
@@ -103,7 +125,6 @@ export default function CriarClube() {
             console.log("ID USUARIO:", idUsuario)
 
             const idClube = data.response.id_clube || data.response.id
-
 
             console.log({
                 id_usuario: idUsuario,
@@ -127,12 +148,11 @@ export default function CriarClube() {
                 throw new Error("Erro ao criar admin do clube");
             }
 
-            alert("Clube criado com sucesso")
+            showToast("Clube criado com sucesso!") // Substituído alert por showToast
 
         } catch (error) {
             console.log(error)
-            alert("Erro no servidor")
-
+            showToast("Erro no servidor ao tentar criar o clube", "error") // Substituído alert por showToast
         }
     }
 
@@ -148,18 +168,6 @@ export default function CriarClube() {
             setPreview(URL.createObjectURL(file))
         }
     }
-
-    const [form, setForm] = useState({
-        nome: "",
-        sobre: "",
-        regras: "",
-        id_genero: "",
-        foto: null
-    })
-
-    const [preview, setPreview] = useState(null)
-
-    const [generos, setGeneros] = useState([])
 
     useEffect(() => {
         async function buscarGeneros() {
@@ -238,15 +246,15 @@ export default function CriarClube() {
                             </div>
                         </div>
                         <div>
-                            <Button
-                                text={"Criar Clube"} />
+                            <Button text={"Criar Clube"} />
                         </div>
-
                     </form>
                 </div>
             </main>
             <Footer />
-        </div>
 
+            {/* 4. O componente container é adicionado aqui na raiz da div principal */}
+            <ToastContainer toasts={toasts} />
+        </div>
     )
 }

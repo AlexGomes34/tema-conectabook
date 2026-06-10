@@ -92,6 +92,35 @@ export default function FeedClube() {
         buscarClube()
     }, [idClube])
 
+    async function sairDoClube() {
+        const idUsuarioAtual = user?.user?.id_usuario || user?.user?.id;
+
+        if (!idUsuarioAtual) {
+            alert("Erro ao identificar o usuário. Faça login novamente.");
+            return;
+        }
+
+        const confirmar = window.confirm("Tem certeza que deseja sair deste clube?");
+        if (!confirmar) return;
+
+        try {
+            const res = await fetch(`https://conectabook.onrender.com/v1/conectaBook/membros/${idUsuarioAtual}`, {
+                method: "DELETE"
+            });
+
+            if (res.ok) {
+                alert("Você saiu do clube com sucesso.");
+                navigate("/feed")
+            } else {
+                console.log(res)
+                alert("Não foi possível sair do clube. Tente novamente mais tarde.");
+            }
+        } catch (error) {
+            console.error("Erro ao tentar sair do clube:", error);
+            alert("Erro de conexão com o servidor.");
+        }
+    }
+
 
     const navigate = useNavigate()
     return (
@@ -104,6 +133,11 @@ export default function FeedClube() {
                         <Button text="Feed" onClick={() => navigate(`/feedClube/${idClube}`)} />
                         <Button text="Membros" onClick={() => navigate(`/membros/${idClube}`)} />
                     </div>
+                    {user && !isAdmin && (
+                            <button className="btn-sair-clube" onClick={sairDoClube}>
+                                Sair do Clube
+                            </button>
+                        )}
                     {
                         isAdmin && (
                             <Button

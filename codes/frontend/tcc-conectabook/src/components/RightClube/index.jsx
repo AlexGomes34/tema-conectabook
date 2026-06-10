@@ -7,6 +7,9 @@ import "./style.css"
 
 import FotoClubeDefault from "../../assets/group.png";
 
+// Variável para a URL base das imagens na nuvem
+const URL_IMAGENS_CLUBES = "https://conectabookstorage.blob.core.windows.net/arquivos-mensagens/clubes/";
+
 export default function RightClube({
     pesquisa,
     setPesquisa,
@@ -75,11 +78,13 @@ export default function RightClube({
                             <div className="info-left">
                                 <img
                                     src={
-                                        clube.foto
-                                            ? `http://localhost:8080/uploads/${clube.foto}`
+                                        clube.foto && clube.foto !== "null"
+                                            ? clube.foto.startsWith("http")
+                                                ? clube.foto
+                                                : `${URL_IMAGENS_CLUBES}${clube.foto}`
                                             : FotoClubeDefault
                                     }
-                                    alt=""
+                                    alt={clube.nome}
                                 />
 
                                 <div className="info-clube">
