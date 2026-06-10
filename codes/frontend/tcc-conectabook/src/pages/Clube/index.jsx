@@ -7,6 +7,7 @@ import Input from "../../components/input"
 import { useEffect, useState } from "react"
 import { Await, useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
+import ToastContainer from '../../components/ToastContainer/index.jsx'
 
 import "./style.css"
 import Header from "../../components/header"
@@ -14,27 +15,10 @@ import Header from "../../components/header"
 import FotoClubeDefault from "../../assets/group.png"
 import RightClube from "../../components/RightClube"
 
+const API_GENEROS = "https://conectabook.onrender.com/v1/conectaBook/generos"
 
-const CLUBE_MEMBRO = [
-    {
-        id: 1,
-        nome: "Clube Semideuses",
-        genero: "Aventura",
-        quantiaMembros: 760,
-        sobre: "Um clube de leitura para fãs de mitologia e aventura, explorando histórias épicas e debatendo teorias sobre heróis e deuses.",
-        foto: fotoClube1
-    },
-    {
-        id: 2,
-        nome: "Páginas & Café",
-        genero: "Romance",
-        quantiaMembros: 540,
-        sobre: "Para quem ama histórias emocionantes acompanhadas de um bom café. Leituras leves, românticas e cheias de sentimento.",
-        foto: fotoClube1
-    }
-]
-
-const API_GENEROS = "http://localhost:8080/v1/conectaBook/generos"
+// Variável para a URL base das imagens na nuvem
+const URL_IMAGENS_CLUBES = "https://conectabookstorage.blob.core.windows.net/arquivos-mensagens/clubes/"
 
 export default function Clube() {
 
@@ -43,7 +27,7 @@ export default function Clube() {
     const [clubes, setClube] = useState([])
     const [generos, setGenero] = useState([])
     const [generoSelecionado, setGeneroSelecionado] = useState("")
-    const API_CLUBES = "http://localhost:8080/v1/conectaBook/clubes"
+    const API_CLUBES = "https://conectabook.onrender.com/v1/conectaBook/clubes"
     const [pesquisa, setPesquisa] = useState("")
     const [clubeAdmin, setClubeAdmin] = useState([])
     const [clubeMembro, setClubeMembro] = useState([])
@@ -51,6 +35,7 @@ export default function Clube() {
         ...clubeMembro.map(clube => clube.id_clube),
         ...clubeAdmin.map(clube => clube.id_clube)
     ]
+    const [toasts, setToasts] = useState([])
 
     const clubesFiltrados = clubes.filter((clube) => {
 
@@ -105,6 +90,14 @@ export default function Clube() {
 
     }
 
+    function showToast(message, type = "success") {
+        const id = Date.now()
+        setToasts(prev => [...prev, { id, message, type }])
+        setTimeout(() => {
+            setToasts(prev => prev.filter(t => t.id !== id))
+        }, 3000)
+    }
+
     async function buscarGeneros() {
         try {
             const response = await fetch(API_GENEROS)
@@ -117,14 +110,11 @@ export default function Clube() {
     }
 
     async function participarClube(idClube) {
-
         const idUsuario = user.user.id_usuario || user.user.id
         try {
-            const response = await fetch("http://localhost:8080/v1/conectaBook/membros", {
+            const response = await fetch("https://conectabook.onrender.com/v1/conectaBook/membros", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     id_usuario: idUsuario,
                     id_clube: idClube,
@@ -132,15 +122,14 @@ export default function Clube() {
                 })
             })
 
-            if (!response.ok) {
-                throw new Error("Erro ao entrar no clube");
+            if (!response.ok) throw new Error("Erro ao entrar no clube")
 
-            }
+            showToast("Você entrou no clube com sucesso!")
+            await buscarClubesMembro(idUsuario)
 
-            alert("Você entrou no clube com sucesso")
         } catch (error) {
             console.log(error)
-            alert("Não foi possível entrar no clube")
+            showToast("Não foi possível entrar no clube", "error")
         }
     }
 
@@ -150,7 +139,7 @@ export default function Clube() {
     async function buscarClubesAdmin(idUsuario) {
         try {
             const response = await fetch(
-                `http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}/admin/`
+                `https://conectabook.onrender.com/v1/conectaBook/membros/usuario/${idUsuario}/admin/`
             )
 
             const data = await response.json()
@@ -165,7 +154,7 @@ export default function Clube() {
     async function buscarClubesMembro(idUsuario) {
         try {
             const response = await fetch(
-                `http://localhost:8080/v1/conectaBook/membros/usuario/${idUsuario}`
+                `https://conectabook.onrender.com/v1/conectaBook/membros/usuario/${idUsuario}`
             )
 
             const data = await response.json()
@@ -197,10 +186,13 @@ export default function Clube() {
                                 >
                                     <img
                                         src={
-                                            meuClubeMembro.foto
-                                                ? `http://localhost:8080/uploads/${meuClubeMembro.foto}`
+                                            meuClubeMembro.foto && meuClubeMembro.foto !== "null"
+                                                ? meuClubeMembro.foto.startsWith("http")
+                                                    ? meuClubeMembro.foto
+                                                    : `${URL_IMAGENS_CLUBES}${meuClubeMembro.foto}`
                                                 : FotoClubeDefault
                                         }
+                                        alt={meuClubeMembro.nome}
                                     />
                                     <div className="clube-acess-text">
                                         <h3>{meuClubeMembro.nome}</h3>
@@ -214,7 +206,7 @@ export default function Clube() {
                                 </div>
                             )}
                         </div>
-                        
+
                     </div>
 
                     <div className="meus-clubes">
@@ -230,10 +222,13 @@ export default function Clube() {
                                 >
                                     <img
                                         src={
-                                            meuClubeAdmin.foto
-                                                ? `http://localhost:8080/uploads/${meuClubeAdmin.foto}`
+                                            meuClubeAdmin.foto && meuClubeAdmin.foto !== "null"
+                                                ? meuClubeAdmin.foto.startsWith("http")
+                                                    ? meuClubeAdmin.foto
+                                                    : `${URL_IMAGENS_CLUBES}${meuClubeAdmin.foto}`
                                                 : FotoClubeDefault
                                         }
+                                        alt={meuClubeAdmin.nome}
                                     />
                                     <div className="clube-acess-text">
                                         <h3>{meuClubeAdmin.nome}</h3>
@@ -270,7 +265,7 @@ export default function Clube() {
             </main>
 
             <Footer />
+            <ToastContainer toasts={toasts} />
         </div>
     )
-
 }

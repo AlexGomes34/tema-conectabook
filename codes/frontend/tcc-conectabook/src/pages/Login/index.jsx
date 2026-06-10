@@ -27,7 +27,7 @@ function Previa({ icon, titulo, desc }) {
 
 }
 
-const API_USUARIOS = ("http://localhost:8080/v1/conectaBook/auth/login")
+const API_USUARIOS = ("https://conectabook.onrender.com/v1/conectaBook/auth/login")
 
 const PREVIAS_DATA = [
     { id: 1, icon: faBook, titulo: "Explore livros", desc: "Encontre novas leituras incríveis" },

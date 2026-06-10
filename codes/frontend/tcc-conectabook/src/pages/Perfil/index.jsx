@@ -8,7 +8,6 @@ import './style.css'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBook, faStar, faShieldHalved } from "@fortawesome/free-solid-svg-icons"
-import { faFacebook, faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons"
 import Footer from "../../components/footer"
 
 import userDefault from "../../assets/userDefault.webp"
@@ -34,7 +33,7 @@ function Perfil() {
 
             if (!confirmDelete) return
 
-            const response = await fetch(`http://localhost:8080/v1/conectaBook/usuarios/${userId}`, {
+            const response = await fetch(`https://conectabook.onrender.com/v1/conectaBook/usuarios/${userId}`, {
                 method: "DELETE"
             })
 
@@ -70,6 +69,8 @@ function Perfil() {
 
             if (foto) {
                 form.append("foto", foto)
+            } else if (userStorage?.user?.foto_perfil) {
+                form.append("foto", userStorage.user.foto_perfil)
             }
 
             const userId =
@@ -77,7 +78,7 @@ function Perfil() {
                 userStorage.user.id_usuario
 
             const putResponse = await fetch(
-                `http://localhost:8080/v1/conectaBook/usuarios/${userId}`,
+                `https://conectabook.onrender.com/v1/conectaBook/usuarios/${userId}`,
                 {
                     method: "PUT",
                     body: form
@@ -92,7 +93,7 @@ function Perfil() {
             }
 
             const getResponse = await fetch(
-                `http://localhost:8080/v1/conectaBook/usuarios/${userId}`
+                `https://conectabook.onrender.com/v1/conectaBook/usuarios/${userId}`
             )
 
             const getData = await getResponse.json()
@@ -152,7 +153,7 @@ function Perfil() {
 
         console.log("FILE ORIGINAL:", file)
         console.log("COMPRESSED FILE:", compressedFile)
-        
+
     }
 
     const INPUT_DATA = [
@@ -211,8 +212,9 @@ function Perfil() {
             <div className="down-perfil">
                 <div className="left-perfil">
                     <div className="user-icon">
-                        <img className="img-user"
-                            src={preview || user?.user?.foto_perfil || userDefault}
+                        <img
+                            className="img-user"
+                            src={preview || (user?.user?.foto_perfil !== "null" && user?.user?.foto_perfil) || userDefault}
                             alt="Foto do usuário"
                         />
 

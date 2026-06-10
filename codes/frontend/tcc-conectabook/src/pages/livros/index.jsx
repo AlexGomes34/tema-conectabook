@@ -66,7 +66,7 @@ export default function Livro() {
     setEstanteLoading(true)
     setEstanteErro(null)
 
-    fetch(`http://localhost:8080/v1/conectaBook/estante/usuario/${userId}`)
+    fetch(`https://conectabook.onrender.com/v1/conectaBook/estante/usuario/${userId}`)
       .then(res => {
         if (!res.ok) throw new Error("Erro ao buscar estante")
         return res.json()
