@@ -27,6 +27,10 @@ export default function FeedClube() {
 
     const [clubesGenero, setClubesGenero] = useState([])
 
+    const [idVinculoMembro, setIdVinculoMembro] = useState(null)
+
+    
+
     useEffect(() => {
         async function buscarClubesGenero() {
             if (!clube?.id_genero) return
@@ -53,18 +57,24 @@ export default function FeedClube() {
             const res = await fetch(
                 `https://conectabook.onrender.com/v1/conectaBook/membros/clube/${idClube}`
             )
-
+    
             const data = await res.json()
-
+    
+            // Encontra o usuário atual na lista de membros retornada pela API
             const membro = data.response.find(
                 membro =>
                     membro.id_usuario === user?.user?.id_usuario ||
                     membro.id_usuario === user?.user?.id
             )
-
+    
             setIsAdmin(membro?.administrador === 1)
+            
+            // 👉 Salva o id_membros correto que veio no JSON da API
+            if (membro) {
+                setIdVinculoMembro(membro.id_membros) 
+            }
         }
-
+    
         if (user) {
             verificarAdmin()
         }
@@ -93,21 +103,20 @@ export default function FeedClube() {
     }, [idClube])
 
     async function sairDoClube() {
-        const idUsuarioAtual = user?.user?.id_usuario || user?.user?.id;
-
-        if (!idUsuarioAtual) {
-            alert("Erro ao identificar o usuário. Faça login novamente.");
+        // Se o estado estiver nulo, significa que o id_membros não foi capturado ou ele não pertence ao clube
+        if (!idVinculoMembro) {
+            alert("Não foi possível encontrar o seu vínculo com este clube.");
             return;
         }
-
+    
         const confirmar = window.confirm("Tem certeza que deseja sair deste clube?");
         if (!confirmar) return;
-
+    
         try {
-            const res = await fetch(`https://conectabook.onrender.com/v1/conectaBook/membros/${idUsuarioAtual}`, {
+            const res = await fetch(`https://conectabook.onrender.com/v1/conectaBook/membros/${idVinculoMembro}`, {
                 method: "DELETE"
             });
-
+    
             if (res.ok) {
                 alert("Você saiu do clube com sucesso.");
                 navigate("/feed")

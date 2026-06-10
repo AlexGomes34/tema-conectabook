@@ -64,7 +64,6 @@ body {
 h1{
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
-    color: var(--color-text);
 }
 
 h2{
@@ -87,7 +86,6 @@ h4{
 
 p{
     font-size: var(--font-size-md);
-    color: var(--color-text-light);
 }
 
 header {
