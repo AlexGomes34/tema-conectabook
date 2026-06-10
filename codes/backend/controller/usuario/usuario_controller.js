@@ -107,19 +107,24 @@ const criarUsuario = async function (usuario, contentType) {
 }
 
 // PUT - Atualizar usuário
-const atualizarUsuario = async function (usuario, contentType, id, file) {
+const atualizarUsuario = async function (usuario, contentType, id, arquivoUrl) {
     try {
         if (id == '' || id == undefined || isNaN(id)) {
             return messages.ERROR_REQUIRED_FIELDS;
         }
 
-        if (String(contentType).toLowerCase() !== 'application/json' &&
-            !String(contentType).toLowerCase().includes('multipart/form-data')) {
+        // CORRIGIDO: Validação do Content-Type usando .includes de forma segura
+        if (
+            !String(contentType).toLowerCase().includes('application/json') &&
+            !String(contentType).toLowerCase().includes('multipart/form-data')
+        ) {
             return messages.ERROR_CONTENT_TYPE;
         }
+
         let buscarId = await usuarioDAO.getSelectByIdUser(id);
 
         if (buscarId) {
+            // Tratamento da senha criptografada
             if (usuario.senha && usuario.senha !== '') {
                 let senhaCriptografada = await bcrypt.hash(usuario.senha, 10);
                 usuario.senha = senhaCriptografada;
@@ -127,10 +132,13 @@ const atualizarUsuario = async function (usuario, contentType, id, file) {
                 usuario.senha = buscarId[0].senha;
             }
 
-            if (file) {
-                usuario.foto_perfil = `http://localhost:8080/uploads/${file.filename}`
+            // CORRIGIDO: Se veio a URL da Azure do arquivo de rotas, usa ela!
+            // Nota: Mudei para "usuario.foto" porque geralmente é o campo mapeado na model. 
+            // Se o seu banco/model usar "foto_perfil", basta alterar o nome abaixo.
+            if (arquivoUrl) {
+                usuario.foto = arquivoUrl;
             } else {
-                usuario.foto_perfil = buscarId[0].foto_perfil
+                usuario.foto = buscarId[0].foto || buscarId[0].foto_perfil;
             }
 
             usuario.id = id;
