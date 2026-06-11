@@ -130,6 +130,8 @@ export default function FeedClube() {
         }
     }
 
+    console.log(clube)
+
     return (
 
         <div className="feedClube-container">
