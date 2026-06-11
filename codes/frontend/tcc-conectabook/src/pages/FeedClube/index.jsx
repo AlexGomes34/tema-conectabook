@@ -30,7 +30,7 @@ export default function FeedClube() {
 
     const [idVinculoMembro, setIdVinculoMembro] = useState(null)
 
-    
+
 
     useEffect(() => {
         async function buscarClubesGenero() {
@@ -58,24 +58,24 @@ export default function FeedClube() {
             const res = await fetch(
                 `https://conectabook.azurewebsites.net/v1/conectaBook/membros/clube/${idClube}`
             )
-    
+
             const data = await res.json()
-    
+
             // Encontra o usuário atual na lista de membros retornada pela API
             const membro = data.response.find(
                 membro =>
                     membro.id_usuario === user?.user?.id_usuario ||
                     membro.id_usuario === user?.user?.id
             )
-    
+
             setIsAdmin(membro?.administrador === 1)
-            
+
             // 👉 Salva o id_membros correto que veio no JSON da API
             if (membro) {
-                setIdVinculoMembro(membro.id_membros) 
+                setIdVinculoMembro(membro.id_membros)
             }
         }
-    
+
         if (user) {
             verificarAdmin()
         }
@@ -108,15 +108,15 @@ export default function FeedClube() {
             alert("Não foi possível encontrar o seu vínculo com este clube.");
             return;
         }
-    
+
         const confirmar = window.confirm("Tem certeza que deseja sair deste clube?");
         if (!confirmar) return;
-    
+
         try {
             const res = await fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/membros/${idVinculoMembro}`, {
                 method: "DELETE"
             });
-    
+
             if (res.ok) {
                 alert("Você saiu do clube com sucesso.");
                 navigate("/feed")
@@ -143,10 +143,10 @@ export default function FeedClube() {
                         <Button text="Membros" onClick={() => navigate(`/membros/${idClube}`)} />
                     </div>
                     {user && !isAdmin && (
-                            <button className="btn-sair-clube" onClick={sairDoClube}>
-                                Sair do Clube
-                            </button>
-                        )}
+                        <button className="btn-sair-clube" onClick={sairDoClube}>
+                            Sair do Clube
+                        </button>
+                    )}
                     {
                         isAdmin && (
                             <Button
@@ -183,14 +183,18 @@ export default function FeedClube() {
 
                             {clubesGenero.map((item) => (
                                 <div className="clube-diverso" key={item.id_clube}>
-                                    <img
-                                        src={item.foto}
-                                        alt={item.nome}
-                                    />
+                                    <div className="clube-diferente">
+                                        <img
+                                            className="imagemClubeMesmoGenero"
+                                            src={item.foto}
+                                            alt={item.nome}
+                                        />
 
-                                    <div className="titulo-clube-diverso">
-                                        <p>{item.nome}</p>
-                                        <p>{item.total_membros} membros</p>
+                                        <div className="titulo-clube-diverso">
+                                            <p>{item.nome}</p>
+                                            <p>{item.total_membros} membros</p>
+                                        </div>
+
                                     </div>
 
                                     <Button

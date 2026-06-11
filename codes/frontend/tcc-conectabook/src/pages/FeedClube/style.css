@@ -171,7 +171,14 @@
 
 .titulo-clube-diverso{
     display: flex;
+    flex-direction: column;
+}
+
+.clube-diferente{
+    display: flex;
+    margin: 1rem 0px;
     gap: 1rem;
+    align-items: center;
 }
 
 .clubesMesmoGenero{
@@ -224,4 +231,11 @@
     display: flex;
     gap: 12px; 
     align-items: center;
+}
+
+.imagemClubeMesmoGenero{
+    height: 70px;
+    width: 70px;
+    object-fit: cover;
+    border-radius: 50%;
 }
