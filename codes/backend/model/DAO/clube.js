@@ -160,10 +160,21 @@ const setUpdateClub = async function (clube) {
 // DELETA UM CLUBE NO BANCO
 const setDeleteClub = async function (id) {
     try {
-        // 1. Remove todos os membros do clube primeiro
+        // 1. Remove as curtidas das mensagens do clube
+        await db.raw(`
+            delete from tbl_curtida 
+            where id_mensagem in (
+                select id_mensagem from tbl_mensagem where id_clube = ${id}
+            )
+        `)
+
+        // 2. Remove as mensagens do clube
+        await db.raw(`delete from tbl_mensagem where id_clube = ${id}`)
+
+        // 3. Remove os membros do clube
         await db.raw(`delete from tbl_membros where id_clube = ${id}`)
 
-        // 2. Agora deleta o clube com segurança
+        // 4. Deleta o clube
         let result = await db.raw(`delete from tbl_clube where id_clube = ${id}`)
 
         if (result && result[0].affectedRows > 0)
