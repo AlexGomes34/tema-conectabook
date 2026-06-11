@@ -12,8 +12,8 @@ import styles from "../MeusClubes/style.module.css"
 
 
 
-const API_CLUBES = "https://conectabook.onrender.com/v1/conectaBook/clubes";
-const API_GENEROS = "https://conectabook.onrender.com/v1/conectaBook/generos";
+const API_CLUBES = "https://conectabook.azurewebsites.net/v1/conectaBook/clubes";
+const API_GENEROS = "https://conectabook.azurewebsites.net/v1/conectaBook/generos";
 
 export default function MeusClubes() {
     const navigate = useNavigate();
@@ -60,19 +60,17 @@ export default function MeusClubes() {
     });
 
     async function participarClube(idClube) {
-        console.log("Entrar no clube:", idClube);
     }
 
     async function buscarClubes(tipo = "todos") {
         let url = API_CLUBES
         const idUsuario = userStorage.user.id_usuario || userStorage.user.id
 
-        console.log(userStorage)
 
         if (tipo === "todos") {
             const [resMembro, resAdmin] = await Promise.all([
-                fetch(`https://conectabook.onrender.com/v1/conectaBook/membros/usuario/${idUsuario}`),
-                fetch(`https://conectabook.onrender.com/v1/conectaBook/membros/usuario/${idUsuario}/admin`)
+                fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/membros/usuario/${idUsuario}`),
+                fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/membros/usuario/${idUsuario}/admin`)
             ])
 
             const dataMembro = await resMembro.json()
@@ -98,11 +96,11 @@ export default function MeusClubes() {
         }
 
         if (tipo === "membro") {
-            url = `https://conectabook.onrender.com/v1/conectaBook/membros/usuario/${idUsuario}`
+            url = `https://conectabook.azurewebsites.net/v1/conectaBook/membros/usuario/${idUsuario}`
         }
 
         if (tipo === "admin") {
-            url = url = `https://conectabook.onrender.com/v1/conectaBook/membros/usuario/${idUsuario}/admin`
+            url = url = `https://conectabook.azurewebsites.net/v1/conectaBook/membros/usuario/${idUsuario}/admin`
         }
 
         const res = await fetch(url)
@@ -110,7 +108,6 @@ export default function MeusClubes() {
 
         setClubes(data.response)
     }
-    console.log(clubes)
     const totalClubes = [...clubesMembro, ...clubesAdmin].filter(
         (clube, index, self) =>
             index === self.findIndex(

@@ -15,7 +15,7 @@ import Header from "../../components/header"
 import FotoClubeDefault from "../../assets/group.png"
 import RightClube from "../../components/RightClube"
 
-const API_GENEROS = "https://conectabook.onrender.com/v1/conectaBook/generos"
+const API_GENEROS = "https://conectabook.azurewebsites.net/v1/conectaBook/generos"
 
 // Variável para a URL base das imagens na nuvem
 const URL_IMAGENS_CLUBES = "https://conectabookstorage.blob.core.windows.net/arquivos-mensagens/clubes/"
@@ -27,7 +27,7 @@ export default function Clube() {
     const [clubes, setClube] = useState([])
     const [generos, setGenero] = useState([])
     const [generoSelecionado, setGeneroSelecionado] = useState("")
-    const API_CLUBES = "https://conectabook.onrender.com/v1/conectaBook/clubes"
+    const API_CLUBES = "https://conectabook.azurewebsites.net/v1/conectaBook/clubes"
     const [pesquisa, setPesquisa] = useState("")
     const [clubeAdmin, setClubeAdmin] = useState([])
     const [clubeMembro, setClubeMembro] = useState([])
@@ -112,7 +112,7 @@ export default function Clube() {
     async function participarClube(idClube) {
         const idUsuario = user.user.id_usuario || user.user.id
         try {
-            const response = await fetch("https://conectabook.onrender.com/v1/conectaBook/membros", {
+            const response = await fetch("https://conectabook.azurewebsites.net/v1/conectaBook/membros", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -139,7 +139,7 @@ export default function Clube() {
     async function buscarClubesAdmin(idUsuario) {
         try {
             const response = await fetch(
-                `https://conectabook.onrender.com/v1/conectaBook/membros/usuario/${idUsuario}/admin/`
+                `https://conectabook.azurewebsites.net/v1/conectaBook/membros/usuario/${idUsuario}/admin/`
             )
 
             const data = await response.json()
@@ -154,7 +154,7 @@ export default function Clube() {
     async function buscarClubesMembro(idUsuario) {
         try {
             const response = await fetch(
-                `https://conectabook.onrender.com/v1/conectaBook/membros/usuario/${idUsuario}`
+                `https://conectabook.azurewebsites.net/v1/conectaBook/membros/usuario/${idUsuario}`
             )
 
             const data = await response.json()

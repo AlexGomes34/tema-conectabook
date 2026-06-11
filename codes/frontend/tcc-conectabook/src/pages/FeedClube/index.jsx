@@ -37,7 +37,7 @@ export default function FeedClube() {
             if (!clube?.id_genero) return
 
             const res = await fetch(
-                `https://conectabook.onrender.com/v1/conectaBook/clubes/genero/${clube.id_genero}`
+                `https://conectabook.azurewebsites.net/v1/conectaBook/clubes/genero/${clube.id_genero}`
             )
 
             const data = await res.json()
@@ -56,7 +56,7 @@ export default function FeedClube() {
     useEffect(() => {
         async function verificarAdmin() {
             const res = await fetch(
-                `https://conectabook.onrender.com/v1/conectaBook/membros/clube/${idClube}`
+                `https://conectabook.azurewebsites.net/v1/conectaBook/membros/clube/${idClube}`
             )
     
             const data = await res.json()
@@ -95,9 +95,8 @@ export default function FeedClube() {
 
     useEffect(() => {
         async function buscarClube() {
-            const res = await fetch(`https://conectabook.onrender.com/v1/conectaBook/clubes/${idClube}`)
+            const res = await fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/clubes/${idClube}`)
             const data = await res.json()
-            console.log(data)
             setClube(data.response)
         }
         buscarClube()
@@ -114,7 +113,7 @@ export default function FeedClube() {
         if (!confirmar) return;
     
         try {
-            const res = await fetch(`https://conectabook.onrender.com/v1/conectaBook/membros/${idVinculoMembro}`, {
+            const res = await fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/membros/${idVinculoMembro}`, {
                 method: "DELETE"
             });
     
@@ -165,7 +164,7 @@ export default function FeedClube() {
 
                         <LeftFeed
                             idClube={idClube}
-                            feedUrl={`https://conectabook.onrender.com/v1/conectaBook/mensagem/clube/${idClube}/mensagens/principais`}
+                            feedUrl={`https://conectabook.azurewebsites.net/v1/conectaBook/mensagem/clube/${idClube}/mensagens/principais`}
                         />
 
                     </div>

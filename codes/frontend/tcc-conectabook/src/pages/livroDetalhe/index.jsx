@@ -46,7 +46,7 @@ export default function LivroDetalhe() {
 
         async function garantirLivroNoBanco() {
             try {
-                await fetch(`https://conectabook.onrender.com/v1/conectaBook/livros`, {
+                await fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/livros`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -122,7 +122,7 @@ export default function LivroDetalhe() {
 
             try {
                 const res = await fetch(
-                    `https://conectabook.onrender.com/v1/conectaBook/estante/usuario/${user.user.id}`
+                    `https://conectabook.azurewebsites.net/v1/conectaBook/estante/usuario/${user.user.id}`
                 )
 
                 if (!res.ok) return
@@ -170,7 +170,7 @@ export default function LivroDetalhe() {
                 console.log(livroNaEstante)
 
                 res = await fetch(
-                    `https://conectabook.onrender.com/v1/conectaBook/estante/${livroNaEstante.id_estante}`,
+                    `https://conectabook.azurewebsites.net/v1/conectaBook/estante/${livroNaEstante.id_estante}`,
                     {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
@@ -182,7 +182,7 @@ export default function LivroDetalhe() {
                     }
                 )
             } else {
-                res = await fetch(`https://conectabook.onrender.com/v1/conectaBook/estante`, {
+                res = await fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/estante`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -224,7 +224,7 @@ export default function LivroDetalhe() {
         try {
 
             const res = await fetch(
-                `https://conectabook.onrender.com/v1/conectaBook/estante/${livroNaEstante.id_estante}`,
+                `https://conectabook.azurewebsites.net/v1/conectaBook/estante/${livroNaEstante.id_estante}`,
                 { method: 'DELETE' }
             )
 
