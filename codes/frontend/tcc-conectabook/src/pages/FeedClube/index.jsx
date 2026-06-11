@@ -20,6 +20,7 @@ import LeftFeed from "../../components/feed/index.jsx";
 export default function FeedClube() {
 
     const { idClube } = useParams()
+    const navigate = useNavigate()
 
     const [user, setUser] = useState(null)
     const [isAdmin, setIsAdmin] = useState(null)
@@ -130,8 +131,6 @@ export default function FeedClube() {
         }
     }
 
-
-    const navigate = useNavigate()
     return (
 
         <div className="feedClube-container">
