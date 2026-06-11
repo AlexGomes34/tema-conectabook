@@ -19,9 +19,9 @@ const INPUT_DATA = [
 
 ]
 
-const API_GENEROS = "https://conectabook.onrender.com/v1/conectaBook/generos"
-const API_USUARIOS = "https://conectabook.onrender.com/v1/conectaBook/usuarios"
-const API_GENERO_USUARIO = "https://conectabook.onrender.com/v1/conectaBook/genero-usuario/multiplos"
+const API_GENEROS = "https://conectabook.azurewebsites.net/v1/conectaBook/generos"
+const API_USUARIOS = "https://conectabook.azurewebsites.net/v1/conectaBook/usuarios"
+const API_GENERO_USUARIO = "https://conectabook.azurewebsites.net/v1/conectaBook/genero-usuario/multiplos"
 
 
 function Cadastro() {
@@ -87,7 +87,7 @@ function Cadastro() {
 
         try {
 
-            const responseUsuarios = await fetch("https://conectabook.onrender.com/v1/conectaBook/usuarios")
+            const responseUsuarios = await fetch("https://conectabook.azurewebsites.net/v1/conectaBook/usuarios")
             const dataUsuarios = await responseUsuarios.json()
 
             const erroDuplicado = verificarDuplicados(dataUsuarios.response, form)

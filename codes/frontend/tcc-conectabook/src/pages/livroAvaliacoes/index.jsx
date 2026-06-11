@@ -14,7 +14,7 @@ import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const API_URL = "https://conectabook.onrender.com/v1/conectaBook/";
+const API_URL = "https://conectabook.azurewebsites.net/v1/conectaBook/";
 
 export default function LivroAvaliacao() {
     const { state } = useLocation();

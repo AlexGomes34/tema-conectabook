@@ -45,7 +45,7 @@ export default function Membros() {
     useEffect(() => {
         async function verificarAdmin() {
             const res = await fetch(
-                `https://conectabook.onrender.com/v1/conectaBook/membros/clube/${idClube}`
+                `https://conectabook.azurewebsites.net/v1/conectaBook/membros/clube/${idClube}`
             )
 
             const data = await res.json()
@@ -78,7 +78,7 @@ export default function Membros() {
 
     useEffect(() => {
         async function buscarMembros() {
-            const res = await fetch(`https://conectabook.onrender.com/v1/conectaBook/membros/clube/${idClube}`)
+            const res = await fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/membros/clube/${idClube}`)
             const data = await res.json()
             console.log(data)
             setMembros(data.response)
