@@ -20,6 +20,7 @@ import LeftFeed from "../../components/feed/index.jsx";
 export default function FeedClube() {
 
     const { idClube } = useParams()
+    const navigate = useNavigate()
 
     const [user, setUser] = useState(null)
     const [isAdmin, setIsAdmin] = useState(null)
@@ -27,12 +28,16 @@ export default function FeedClube() {
 
     const [clubesGenero, setClubesGenero] = useState([])
 
+    const [idVinculoMembro, setIdVinculoMembro] = useState(null)
+
+    
+
     useEffect(() => {
         async function buscarClubesGenero() {
             if (!clube?.id_genero) return
 
             const res = await fetch(
-                `https://conectabook.onrender.com/v1/conectaBook/clubes/genero/${clube.id_genero}`
+                `https://conectabook.azurewebsites.net/v1/conectaBook/clubes/genero/${clube.id_genero}`
             )
 
             const data = await res.json()
@@ -51,20 +56,26 @@ export default function FeedClube() {
     useEffect(() => {
         async function verificarAdmin() {
             const res = await fetch(
-                `https://conectabook.onrender.com/v1/conectaBook/membros/clube/${idClube}`
+                `https://conectabook.azurewebsites.net/v1/conectaBook/membros/clube/${idClube}`
             )
-
+    
             const data = await res.json()
-
+    
+            // Encontra o usuário atual na lista de membros retornada pela API
             const membro = data.response.find(
                 membro =>
                     membro.id_usuario === user?.user?.id_usuario ||
                     membro.id_usuario === user?.user?.id
             )
-
+    
             setIsAdmin(membro?.administrador === 1)
+            
+            // 👉 Salva o id_membros correto que veio no JSON da API
+            if (membro) {
+                setIdVinculoMembro(membro.id_membros) 
+            }
         }
-
+    
         if (user) {
             verificarAdmin()
         }
@@ -84,30 +95,28 @@ export default function FeedClube() {
 
     useEffect(() => {
         async function buscarClube() {
-            const res = await fetch(`https://conectabook.onrender.com/v1/conectaBook/clubes/${idClube}`)
+            const res = await fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/clubes/${idClube}`)
             const data = await res.json()
-            console.log(data)
             setClube(data.response)
         }
         buscarClube()
     }, [idClube])
 
     async function sairDoClube() {
-        const idUsuarioAtual = user?.user?.id_usuario || user?.user?.id;
-
-        if (!idUsuarioAtual) {
-            alert("Erro ao identificar o usuário. Faça login novamente.");
+        // Se o estado estiver nulo, significa que o id_membros não foi capturado ou ele não pertence ao clube
+        if (!idVinculoMembro) {
+            alert("Não foi possível encontrar o seu vínculo com este clube.");
             return;
         }
-
+    
         const confirmar = window.confirm("Tem certeza que deseja sair deste clube?");
         if (!confirmar) return;
-
+    
         try {
-            const res = await fetch(`https://conectabook.onrender.com/v1/conectaBook/membros/${idUsuarioAtual}`, {
+            const res = await fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/membros/${idVinculoMembro}`, {
                 method: "DELETE"
             });
-
+    
             if (res.ok) {
                 alert("Você saiu do clube com sucesso.");
                 navigate("/feed")
@@ -121,8 +130,6 @@ export default function FeedClube() {
         }
     }
 
-
-    const navigate = useNavigate()
     return (
 
         <div className="feedClube-container">
@@ -157,7 +164,7 @@ export default function FeedClube() {
 
                         <LeftFeed
                             idClube={idClube}
-                            feedUrl={`https://conectabook.onrender.com/v1/conectaBook/mensagem/clube/${idClube}/mensagens/principais`}
+                            feedUrl={`https://conectabook.azurewebsites.net/v1/conectaBook/mensagem/clube/${idClube}/mensagens/principais`}
                         />
 
                     </div>

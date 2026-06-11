@@ -160,20 +160,21 @@ const setUpdateClub = async function (clube) {
 // DELETA UM CLUBE NO BANCO
 const setDeleteClub = async function (id) {
     try {
-        let sql = `delete from tbl_clube where id_clube = ${id}`
-        let result = await db.raw(sql)
+        // 1. Remove todos os membros do clube primeiro
+        await db.raw(`delete from tbl_membros where id_clube = ${id}`)
+
+        // 2. Agora deleta o clube com segurança
+        let result = await db.raw(`delete from tbl_clube where id_clube = ${id}`)
 
         if (result && result[0].affectedRows > 0)
             return true
         else
             return false
+
     } catch (error) {
-        // Se qualquer um dos passos falhar, desfaz tudo o que foi feito para não quebrar o banco
-        await transaction.rollback();
-        console.error("🚨 ERRO CRÍTICO AO DELETAR CLUBE EM CASCATA:", error.message);
+        console.error("🚨 Erro ao deletar clube:", error.message);
         return false;
     }
-
 }
 
 module.exports = {

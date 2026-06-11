@@ -50,7 +50,6 @@ export default function Livro() {
   // Carrega usuário do localStorage
   useEffect(() => {
     const userStorage = JSON.parse(localStorage.getItem("user"))
-    console.log(userStorage)
     if (userStorage) {
       setUser(userStorage)
     }
@@ -59,20 +58,17 @@ export default function Livro() {
   // Busca estante quando o usuário estiver disponível
   useEffect(() => {
     const userId = user?.user?.id
-    console.log("user state:", user)  
-    console.log("userId extraído:", userId)
     if (!userId) return
 
     setEstanteLoading(true)
     setEstanteErro(null)
 
-    fetch(`https://conectabook.onrender.com/v1/conectaBook/estante/usuario/${userId}`)
+    fetch(`https://conectabook.azurewebsites.net/v1/conectaBook/estante/usuario/${userId}`)
       .then(res => {
         if (!res.ok) throw new Error("Erro ao buscar estante")
         return res.json()
       })
       .then(data => {
-        console.log("data da estante:", data)
         const lista = Array.isArray(data.estante) ? data.estante : [] 
         setEstante(lista)
       })
