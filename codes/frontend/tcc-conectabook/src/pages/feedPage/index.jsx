@@ -21,7 +21,7 @@ import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 
 function Feed() {
 
-    const POSTS_API = "https://conectabook.onrender.com/v1/conectaBook/mensagem/feed/principal"
+    const POSTS_API = "https://conectabook.azurewebsites.net/v1/conectaBook/mensagem/feed/principal"
 
     const [posts, setPosts] = useState([])
     const [user, setUser] = useState(null)
@@ -75,14 +75,13 @@ function Feed() {
         async function getClubesUsuario(idUsuario) {
             try {
                 const response = await fetch(
-                    `https://conectabook.onrender.com/v1/conectaBook/membros/usuario/${idUsuario}`
+                    `https://conectabook.azurewebsites.net/v1/conectaBook/membros/usuario/${idUsuario}`
                 )
 
                 const data = await response.json()
 
                 setClubesUsuario(data.response ?? [])
 
-                console.log(data.response)
             } catch (error) {
                 console.log(error)
             }
@@ -91,7 +90,7 @@ function Feed() {
         async function getLivrosFavoritos(idUsuario) {
             try {
                 const responseGenero = await fetch(
-                    `https://conectabook.onrender.com/v1/conectaBook/genero-usuario/usuario/${idUsuario}`
+                    `https://conectabook.azurewebsites.net/v1/conectaBook/genero-usuario/usuario/${idUsuario}`
                 )
 
                 const dataGenero = await responseGenero.json()
@@ -155,7 +154,6 @@ function Feed() {
 
                 setLivrosSugeridos(livrosUnicos)
 
-                console.log(livrosUnicos)
             } catch (error) {
                 console.log(error)
             }
@@ -167,7 +165,6 @@ function Feed() {
 
                 const data = await response.json()
 
-                console.log(data.response)
 
                 setPosts(data.response)
             } catch (error) {
@@ -187,7 +184,7 @@ function Feed() {
                 fotoUser={user?.user?.foto_perfil}
             />
             <div className={styles.mainFeed}>
-                <LeftFeed feedUrl={"https://conectabook.onrender.com/v1/conectaBook/mensagem/feed/principal"} />
+                <LeftFeed feedUrl={"https://conectabook.azurewebsites.net/v1/conectaBook/mensagem/feed/principal"} />
                 <div className={styles.feedPageRight}>
                     <div className={styles.divRight}>
                         <div className={styles.divRightTitulo}>

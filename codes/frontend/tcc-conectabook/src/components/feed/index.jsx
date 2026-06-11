@@ -24,7 +24,6 @@ export default function LeftFeed({ posts, idConversa, idClube, feedUrl }) {
             navigate("/")
         } else {
             setUser(userStorage)
-            console.log(user)
         }
     }, [])
 
