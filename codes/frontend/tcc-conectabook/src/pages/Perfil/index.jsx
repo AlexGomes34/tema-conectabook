@@ -58,62 +58,64 @@ function Perfil() {
     async function handleUpdate() {
         try {
             const userStorage = JSON.parse(localStorage.getItem("user"))
-
+    
             const form = new FormData()
-
             form.append("nome", formData.nome)
             form.append("nome_usuario", formData.username)
             form.append("email", formData.email)
             form.append("data_nascimento", formData.dataNascimento)
-
+    
             if (foto) {
-                form.append("foto", foto)
+                form.append("foto_perfil", foto)
             }
-
-            const userId =
-                userStorage.user.id ||
-                userStorage.user.id_usuario
-
+    
+            const userId = userStorage.user.id || userStorage.user.id_usuario
+    
             const putResponse = await fetch(
                 `https://conectabook.azurewebsites.net/v1/conectaBook/usuarios/${userId}`,
                 {
                     method: "PUT",
-                    body: form
+                    body: form,
                 }
             )
-
+    
+            //  Verifica antes de tentar parsear JSON
+            if (!putResponse.ok) {
+                const errorText = await putResponse.text() // lê como texto para não quebrar
+                console.error("Erro do servidor:", putResponse.status, errorText)
+                alert(`Erro ao atualizar perfil (${putResponse.status})`)
+                return
+            }
+    
             const putData = await putResponse.json()
-
+    
             if (!putData.status) {
                 alert("Erro ao atualizar perfil")
                 return
             }
-
+    
             const getResponse = await fetch(
                 `https://conectabook.azurewebsites.net/v1/conectaBook/usuarios/${userId}`
             )
-
-            const getData = await getResponse.json()
-
-            const userData = getData.response || getData.user || getData
-
-            console.log("USER STORAGE:", userStorage)
-            console.log("USER DATA:", userData)
-
-            const updatedUser = {
-                ...userStorage,
-                user: userData
+    
+            if (!getResponse.ok) {
+                console.error("Erro ao buscar usuário atualizado:", getResponse.status)
+                alert("Perfil atualizado, mas não foi possível recarregar os dados.")
+                return
             }
-
+    
+            const getData = await getResponse.json()
+            const userData = getData.response || getData.user || getData
+    
+            const updatedUser = { ...userStorage, user: userData }
             localStorage.setItem("user", JSON.stringify(updatedUser))
             setUser(updatedUser)
-
+    
             alert("Perfil atualizado com sucesso!")
-
+    
         } catch (error) {
             console.error("Erro no PUT:", error)
             alert("Erro na requisição")
-            console.log(error)
         }
     }
 

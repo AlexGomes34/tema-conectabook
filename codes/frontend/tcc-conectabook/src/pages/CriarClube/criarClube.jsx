@@ -41,14 +41,16 @@ export default function CriarClube() {
     }
 
     function verificarDuplicados(clubes, form) {
+        if (!clubes || !Array.isArray(clubes)) return null // <-- adicione isso
+    
         const clubeExiste = clubes.some(
             c => c.nome === form.nome
         )
-
+    
         if (clubeExiste) {
             return "Clube já existente"
         }
-
+    
         return null
     }
 
